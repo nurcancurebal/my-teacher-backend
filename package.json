@@ -1,23 +1,17 @@
 {
   "name": "my-teacher-backend",
   "version": "0.3.0",
-  "description": "A boilerplate/starter project for quickly building RESTful APIs using Node.js,Typescript, Express, and Sequelize.",
-  "author": "Nabadeep Thakuria",
+  "description": "RESTful APIs using Node.js,Typescript, Express, and Sequelize.",
   "bin": "bin/cli.js",
-  "homepage": "https://github.com/nabadeep25/typescript-node-sequelize-boilerplate",
   "license": "MIT",
   "keywords": [
     "typescript",
     "node",
     "express",
     "sequelize",
-    "mysql",
     "postgres",
-    "boilerplate",
-    "template",
-    "typescript node sequelize boilerplate",
     "typescript node",
-    "typescript sequelize boilerplate"
+    "typescript sequelize"
   ],
   "scripts": {
     "build-ts": "tsc",

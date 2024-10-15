@@ -1,3 +1,10 @@
+import { NextFunction, Request, Response } from "express";
+import { omit } from "lodash";
+
+import { sign } from "../util/jwt";
+import { generateOTP, verifyOTP } from "../util/otp";
+import { ApiError } from "../util/ApiError";
+
 import {
   createUser,
   findOneUser,
@@ -5,13 +12,10 @@ import {
   userExists,
   validatePassword,
 } from "../services/userService";
-import { NextFunction, Request, Response } from "express";
-import { omit } from "lodash";
-import { sign } from "../util/jwt";
-import { generateOTP, verifyOTP } from "../util/otp";
+
 import { sendOTP } from "../helpers/mailHelper";
-import { ApiError } from "../util/ApiError";
-const omitData = ["password"];
+
+const OMIT_DATA = ["password"];
 
 export const registerUser = async (
   req: Request,
@@ -20,6 +24,7 @@ export const registerUser = async (
 ) => {
   try {
     let user = req.body;
+
     const userExist = await userExists({
       email: user.email,
       mobile: user.mobile,
@@ -27,8 +32,11 @@ export const registerUser = async (
     if (userExist) {
       throw new ApiError(400, "Email or Mobile is alredy used");
     }
+
     user = await createUser(user);
-    const userData = omit(user?.toJSON(), omitData);
+
+    const userData = omit(user?.toJSON(), OMIT_DATA);
+
     const accessToken = sign({ ...userData });
 
     return res.status(200).json({
@@ -59,7 +67,7 @@ export const loginUser = async (
     if (!validPassword) {
       throw new ApiError(400, "Password is incorrect");
     }
-    const userData = omit(user?.toJSON(), omitData);
+    const userData = omit(user?.toJSON(), OMIT_DATA);
     const accessToken = sign({ ...userData });
 
     return res.status(200).json({

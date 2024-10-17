@@ -2,17 +2,8 @@
   "name": "my-teacher-backend",
   "version": "0.3.0",
   "description": "RESTful APIs using Node.js,Typescript, Express, and Sequelize.",
+  "main": "dist/server.js",
   "bin": "bin/cli.js",
-  "license": "MIT",
-  "keywords": [
-    "typescript",
-    "node",
-    "express",
-    "sequelize",
-    "postgres",
-    "typescript node",
-    "typescript sequelize"
-  ],
   "scripts": {
     "build-ts": "tsc",
     "build": "npm run build-ts && npm run lint ",
@@ -24,6 +15,27 @@
     "watch-ts": "tsc -w",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\""
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nurcancurebal/my-teacher-backend"
+  },
+  "keywords": [
+    "typescript",
+    "node",
+    "express",
+    "sequelize",
+    "postgres",
+    "typescript node",
+    "typescript sequelize",
+    "typescript express",
+    "typescript postgres",
+    "typescript node express",
+    "typescript node sequelize",
+    "typescript node postgres",
+    "typescript express sequelize"
+  ],
+  "author": "Nurcan Curebal",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^20.8.4",
     "bcrypt": "^5.1.0",
@@ -70,5 +82,6 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  }
+  },
+  "private": true
 }

@@ -2,13 +2,14 @@ import { customError } from "customDefinition";
 import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../util/ApiError";
 
-/**
- * Error Handler Middleware
- * @param error
- * @param req
- * @param res
- * @param next
- */
+/*
+  Error Handler Middleware
+  @param error
+  @param req
+  @param res
+  @param next
+*/
+
 export const errorHandler = (
   error: customError,
   req: Request,

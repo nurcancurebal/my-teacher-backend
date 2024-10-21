@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer, { SendMailOptions } from "nodemailer";
 import { emailConfig } from "../config/config";
 import { forgotPasswordMailTemplate, mailTemplate } from "./mailTemplate";
 
@@ -17,22 +17,22 @@ export const sendOTP = (email: string, otp: string) => {
     subject: "OTP Verification",
   });
 };
-export const sendMail = (exports.sendMail = function (details: {
+export const sendMail = function (details: {
   to: string;
   subject: string;
   html: string;
-  attachments?: any[];
-  cc?: any;
-  bcc?: any;
+  attachments?: SendMailOptions["attachments"];
+  cc?: string | string[];
+  bcc?: string | string[];
   from?: string;
-}) {
-  const mailOptions = {
+}): Promise<boolean> {
+  const mailOptions: nodemailer.SendMailOptions = {
     to: details.to,
     subject: details.subject,
     html: details.html,
     attachments: details.attachments || [],
-    cc: details.cc || null,
-    bcc: details.bcc || null,
+    cc: details.cc || undefined,
+    bcc: details.bcc || undefined,
     from: details.from || emailConfig.emailFrom,
   };
 
@@ -45,12 +45,12 @@ export const sendMail = (exports.sendMail = function (details: {
       }
     });
   });
-});
+};
 
-exports.sendMessage = (
+export const sendMessage = (
   email: string,
-  messageBody: any,
-  attachment: any[] = []
+  messageBody: { subject: string; body: string },
+  attachment: SendMailOptions["attachments"] = []
 ) => {
   return sendMail({
     to: email,

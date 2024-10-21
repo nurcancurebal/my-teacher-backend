@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
+
 dotenv.config({ path: ".env" });
+
 import { Dialect } from "sequelize";
+
 export const dbConfig = {
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT, 10),

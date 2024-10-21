@@ -3,13 +3,18 @@ import { getUserById } from "../services/userService";
 import { Response, NextFunction } from "express";
 import { customRequest } from "../types/customDefinition";
 
+// User arayüzü tanımlanıyor
+interface User {
+  id: number;
+}
+
 const requireUser = async (
   req: customRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const user: any = get(req, "user");
+    const user: User | undefined = get(req, "user");
 
     if (!user) {
       return res
@@ -25,7 +30,7 @@ const requireUser = async (
     if (err instanceof Error) {
       msg = err.message;
     } else if (err) {
-      msg = err;
+      msg = String(err);
     }
     return res.status(400).json({ errorMsg: msg, error: true });
   }

@@ -1,4 +1,4 @@
-import Joi, { Schema } from "joi";
+import { Schema } from "joi";
 
 import { Request, Response, NextFunction } from "express";
 const validateRequest = (schema: Schema) => {

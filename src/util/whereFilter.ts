@@ -1,11 +1,22 @@
-import { omit, replace } from "lodash";
+import { omit } from "lodash";
+
+interface FilterOptions {
+  orderBy?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  orderColumn?: string;
+  status?: string;
+  [key: string]: unknown; // Diğer dinamik anahtarlar için
+}
 
 /**
  * Filter options for using in where statement
  * @param options
  * @returns
  */
-export const whereFilter = (options: any) => {
+
+export const whereFilter = (options: FilterOptions) => {
   const where = omit({ ...options }, [
     "orderBy",
     "page",

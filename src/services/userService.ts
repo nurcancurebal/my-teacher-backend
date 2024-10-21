@@ -1,8 +1,18 @@
 import { encryptSync } from "../util/encrypt";
-import User from "../models/User";
-import { Op } from "sequelize";
+import User, { UserCreationAttributes } from "../models/User";
+import { Op, WhereOptions } from "sequelize";
 
-export const createUser = async (payload: any) => {
+// Kullanıcı oluşturma fonksiyonu için payload arayüzü
+interface CreateUserPayload extends UserCreationAttributes {
+  name: string;
+  email: string;
+  password: string;
+  mobile?: string;
+  status: boolean;
+  role: number;
+}
+
+export const createUser = async (payload: CreateUserPayload) => {
   payload.password = encryptSync(payload.password);
   const user = await User.create(payload);
   return user;
@@ -18,8 +28,13 @@ export const getUserById = async (id: number) => {
   return user;
 };
 
+interface UserExistsOptions {
+  email: string | null;
+  mobile: string | null;
+}
+
 export const userExists = async (
-  options: { email: string | null; mobile: string | null } = {
+  options: UserExistsOptions = {
     email: null,
     mobile: null,
   }
@@ -27,14 +42,15 @@ export const userExists = async (
   if (!options.email) {
     throw new Error("Please provide either of these options: email");
   }
-  const where: any = {
-    [Op.or]: [],
+  const orCondition = Op.or as unknown as string;
+  const where: WhereOptions = {
+    [orCondition]: [],
   };
   if (options.email) {
-    where[Op.or].push({ email: options.email });
+    where[orCondition].push({ email: options.email });
   }
   if (options.mobile) {
-    where[Op.or].push({ email: options.mobile });
+    where[orCondition].push({ mobile: options.mobile });
   }
 
   const users = await User.findAll({ where: where });
@@ -45,32 +61,43 @@ export const validatePassword = async (email: string, password: string) => {
   if (!email && !password) {
     throw new Error("Please provide email and password");
   }
-  const where = {
-    [Op.or]: [] as any,
+  const orCondition = Op.or as unknown as string;
+  const where: WhereOptions = {
+    [orCondition]: [],
   };
 
   if (email) {
-    where[Op.or].push({ email: email });
+    where[orCondition].push({ email: email });
   }
 
   const user = await User.findOne({ where });
 
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   return User.validPassword(password, user.password);
 };
 
-export const findOneUser = async (options: any) => {
+interface FindOneUserOptions {
+  email?: string;
+  id?: number;
+}
+
+export const findOneUser = async (options: FindOneUserOptions) => {
   if (!options.email && !options.id) {
     throw new Error("Please provide email or id ");
   }
-  const where = {
-    [Op.or]: [] as any,
+  const orCondition = Op.or as unknown as string;
+  const where: WhereOptions = {
+    [orCondition]: [],
   };
 
   if (options.email) {
-    where[Op.or].push({ email: options.email });
+    where[orCondition].push({ email: options.email });
   }
   if (options.id) {
-    where[Op.or].push({ id: options.id });
+    where[orCondition].push({ id: options.id });
   }
 
   const user = await User.findOne({
@@ -80,7 +107,16 @@ export const findOneUser = async (options: any) => {
   return user;
 };
 
-export const updateUserById = (user: any, userId: number) => {
+interface UpdateUserPayload {
+  id?: number;
+  email?: string;
+  password?: string;
+  mobile?: string;
+  status?: boolean;
+  role?: number;
+}
+
+export const updateUserById = (user: UpdateUserPayload, userId: number) => {
   if (!user && !userId) {
     throw new Error("Please provide user data and/or user id to update");
   }

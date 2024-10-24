@@ -15,8 +15,6 @@ import {
 
 import { sendOTP } from "../helpers/mailHelper";
 
-const OMIT_DATA = ["password"];
-
 export const registerUser = async (
   req: Request,
   res: Response,
@@ -27,15 +25,15 @@ export const registerUser = async (
 
     const userExist = await userExists({
       email: user.email,
-      mobile: user.mobile,
+      username: user.username,
     });
     if (userExist) {
-      throw new ApiError(400, "Email or Mobile is alredy used");
+      throw new ApiError(400, "Email is alredy used");
     }
 
     user = await createUser(user);
 
-    const userData = omit(user?.toJSON(), OMIT_DATA);
+    const userData = omit(user?.toJSON(), ["password"]);
 
     const accessToken = sign({ ...userData });
 
@@ -67,7 +65,7 @@ export const loginUser = async (
     if (!validPassword) {
       throw new ApiError(400, "Password is incorrect");
     }
-    const userData = omit(user?.toJSON(), OMIT_DATA);
+    const userData = omit(user?.toJSON(), ["password"]);
     const accessToken = sign({ ...userData });
 
     return res.status(200).json({

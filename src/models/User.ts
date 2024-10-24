@@ -4,12 +4,11 @@ import sequelizeConnection from "../db/connection";
 
 interface UserAttributes {
   id: number;
-  name: string;
+  firstname: string;
+  lastname: string;
+  username: string;
   email: string;
   password: string;
-  mobile?: string;
-  status: boolean;
-  role: number;
   created_at: Date;
   last_updated: Date;
 }
@@ -22,12 +21,11 @@ class User
   implements UserAttributes
 {
   public id!: number;
-  public name!: string;
+  public firstname!: string;
+  public lastname!: string;
+  public username!: string;
   public email!: string;
   public password!: string;
-  public mobile!: string;
-  public status!: boolean;
-  public role!: number;
   // timestamps!
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
@@ -42,9 +40,18 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    firstname: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -53,17 +60,7 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
-    },
-    mobile: {
-      type: DataTypes.STRING,
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    role: {
-      type: DataTypes.INTEGER,
-      defaultValue: 2,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,

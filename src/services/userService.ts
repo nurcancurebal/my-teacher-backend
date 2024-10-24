@@ -4,12 +4,11 @@ import { Op, WhereOptions } from "sequelize";
 
 // Kullanıcı oluşturma fonksiyonu için payload arayüzü
 interface CreateUserPayload extends UserCreationAttributes {
-  name: string;
+  firstname: string;
+  lastname: string;
+  username: string;
   email: string;
   password: string;
-  mobile?: string;
-  status: boolean;
-  role: number;
 }
 
 export const createUser = async (payload: CreateUserPayload) => {
@@ -29,30 +28,28 @@ export const getUserById = async (id: number) => {
 };
 
 interface UserExistsOptions {
-  email: string | null;
-  mobile: string | null;
+  email: string;
+  username: string;
 }
 
 export const userExists = async (
   options: UserExistsOptions = {
     email: null,
-    mobile: null,
+    username: null,
   }
 ) => {
-  if (!options.email) {
-    throw new Error("Please provide either of these options: email");
+  if (!options.email && !options.username) {
+    throw new Error(
+      "Please provide either of these options: email or username"
+    );
   }
-  const orCondition = Op.or as unknown as string;
-  const where: WhereOptions = {
-    [orCondition]: [],
-  };
+  const where: WhereOptions = {};
   if (options.email) {
-    where[orCondition].push({ email: options.email });
+    where.email = options.email;
   }
-  if (options.mobile) {
-    where[orCondition].push({ mobile: options.mobile });
+  if (options.username) {
+    where.username = options.username;
   }
-
   const users = await User.findAll({ where: where });
   return users.length > 0;
 };
@@ -111,9 +108,6 @@ interface UpdateUserPayload {
   id?: number;
   email?: string;
   password?: string;
-  mobile?: string;
-  status?: boolean;
-  role?: number;
 }
 
 export const updateUserById = (user: UpdateUserPayload, userId: number) => {

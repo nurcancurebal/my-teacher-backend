@@ -43,10 +43,10 @@ export default userRouter;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstname:
  *                 type: string
  *             example:
- *               name: fake name
+ *               firstname: fake name
  *     responses:
  *       "200":
  *         description: OK

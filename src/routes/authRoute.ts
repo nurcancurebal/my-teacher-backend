@@ -7,6 +7,7 @@ import {
   resetPassword,
 } from "../controllers/auth";
 import { loginSchema, registerSchema } from "../validation/user";
+
 const authRouter = Router();
 
 authRouter.post("/register", validateRequest(registerSchema), registerUser);
@@ -36,12 +37,19 @@ export default authRouter;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - firstname
+ *               - lastname
+ *               - username
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               firstname:
  *                 type: string
+ *               lastname:
+ *                 type: string
+ *               username:
+ *                type: string
+ *                description: must be unique
  *               email:
  *                 type: string
  *                 format: email
@@ -52,16 +60,16 @@ export default authRouter;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               name:  name
+ *               firstname: firstname
+ *               lastname: lastname
+ *               username: username
  *               email: name@example.com
  *               password: password1
  *     responses:
  *       "201":
  *         description: Created
- *
- *
  *       "400":
- *         description:  Bad Request
+ *         description: Bad Request
  */
 
 /**

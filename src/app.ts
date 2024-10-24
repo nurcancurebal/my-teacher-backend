@@ -26,11 +26,13 @@ app.use("/api", appRouter);
 
 // route to test server
 app.get("/api/", (req: customRequest, res) => {
-  res.status(200).json({ msg: "server is up..", user: req.user });
+  res
+    .status(200)
+    .json({ msg: "server is up..", data: req.user, user: req.user });
 });
 
 // route to sync db
-app.patch("/api/sync", async (req, res) => {
+app.patch("/api/sync", async (_req, res) => {
   try {
     const sync = await dbSync(); // dbSync() veritabanına bağlantı kurar ve veritabanı senkronizasyonunu gerçekleştirir.
     res.status(200).json({ ...sync, error: false });
@@ -58,7 +60,7 @@ app.patch("/api/sync", async (req, res) => {
  * /:
  *   get:
  *     summary: Get server status
- *     description: Logged in users can fetch only their own user information.
+ *     description: Logged in users can fetch only their own user information or Check Server Status
  *     tags: [Global]
  *     responses:
  *       "200":

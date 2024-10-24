@@ -15,7 +15,7 @@ export const updateUser = async (
     let body = req.body;
     body = omit(body, omitData);
 
-    const user = await findOneUser({ id: userId });
+    const user = await findOneUser({ email: body.email });
 
     if (!user) {
       throw new ApiError(400, "User not found");

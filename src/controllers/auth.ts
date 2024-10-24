@@ -6,11 +6,11 @@ import { generateOTP, verifyOTP } from "../util/otp";
 import { ApiError } from "../util/ApiError";
 
 import {
+  userExists,
   createUser,
   findOneUser,
-  updateUserById,
-  userExists,
   validatePassword,
+  updateUserById,
 } from "../services/userService";
 
 import { sendOTP } from "../helpers/mailHelper";
@@ -57,14 +57,17 @@ export const loginUser = async (
     const { email, password } = req.body;
 
     const user = await findOneUser({ email });
+
     if (!user) {
       throw new ApiError(400, "Email id is incorrect");
     }
 
     const validPassword = await validatePassword(user.email, password);
+
     if (!validPassword) {
       throw new ApiError(400, "Password is incorrect");
     }
+
     const userData = omit(user?.toJSON(), ["password"]);
     const accessToken = sign({ ...userData });
 
@@ -87,21 +90,24 @@ export const forgotPassword = async (
     const { email } = req.body;
 
     let user = await findOneUser({ email });
+
     if (!user) {
       throw new ApiError(400, "Email id is incorrect");
     }
-    user = user?.toJSON();
-    // generate otp
-    const otp = generateOTP(user.email);
 
-    const send = await sendOTP(user.email, otp);
+    // generate otp
+    user = user.toJSON();
+    const otp = generateOTP(user.username);
+
     // send otp to email
+    const send = await sendOTP(user.email, otp);
+
     if (!send) {
       throw new ApiError(400, "Failed to send OTP");
     }
 
     return res.status(200).json({
-      msg: "Email sent sucessfully",
+      msg: "Email sent successfully",
       error: false,
     });
   } catch (err) {

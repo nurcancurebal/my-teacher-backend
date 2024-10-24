@@ -1,31 +1,6 @@
 import { encryptSync } from "../util/encrypt";
 import User, { UserCreationAttributes } from "../models/User";
-import { Op, WhereOptions } from "sequelize";
-
-// Kullanıcı oluşturma fonksiyonu için payload arayüzü
-interface CreateUserPayload extends UserCreationAttributes {
-  firstname: string;
-  lastname: string;
-  username: string;
-  email: string;
-  password: string;
-}
-
-export const createUser = async (payload: CreateUserPayload) => {
-  payload.password = encryptSync(payload.password);
-  const user = await User.create(payload);
-  return user;
-};
-
-export const getUserById = async (id: number) => {
-  const user = await User.findByPk(id, {
-    attributes: { exclude: ["password"] },
-  });
-  if (!user) {
-    throw new Error("User not found");
-  }
-  return user;
-};
+import { WhereOptions } from "sequelize";
 
 interface UserExistsOptions {
   email: string;
@@ -50,22 +25,57 @@ export const userExists = async (
   if (options.username) {
     where.username = options.username;
   }
-  const users = await User.findAll({ where: where });
-  return users.length > 0;
+  const user = await User.findOne({ where: where });
+  return user !== null;
+};
+
+interface CreateUserPayload extends UserCreationAttributes {
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+export const createUser = async (payload: CreateUserPayload) => {
+  payload.password = encryptSync(payload.password);
+  const user = await User.create(payload);
+  return user;
+};
+
+interface FindOneUserOptions {
+  email: string;
+  username?: string;
+}
+
+export const findOneUser = async (options: FindOneUserOptions) => {
+  if (!options.email) {
+    throw new Error("Please provide email");
+  }
+
+  const where: WhereOptions = {
+    email: options.email,
+  };
+
+  if (options.username) {
+    where.username = options.username;
+  }
+
+  const user = await User.findOne({
+    where,
+    attributes: { exclude: ["password"] }, // Bir veritabanı sorgusu sırasında belirli alanların sonuçlardan hariç tutulmasını sağlar.
+  });
+  return user;
 };
 
 export const validatePassword = async (email: string, password: string) => {
   if (!email && !password) {
     throw new Error("Please provide email and password");
   }
-  const orCondition = Op.or as unknown as string;
-  const where: WhereOptions = {
-    [orCondition]: [],
-  };
 
-  if (email) {
-    where[orCondition].push({ email: email });
-  }
+  const where: WhereOptions = {
+    email,
+  };
 
   const user = await User.findOne({ where });
 
@@ -74,34 +84,6 @@ export const validatePassword = async (email: string, password: string) => {
   }
 
   return User.validPassword(password, user.password);
-};
-
-interface FindOneUserOptions {
-  email?: string;
-  id?: number;
-}
-
-export const findOneUser = async (options: FindOneUserOptions) => {
-  if (!options.email && !options.id) {
-    throw new Error("Please provide email or id ");
-  }
-  const orCondition = Op.or as unknown as string;
-  const where: WhereOptions = {
-    [orCondition]: [],
-  };
-
-  if (options.email) {
-    where[orCondition].push({ email: options.email });
-  }
-  if (options.id) {
-    where[orCondition].push({ id: options.id });
-  }
-
-  const user = await User.findOne({
-    where,
-    attributes: { exclude: ["password"] },
-  });
-  return user;
 };
 
 interface UpdateUserPayload {
@@ -128,6 +110,18 @@ export const updateUserById = (user: UpdateUserPayload, userId: number) => {
       where: { id: id },
     });
   }
+};
+
+// ----------------------------------------------------------
+
+export const getUserById = async (id: number) => {
+  const user = await User.findByPk(id, {
+    attributes: { exclude: ["password"] },
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
 };
 
 export const deleteUserById = (userId: number) => {

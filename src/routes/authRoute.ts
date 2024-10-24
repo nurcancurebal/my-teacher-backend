@@ -121,11 +121,15 @@ export default authRouter;
  *             type: object
  *             required:
  *               - email
+ *               - username
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
+ *               username:
+ *                type: string
  *             example:
+ *               username: fake
  *               email: fake@example.com
  *     responses:
  *       "204":

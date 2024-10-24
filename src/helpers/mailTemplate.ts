@@ -1,6 +1,6 @@
 export const forgotPasswordMailTemplate = function (details: { otp: string }) {
   const content = `Hey! <br/>
-  We heard you lost your password. Well, Please use ${details.otp} as OTP  to reset your password. OTP will be valid for 10 minutes`;
+  We heard you lost your password. Well, Please use ${details.otp} as OTP  to reset your password. OTP will be valid for 10 minutes.`;
   return mailTemplate(content, "Forgot Password");
 };
 

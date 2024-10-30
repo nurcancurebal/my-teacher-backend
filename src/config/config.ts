@@ -20,10 +20,11 @@ export const jwtConfig = {
 };
 
 export const emailConfig = {
-  emailService: process.env.EMAIL_SERVICE,
-  emailUser: process.env.EMAIL_USER,
-  emailPassword: process.env.EMAIL_PASS,
-  emailFrom: process.env.EMAIL_FROM,
+  smtpHost: process.env.SMTP_HOST,
+  smtpPort: process.env.SMTP_PORT,
+  smtpUser: process.env.SMTP_USER,
+  smtpPass: process.env.SMTP_PASS,
+  smtpRecipient: process.env.SMTP_RECIPIENT,
 };
 
 export const otpConfig = {

@@ -26,9 +26,7 @@ app.use("/api", appRouter);
 
 // route to test server
 app.get("/api/", (req: customRequest, res) => {
-  res
-    .status(200)
-    .json({ msg: "server is up..", data: req.user, user: req.user });
+  res.status(200).json({ msg: "server is up..", user: req.user });
 });
 
 // route to sync db

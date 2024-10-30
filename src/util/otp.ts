@@ -7,12 +7,12 @@ authenticator.options = {
   digits: 6,
 };
 
-export const generateOTP = (username: string) => {
-  const secret = username + otpConfig.otpSecret;
+export const generateOTP = (email: string) => {
+  const secret = email + otpConfig.otpSecret;
   return authenticator.generate(secret);
 };
 
-export const verifyOTP = (username: string, otp: string) => {
-  const secret = username + otpConfig.otpSecret;
+export const verifyOTP = (email: string, otp: string) => {
+  const secret = email + otpConfig.otpSecret;
   return authenticator.verify({ secret, token: otp });
 };

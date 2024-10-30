@@ -4,26 +4,19 @@ import { WhereOptions } from "sequelize";
 
 interface UserExistsOptions {
   email: string;
-  username: string;
 }
 
 export const userExists = async (
   options: UserExistsOptions = {
     email: null,
-    username: null,
   }
 ) => {
-  if (!options.email && !options.username) {
-    throw new Error(
-      "Please provide either of these options: email or username"
-    );
+  if (!options.email) {
+    throw new Error("Please provide either of these options: email");
   }
   const where: WhereOptions = {};
   if (options.email) {
     where.email = options.email;
-  }
-  if (options.username) {
-    where.username = options.username;
   }
   const user = await User.findOne({ where: where });
   return user !== null;
@@ -44,21 +37,21 @@ export const createUser = async (payload: CreateUserPayload) => {
 };
 
 interface FindOneUserOptions {
-  email: string;
-  username?: string;
+  email?: string;
+  id?: number;
 }
 
 export const findOneUser = async (options: FindOneUserOptions) => {
-  if (!options.email) {
-    throw new Error("Please provide email");
+  if (!options.email && !options.id) {
+    throw new Error("Please provide email or id");
   }
 
-  const where: WhereOptions = {
-    email: options.email,
-  };
+  const where: WhereOptions = {};
 
-  if (options.username) {
-    where.username = options.username;
+  if (options.email) {
+    where.email = options.email;
+  } else if (options.id) {
+    where.id = options.id;
   }
 
   const user = await User.findOne({
@@ -87,7 +80,9 @@ export const validatePassword = async (email: string, password: string) => {
 };
 
 interface UpdateUserPayload {
-  id?: number;
+  firstname?: string;
+  lastname?: string;
+  username?: string;
   email?: string;
   password?: string;
 }
@@ -96,23 +91,21 @@ export const updateUserById = (user: UpdateUserPayload, userId: number) => {
   if (!user && !userId) {
     throw new Error("Please provide user data and/or user id to update");
   }
+
   if (userId && isNaN(userId)) {
     throw new Error("Invalid user id");
   }
-  if (user.id || userId) {
-    const id = user.id || userId;
 
-    if (user.password) {
-      user.password = encryptSync(user.password);
-    }
+  const id = userId;
 
-    return User.update(user, {
-      where: { id: id },
-    });
+  if (user.password) {
+    user.password = encryptSync(user.password);
   }
-};
 
-// ----------------------------------------------------------
+  return User.update(user, {
+    where: { id: id },
+  });
+};
 
 export const getUserById = async (id: number) => {
   const user = await User.findByPk(id, {

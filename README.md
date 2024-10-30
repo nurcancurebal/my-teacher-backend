@@ -45,3 +45,7 @@ Bu bölüm, geliştirme sürecinde kullanılan ancak uygulamanın çalışması 
 ---**prettier:** Kod formatlama aracı.
 **ts-node-dev:** TypeScript dosyalarını çalıştırmak ve otomatik yeniden başlatma sağlamak için kullanılır.
 **typescript:** TypeScript dil desteği.
+
+# API Belgeleri
+
+Kullanılabilir API'lerin listesini ve özelliklerini görüntülemek için sunucuyu çalıştırın ve tarayıcınızda http://localhost:3000/api/docs/ adresine gidin. Bu belge sayfası, rota dosyalarında yorumlar olarak yazılan swagger tanımları kullanılarak otomatik olarak oluşturulur.

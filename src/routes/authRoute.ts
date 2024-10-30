@@ -6,14 +6,22 @@ import {
   registerUser,
   resetPassword,
 } from "../controllers/auth";
-import { loginSchema, registerSchema } from "../validation/user";
+import {
+  loginSchema,
+  registerSchema,
+  passwordResetSchema,
+} from "../validation/user";
 
 const authRouter = Router();
 
 authRouter.post("/register", validateRequest(registerSchema), registerUser);
 authRouter.post("/login", validateRequest(loginSchema), loginUser);
 authRouter.post("/forgot-password", forgotPassword);
-authRouter.post("/reset-password", resetPassword);
+authRouter.post(
+  "/reset-password",
+  validateRequest(passwordResetSchema),
+  resetPassword
+);
 
 export default authRouter;
 
@@ -45,10 +53,15 @@ export default authRouter;
  *             properties:
  *               firstname:
  *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
  *               lastname:
  *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
  *               username:
  *                type: string
+ *                minLength: 3
  *                description: must be unique
  *               email:
  *                 type: string
@@ -91,9 +104,12 @@ export default authRouter;
  *               email:
  *                 type: string
  *                 format: email
+ *                 description: must be unique
  *               password:
  *                 type: string
  *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
  *             example:
  *               email: name@example.com
  *               password: password1
@@ -121,16 +137,11 @@ export default authRouter;
  *             type: object
  *             required:
  *               - email
- *               - username
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
- *               username:
- *                type: string
- *             example:
- *               username: fake
- *               email: fake@example.com
+ *                 description: must be unique
  *     responses:
  *       "204":
  *         description: No content
@@ -162,12 +173,16 @@ export default authRouter;
  *               password:
  *                 type: string
  *                 format: password
+ *                 minLength: 8
+ *                 description: At least one number and one letter
  *               otp:
  *                 type: string
+ *                 length: 6
+ *                 description: One time password
  *             example:
  *               email: name@example.com
  *               password: password1
- *               otp: 123344
+ *               otp: "123344"
  *     responses:
  *       "204":
  *         description: No content

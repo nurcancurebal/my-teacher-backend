@@ -3,10 +3,15 @@ import { emailConfig } from "../config/config";
 import { forgotPasswordMailTemplate } from "./mailTemplate";
 
 const transporter = nodemailer.createTransport({
-  service: emailConfig.emailService,
+  host: emailConfig.smtpHost,
+  port: parseInt(emailConfig.smtpPort),
+  secure: true,
   auth: {
-    user: emailConfig.emailUser,
-    pass: emailConfig.emailPassword,
+    user: emailConfig.smtpUser,
+    pass: emailConfig.smtpPass,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
@@ -34,7 +39,7 @@ export const sendMail = function (details: {
     attachments: details.attachments || [],
     cc: details.cc || undefined,
     bcc: details.bcc || undefined,
-    from: details.from || emailConfig.emailFrom,
+    from: details.from || emailConfig.smtpUser,
   };
 
   return new Promise(function (resolve, reject) {

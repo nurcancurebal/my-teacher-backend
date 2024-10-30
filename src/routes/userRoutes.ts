@@ -5,8 +5,8 @@ import { updateSchema } from "../validation/user";
 
 const userRouter = Router();
 
-userRouter.patch("/", requireUser, validateRequest(updateSchema), updateUser);
 userRouter.get("/", requireUser, getUserData);
+userRouter.patch("/", requireUser, validateRequest(updateSchema), updateUser);
 
 export default userRouter;
 
@@ -42,11 +42,33 @@ export default userRouter;
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - username
+ *               - email
  *             properties:
  *               firstname:
  *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *               lastname:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *               username:
+ *                type: string
+ *                minLength: 3
+ *                description: must be unique
+ *               email:
+ *                type: string
+ *                format: email
+ *                description: must be unique
  *             example:
- *               firstname: fake name
+ *               firstname: "John"
+ *               lastname: "Doe"
+ *               username: "johndoe"
+ *               email: "johndoe@example.com"
  *     responses:
  *       "200":
  *         description: OK

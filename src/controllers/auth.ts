@@ -25,7 +25,6 @@ export const registerUser = async (
 
     const userExist = await userExists({
       email: user.email,
-      username: user.username,
     });
     if (userExist) {
       throw new ApiError(400, "Email is alredy used");
@@ -97,7 +96,7 @@ export const forgotPassword = async (
 
     // generate otp
     user = user.toJSON();
-    const otp = generateOTP(user.username);
+    const otp = generateOTP(user.email);
 
     // send otp to email
     const send = await sendOTP(user.email, otp);
@@ -124,14 +123,16 @@ export const resetPassword = async (
     const { email, otp, password } = req.body;
 
     let user = await findOneUser({ email });
+
     if (!user) {
       throw new ApiError(400, "Email id is incorrect");
     }
+
     user = user?.toJSON();
     const isValid = verifyOTP(user.email, otp);
 
     if (!isValid) {
-      return res.status(400).send({
+      return res.status(400).json({
         error: true,
         errorMsg: "OTP is Incorrect",
       });

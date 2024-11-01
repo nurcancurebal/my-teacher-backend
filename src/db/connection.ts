@@ -19,9 +19,11 @@ const sequelizeConnection = new Sequelize(
 const dbSync = async () => {
   try {
     await sequelizeConnection.sync({ alter: isDev });
+    //alter: isDev parametresi, geliştirme ortamında tabloları otomatik olarak günceller.
     return { success: true };
   } catch (error) {
-    throw error;
+    logger.error("Failed to sync DB", error);
+    throw { success: false, error: error.message };
   }
 };
 dbSync()
@@ -33,5 +35,5 @@ dbSync()
   });
 
 export { dbSync };
- 
+
 export default sequelizeConnection;

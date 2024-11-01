@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { compareSync } from "../util/encrypt";
 import sequelizeConnection from "../db/connection";
 
+// User modelinin özelliklerini tanımlayan arayüz
 interface UserAttributes {
   id: number;
   firstname: string;
@@ -13,8 +14,12 @@ interface UserAttributes {
   last_updated: Date;
 }
 
+// User modelinin oluşturulması sırasında elle girilmesi gerekli olmayan özellikleri tanımlayan arayüz
 interface UserCreationAttributes
   extends Optional<UserAttributes, "id" | "created_at" | "last_updated"> {}
+
+// User modelini tanımlayan sınıf
+//implements Anahtar Kelimesi: User sınıfının UserAttributes arayüzünde tanımlanan tüm özellikleri içermesi gerektiğini belirtir.
 
 class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -30,9 +35,13 @@ class User
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
 
-  static validPassword: (password: string, hash: string) => boolean;
+  // Şifre doğrulama fonksiyonu
+  static validPassword(password: string, hash: string): boolean {
+    return compareSync(password, hash);
+  }
 }
 
+// User modelinin Sequelize ile başlatılması
 User.init(
   {
     id: {
@@ -74,14 +83,11 @@ User.init(
   {
     sequelize: sequelizeConnection,
     tableName: "users",
+    timestamps: true,
     createdAt: "created_at",
     updatedAt: "last_updated",
   }
 );
-
-User.validPassword = (password: string, hash: string) => {
-  return compareSync(password, hash);
-};
 
 export default User;
 export { UserCreationAttributes };

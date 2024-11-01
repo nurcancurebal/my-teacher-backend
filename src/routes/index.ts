@@ -2,7 +2,8 @@ import { Router } from "express";
 
 import authRouter from "./authRoute";
 import docsRouter from "./docsRoute";
-import userRouter from "./userRoutes";
+import userRouter from "./userRoute";
+import globalRouter from "./globalRoute";
 
 const appRouter = Router();
 
@@ -19,6 +20,10 @@ const appRoutes = [
   {
     path: "/docs",
     router: docsRouter,
+  },
+  {
+    path: "/",
+    router: globalRouter,
   },
 ];
 

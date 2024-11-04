@@ -4,6 +4,8 @@ import authRouter from "./authRoute";
 import docsRouter from "./docsRoute";
 import userRouter from "./userRoute";
 import globalRouter from "./globalRoute";
+import classRouter from "./classRoute";
+import studentRouter from "./studentRoute";
 
 const appRouter = Router();
 
@@ -24,6 +26,14 @@ const appRoutes = [
   {
     path: "/",
     router: globalRouter,
+  },
+  {
+    path: "/class",
+    router: classRouter,
+  },
+  {
+    path: "/student",
+    router: studentRouter,
   },
 ];
 

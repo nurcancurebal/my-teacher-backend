@@ -65,10 +65,10 @@ export default userRouter;
  *                format: email
  *                description: must be unique
  *             example:
- *               firstname: "John"
- *               lastname: "Doe"
- *               username: "johndoe"
- *               email: "johndoe@example.com"
+ *               firstname: John
+ *               lastname: Doe
+ *               username: johndoe
+ *               email: johndoe@example.com
  *     responses:
  *       "200":
  *         description: OK

@@ -1,4 +1,3 @@
-import { get } from "lodash";
 import { getUserById } from "../services/userService";
 import { Response, NextFunction } from "express";
 import { customRequest } from "../types/customDefinition";
@@ -6,6 +5,13 @@ import { customRequest } from "../types/customDefinition";
 // User arayüzü tanımlanıyor
 interface User {
   id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  created_at: Date;
+  last_updated: Date;
 }
 
 const requireUser = async (
@@ -14,7 +20,7 @@ const requireUser = async (
   next: NextFunction
 ) => {
   try {
-    const user: User | undefined = get(req, "user");
+    const user: User | undefined = req.user;
 
     if (!user) {
       return res

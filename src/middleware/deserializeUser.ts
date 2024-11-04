@@ -3,6 +3,17 @@ import { verify } from "../util/jwt";
 import { Response, NextFunction } from "express";
 import { customRequest } from "../types/customDefinition";
 
+interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  created_at: Date;
+  last_updated: Date;
+}
+
 const deserializeUser = async (
   req: customRequest,
   res: Response,
@@ -17,8 +28,8 @@ const deserializeUser = async (
 
   const { decoded, expired, valid, msg: errorMsg } = verify(token);
 
-  if (valid && !expired) {
-    req.user = decoded;
+  if (valid && !expired && typeof decoded !== "string") {
+    req.user = decoded as User;
     return next();
   } else {
     return res.status(403).json({

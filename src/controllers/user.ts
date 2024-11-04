@@ -25,7 +25,7 @@ export const updateUser = async (
 
     user = user?.toJSON();
 
-    const updated = await updateUserById(body, parseInt(id, 10));
+    const updated = await updateUserById(body, id);
 
     return res.status(200).json({
       error: false,

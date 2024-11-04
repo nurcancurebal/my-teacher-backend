@@ -14,11 +14,11 @@ export const userExists = async (
   if (!options.email) {
     throw new Error("Please provide either of these options: email");
   }
-  const where: WhereOptions = {};
-  if (options.email) {
-    where.email = options.email;
-  }
-  const user = await User.findOne({ where: where });
+  const where: WhereOptions = {
+    email: options.email,
+  };
+
+  const user = await User.findOne({ where });
   return user !== null;
 };
 

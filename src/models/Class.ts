@@ -43,7 +43,9 @@ Class.init(
   {
     sequelize: sequelizeConnection,
     tableName: "classes",
+    timestamps: false,
   }
 );
 
 export default Class;
+export { ClassCreationAttributes };

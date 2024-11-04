@@ -1,30 +1,14 @@
 import { Router } from "express";
-import { customRequest } from "../types/customDefinition";
-import { dbSync } from "../db/connection";
+
+import { getServerStatus, syncDatabase } from "../controllers/global";
 
 const globalRouter = Router();
 
 // route to test server
-globalRouter.get("/", (req: customRequest, res) => {
-  res.status(200).json({ msg: "server is up..", user: req.user });
-});
+globalRouter.get("/", getServerStatus);
 
 // route to sync db
-globalRouter.patch("/sync", async (_req, res) => {
-  try {
-    const sync = await dbSync(); // dbSync() veritabanına bağlantı kurar ve veritabanı senkronizasyonunu gerçekleştirir.
-    res.status(200).json({ ...sync, error: false });
-  } catch (err) {
-    console.log("ERR", err);
-    let msg = "Internal Server Error";
-    if (err instanceof Error) {
-      msg = err.message;
-    } else if (err) {
-      msg = String(err);
-    }
-    return res.status(400).json({ errorMsg: msg, error: true });
-  }
-});
+globalRouter.patch("/sync", syncDatabase);
 
 export default globalRouter;
 

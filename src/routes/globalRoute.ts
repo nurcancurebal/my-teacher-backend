@@ -16,7 +16,7 @@ export default globalRouter;
  * @swagger
  * tags:
  *   name: Global
- *
+ *   description: Server status and database sync
  */
 
 /**

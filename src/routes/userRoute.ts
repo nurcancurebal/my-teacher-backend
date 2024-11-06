@@ -14,7 +14,7 @@ export default userRouter;
  * @swagger
  * tags:
  *   name: User
- *   description: User
+ *   description: User management
  */
 
 /**

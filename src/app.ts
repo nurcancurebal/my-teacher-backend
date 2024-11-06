@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/error";
 import User from "./models/User";
 import Class from "./models/Class";
 import Student from "./models/Student";
+import Grade from "./models/Grade";
 
 // Create Express server
 const app = express();
@@ -27,6 +28,8 @@ User.hasMany(Class, { foreignKey: "teacher_id" });
 Class.belongsTo(User, { foreignKey: "teacher_id" });
 Class.hasMany(Student, { foreignKey: "class_id" });
 Student.belongsTo(Class, { foreignKey: "class_id" });
+Student.hasMany(Grade, { foreignKey: "student_id" });
+Grade.belongsTo(Student, { foreignKey: "student_id" });
 
 // Primary app routes.
 app.use("/api", appRouter);

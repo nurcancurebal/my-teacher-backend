@@ -26,11 +26,6 @@ Class.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    class_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     teacher_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -38,6 +33,11 @@ Class.init(
         model: User,
         key: "id",
       },
+    },
+    class_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
   },
   {

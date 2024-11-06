@@ -1,12 +1,11 @@
 import { Router } from "express";
 
 import { requireUser } from "../middleware";
+import { createStudentController } from "../controllers/student";
 
 const studentRouter = Router();
 
-studentRouter.post("/", requireUser, (_req, res) => {
-  res.send("Create a new student");
-});
+studentRouter.post("/", requireUser, createStudentController);
 
 /* studentRouter.get("/", (req, res) => {
   res.send("Get all students");
@@ -35,7 +34,7 @@ export default studentRouter;
 
 /**
  * @swagger
- * /:
+ * /student:
  *   post:
  *     summary: Create a new student
  *     description: Create a new student

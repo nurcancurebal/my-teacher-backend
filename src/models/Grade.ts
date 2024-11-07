@@ -5,22 +5,14 @@ import Student from "./Student";
 interface GradeAttributes {
   id: number;
   student_id: number;
-  exam1?: number;
-  exam2?: number;
-  exam3?: number;
-  oral1?: number;
-  oral2?: number;
-  oral3?: number;
-  performance1?: number;
-  performance2?: number;
-  performance3?: number;
-  project?: number;
-  note1?: string;
-  note2?: string;
-  note3?: string;
+  grade_type: string;
+  grade_value: number;
+  created_at: Date;
+  last_updated: Date;
 }
 
-interface GradeCreationAttributes extends Optional<GradeAttributes, "id"> {}
+interface GradeCreationAttributes
+  extends Optional<GradeAttributes, "id" | "created_at" | "last_updated"> {}
 
 class Grade
   extends Model<GradeAttributes, GradeCreationAttributes>
@@ -28,19 +20,10 @@ class Grade
 {
   public id!: number;
   public student_id!: number;
-  public exam1!: number;
-  public exam2!: number;
-  public exam3!: number;
-  public oral1!: number;
-  public oral2!: number;
-  public oral3!: number;
-  public performance1!: number;
-  public performance2!: number;
-  public performance3!: number;
-  public project!: number;
-  public note1!: string;
-  public note2!: string;
-  public note3!: string;
+  public grade_type!: string;
+  public grade_value!: number;
+  public readonly created_at!: Date;
+  public readonly last_updated!: Date;
 }
 
 Grade.init(
@@ -58,64 +41,36 @@ Grade.init(
         key: "id",
       },
     },
-    exam1: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    exam2: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    exam3: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    oral1: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    oral2: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    oral3: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    performance1: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    performance2: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    performance3: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    project: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    note1: {
+    grade_type: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      unique: true,
+      set(value: string) {
+        // Baş ve sondaki boşlukları silerek kaydet
+        this.setDataValue("grade_type", value.trim());
+      },
     },
-    note2: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    grade_value: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    note3: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    last_updated: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize: sequelizeConnection,
     tableName: "grades",
-    timestamps: false,
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "last_updated",
   }
 );
 
 export default Grade;
+export { GradeCreationAttributes };

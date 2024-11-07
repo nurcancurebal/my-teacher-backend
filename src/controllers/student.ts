@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { customRequest } from "../types/customDefinition";
-import { classExists } from "../services/classService";
-import { createStudent } from "../services/studentService";
+import { createStudent, studentExists } from "../services/studentService";
+import { ApiError } from "../util/ApiError";
 
 export const createStudentController = async (
   req: customRequest,
@@ -11,14 +11,10 @@ export const createStudentController = async (
   try {
     const { class_id, student_name, student_lastname, student_number } =
       req.body;
-    const { id: teacher_id } = req.user;
 
-    const classExist = await classExists({ class_id, teacher_id });
-
-    if (!classExist) {
-      return res
-        .status(403)
-        .json({ errorMsg: "Class not found or not authorized", error: true });
+    const studentExist = await studentExists(student_number);
+    if (studentExist) {
+      throw new ApiError(400, "Email is alredy used");
     }
 
     const student = await createStudent({

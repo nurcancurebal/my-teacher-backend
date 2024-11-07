@@ -7,6 +7,7 @@ interface UserExistsOptions {
 }
 
 export const userExists = async (
+  // Kullanıcının veritabanında var olup olmadığını kontrol eder. Varsa tekrar kayıt yapmamak için kullandık
   options: UserExistsOptions = {
     email: null,
   }

@@ -46,18 +46,14 @@ export default classRouter;
  *             type: object
  *             required:
  *               - class_name
- *               - teacher_id
  *             properties:
  *               class_name:
  *                 type: string
  *                 minLength: 2
  *                 maxLength: 3
  *                 description: must be unique
- *               teacher_id:
- *                 type: number
  *             example:
  *               class_name: 3B
- *               teacher_id: 1
  *     responses:
  *       "200":
  *         description: OK

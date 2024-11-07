@@ -7,7 +7,7 @@ interface StudentAttributes {
   class_id: number;
   student_name: string;
   student_lastname: string;
-  student_number: string;
+  student_number: number;
 }
 
 interface StudentCreationAttributes extends Optional<StudentAttributes, "id"> {}
@@ -20,7 +20,7 @@ class Student
   public class_id!: number;
   public student_name!: string;
   public student_lastname!: string;
-  public student_number!: string;
+  public student_number!: number;
 }
 
 Student.init(
@@ -47,8 +47,9 @@ Student.init(
       allowNull: false,
     },
     student_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
+      unique: true,
     },
   },
   {

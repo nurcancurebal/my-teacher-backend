@@ -182,7 +182,7 @@ export default authRouter;
  *             example:
  *               email: name@example.com
  *               password: password1
- *               otp: 123344
+ *               otp: 12334e
  *     responses:
  *       "204":
  *         description: No content

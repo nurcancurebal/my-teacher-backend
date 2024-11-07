@@ -58,7 +58,7 @@ export const loginUser = async (
     const user = await findOneUser({ email });
 
     if (!user) {
-      throw new ApiError(400, "Email id is incorrect");
+      throw new ApiError(400, "Email is incorrect");
     }
 
     const validPassword = await validatePassword(user.email, password);
@@ -91,7 +91,7 @@ export const forgotPassword = async (
     let user = await findOneUser({ email });
 
     if (!user) {
-      throw new ApiError(400, "Email id is incorrect");
+      throw new ApiError(400, "Email is incorrect");
     }
 
     // generate otp
@@ -125,7 +125,7 @@ export const resetPassword = async (
     let user = await findOneUser({ email });
 
     if (!user) {
-      throw new ApiError(400, "Email id is incorrect");
+      throw new ApiError(400, "Email is incorrect");
     }
 
     user = user?.toJSON();

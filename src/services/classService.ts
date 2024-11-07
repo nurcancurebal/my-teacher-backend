@@ -3,18 +3,16 @@ import { WhereOptions } from "sequelize";
 import Class, { ClassCreationAttributes } from "../models/Class";
 
 interface ClassExistsOptions {
-  class_id: number;
-  teacher_id: number;
+  class_name: string;
 }
 
 export const classExists = async (options: ClassExistsOptions) => {
-  if (!options.class_id || !options.teacher_id) {
-    throw new Error("Please provide both class_id and teacher_id");
+  if (!options.class_name) {
+    throw new Error("class_name is required");
   }
 
   const where: WhereOptions = {
-    id: options.class_id,
-    teacher_id: options.teacher_id,
+    class_name: options.class_name,
   };
 
   const classInstance = await Class.findOne({ where });

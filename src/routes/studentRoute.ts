@@ -64,7 +64,7 @@ export default studentRouter;
  *                minLength: 3
  *                maxLength: 30
  *               student_number:
- *                type: string
+ *                type: number
  *                minLength: 2
  *                maxLength: 15
  *             example:

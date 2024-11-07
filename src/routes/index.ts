@@ -6,6 +6,7 @@ import userRouter from "./userRoute";
 import globalRouter from "./globalRoute";
 import classRouter from "./classRoute";
 import studentRouter from "./studentRoute";
+import gradeRouter from "./gradeRoute";
 
 const appRouter = Router();
 
@@ -34,6 +35,10 @@ const appRoutes = [
   {
     path: "/student",
     router: studentRouter,
+  },
+  {
+    path: "/grade",
+    router: gradeRouter,
   },
 ];
 

@@ -2,17 +2,18 @@ import { Response, NextFunction } from "express";
 import { WhereOptions } from "sequelize";
 
 import { customRequest } from "../types/customDefinition";
-import { createGrade, gradeExists } from "../services/gradeService";
 import Student from "../models/Student";
 import Class from "../models/Class";
+import { createTeacherNote } from "../services/teacherNoteService";
 
-export const createGradeController = async (
+export const createTeacherNoteController = async (
   req: customRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { student_id, grade_type, grade_value } = req.body;
+    const { student_id, title, note } = req.body;
+    const { id: teacher_id } = req.user;
 
     // Öğrencinin var olup olmadığını kontrol et
     const student = await Student.findByPk(student_id);
@@ -25,7 +26,7 @@ export const createGradeController = async (
     // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
     const where: WhereOptions<Class> = {
       id: student.class_id,
-      teacher_id: req.user.id,
+      teacher_id,
     };
 
     const studentClass = await Class.findOne({
@@ -38,27 +39,19 @@ export const createGradeController = async (
       });
     }
 
-    // Aynı türde notun tekrar girilmesini engelle
-    const exists = await gradeExists({ student_id, grade_type });
-    if (exists) {
-      return res.status(400).json({
-        errorMsg: "Grade of this type already exists for this student",
-        error: true,
-      });
-    }
-
     // Yeni not oluştur
-    const newGrade = await createGrade({
+    const newNote = await createTeacherNote({
       student_id,
-      grade_type,
-      grade_value,
+      teacher_id,
+      title,
+      note,
     });
 
     return res.status(201).json({
-      data: newGrade,
+      data: newNote,
       error: false,
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };

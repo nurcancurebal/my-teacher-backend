@@ -1,7 +1,6 @@
 import { NextFunction, Response } from "express";
 import { customRequest } from "../types/customDefinition";
-import { createClass } from "../services/classService";
-import { classExists } from "../services/classService";
+import { createClass, classExists } from "../services/classService";
 import { ApiError } from "../util/ApiError";
 
 export const createClassController = async (
@@ -11,9 +10,9 @@ export const createClassController = async (
 ) => {
   try {
     const { id: teacher_id } = req.user; // Öğretmen kimliğini req.user'dan alıyoruz
-
     const { class_name } = req.body;
 
+    // Sınıf adının benzersiz olup olmadığını kontrol et
     const classExist = await classExists({
       class_name,
     });
@@ -21,6 +20,7 @@ export const createClassController = async (
       throw new ApiError(400, "Class name is alredy used");
     }
 
+    // Yeni sınıf oluştur
     const newClass = await createClass({ class_name, teacher_id });
 
     return res.status(201).json({

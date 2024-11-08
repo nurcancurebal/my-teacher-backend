@@ -13,12 +13,6 @@ classRouter.post(
   validateRequest(classSchema),
   createClassController
 );
-/*
-classRouter.get("/", getAllClasses);
-classRouter.get("/:id", getClassById);
-classRouter.put("/:id", validateRequest(classSchema), updateClass);
-classRouter.delete("/:id", deleteClass);
-*/
 
 export default classRouter;
 

@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { requireUser, validateRequest } from "../middleware";
 import { createGradeController } from "../controllers/grade";
 import { createSchema } from "../validation/grade";

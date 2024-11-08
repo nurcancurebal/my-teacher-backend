@@ -1,39 +1,52 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 
+import User from "./User";
 import Student from "./Student";
-
 import sequelizeConnection from "../db/connection";
 
-interface GradeAttributes {
+interface TeacherNoteAttributes {
   id: number;
+  teacher_id: number;
   student_id: number;
-  grade_type: string;
-  grade_value: number;
+  title: string;
+  note: string;
   created_at: Date;
   last_updated: Date;
 }
 
-interface GradeCreationAttributes
-  extends Optional<GradeAttributes, "id" | "created_at" | "last_updated"> {}
+interface TeacherNoteCreationAttributes
+  extends Optional<
+    TeacherNoteAttributes,
+    "id" | "created_at" | "last_updated"
+  > {}
 
-class Grade
-  extends Model<GradeAttributes, GradeCreationAttributes>
-  implements GradeAttributes
+class TeacherNote
+  extends Model<TeacherNoteAttributes, TeacherNoteCreationAttributes>
+  implements TeacherNoteAttributes
 {
   public id!: number;
+  public teacher_id!: number;
   public student_id!: number;
-  public grade_type!: string;
-  public grade_value!: number;
+  public title!: string;
+  public note!: string;
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
 }
 
-Grade.init(
+TeacherNote.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    teacher_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
     },
     student_id: {
       type: DataTypes.INTEGER,
@@ -43,17 +56,12 @@ Grade.init(
         key: "id",
       },
     },
-    grade_type: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      set(value: string) {
-        // Baş ve sondaki boşlukları silerek kaydet
-        this.setDataValue("grade_type", value.trim());
-      },
     },
-    grade_value: {
-      type: DataTypes.INTEGER,
+    note: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     created_at: {
@@ -67,12 +75,12 @@ Grade.init(
   },
   {
     sequelize: sequelizeConnection,
-    tableName: "grades",
+    tableName: "teacher_notes",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "last_updated",
   }
 );
 
-export default Grade;
-export { GradeCreationAttributes };
+export default TeacherNote;
+export { TeacherNoteCreationAttributes };

@@ -62,6 +62,7 @@ export default authRouter;
  *               username:
  *                type: string
  *                minLength: 3
+ *                maxLength: 30
  *                description: must be unique
  *               email:
  *                 type: string

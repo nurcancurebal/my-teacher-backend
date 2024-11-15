@@ -19,7 +19,7 @@ export const createGradeController = async (
     if (!student) {
       return res
         .status(404)
-        .json({ errorMsg: "Student not found", error: true });
+        .json({ message: "Student not found", error: true });
     }
 
     // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
@@ -33,7 +33,7 @@ export const createGradeController = async (
     });
     if (!studentClass) {
       return res.status(403).json({
-        errorMsg: "Not authorized to grade this student",
+        message: "Not authorized to grade this student",
         error: true,
       });
     }
@@ -42,7 +42,7 @@ export const createGradeController = async (
     const exists = await gradeExists({ student_id, grade_type });
     if (exists) {
       return res.status(400).json({
-        errorMsg: "Grade of this type already exists for this student",
+        message: "Grade of this type already exists for this student",
         error: true,
       });
     }

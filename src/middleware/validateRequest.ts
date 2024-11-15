@@ -14,7 +14,7 @@ const validateRequest = (schema: Schema) => {
       const messages = details.map(i => i.message).join(",");
 
       console.log("error", messages);
-      res.status(400).json({ error: messages, msg: message });
+      res.status(400).json({ error: messages, message });
     }
   };
 };

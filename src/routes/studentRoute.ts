@@ -7,22 +7,6 @@ const studentRouter = Router();
 
 studentRouter.post("/", requireUser, createStudentController);
 
-/* studentRouter.get("/", (req, res) => {
-  res.send("Get all students");
-});
-
-studentRouter.get("/:id", (req, res) => {
-  res.send("Get student by id");
-});
-
-studentRouter.put("/:id", (req, res) => {
-  res.send("Update student by id");
-});
-
-studentRouter.delete("/:id", (req, res) => {
-  res.send("Delete student by id");
-}); */
-
 export default studentRouter;
 
 /**

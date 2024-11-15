@@ -20,7 +20,7 @@ export const createTeacherNoteController = async (
     if (!student) {
       return res
         .status(404)
-        .json({ errorMsg: "Student not found", error: true });
+        .json({ message: "Student not found", error: true });
     }
 
     // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
@@ -34,7 +34,7 @@ export const createTeacherNoteController = async (
     });
     if (!studentClass) {
       return res.status(403).json({
-        errorMsg: "Not authorized to grade this student",
+        message: "Not authorized to grade this student",
         error: true,
       });
     }

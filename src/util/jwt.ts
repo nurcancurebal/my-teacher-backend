@@ -16,16 +16,16 @@ export const verify = (token: string) => {
     return { valid: true, expired: false, decoded };
   } catch (error) {
     console.log("token", token, { error });
-    let msg;
+    let message;
     if (error instanceof Error) {
-      msg = error.message;
+      message = error.message;
     } else {
-      msg = error;
+      message = error;
     }
     return {
       valid: false,
-      expired: msg === "jwt expired",
-      msg: msg,
+      expired: message === "jwt expired",
+      message,
       decoded: null as null,
     };
   }

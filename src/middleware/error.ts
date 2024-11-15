@@ -1,8 +1,8 @@
-import { customError } from "customDefinition";
 import { NextFunction, Request, Response } from "express";
+import { customError } from "customDefinition";
 import { ApiError } from "../util/ApiError";
 
-/*
+/**
   Error Handler Middleware
   @param error
   @param req
@@ -20,6 +20,7 @@ export const errorHandler = (
   let err = error;
 
   if (!(error instanceof ApiError)) {
+    // eğer error bir ApiError değilse
     const statusCode = 500;
     const message = error.message || "Internal server error";
     err = new ApiError(statusCode, message);

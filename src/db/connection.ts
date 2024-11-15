@@ -12,7 +12,7 @@ const sequelizeConnection = new Sequelize(
     host: dbConfig.host,
     port: dbConfig.port,
     dialect: dbConfig.dialect,
-    logging: msg => logger.debug(msg),
+    logging: message => logger.debug(message),
   }
 );
 

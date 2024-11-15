@@ -27,7 +27,7 @@ export const registerUser = async (
       email: user.email,
     });
     if (userExist) {
-      throw new ApiError(400, "Email is alredy used");
+      throw new ApiError(400, "Email is already used");
     }
 
     user = await createUser(user);
@@ -40,9 +40,10 @@ export const registerUser = async (
       data: userData,
       error: false,
       accessToken,
-      msg: "User registered successfully",
+      message: "User registered successfully",
     });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
@@ -106,7 +107,7 @@ export const forgotPassword = async (
     }
 
     return res.status(200).json({
-      msg: "Email sent successfully",
+      message: "Email sent successfully",
       error: false,
     });
   } catch (err) {
@@ -134,7 +135,7 @@ export const resetPassword = async (
     if (!isValid) {
       return res.status(400).json({
         error: true,
-        errorMsg: "OTP is Incorrect",
+        message: "Otp code is invalid.",
       });
     }
 
@@ -142,7 +143,7 @@ export const resetPassword = async (
 
     return res.status(200).json({
       updated: updated[0],
-      msg: updated[0] ? "Password reseted successfully" : "Failed to reset",
+      message: updated[0] ? "Password reseted successfully" : "Failed to reset",
       error: false,
     });
   } catch (err) {

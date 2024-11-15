@@ -17,7 +17,7 @@ export const createClassController = async (
       class_name,
     });
     if (classExist) {
-      throw new ApiError(400, "Class name is alredy used");
+      throw new ApiError(400, "Class name is already used");
     }
 
     // Yeni sınıf oluştur

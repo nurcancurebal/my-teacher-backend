@@ -2,6 +2,7 @@ import { authenticator } from "otplib";
 import { otpConfig } from "../config/config";
 
 const expireOTPInSeconds = 60 * parseInt(otpConfig.otpExpiry);
+
 authenticator.options = {
   step: expireOTPInSeconds,
   digits: 6,

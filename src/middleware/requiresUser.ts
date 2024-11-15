@@ -25,20 +25,20 @@ const requireUser = async (
     if (!user) {
       return res
         .status(403)
-        .json({ errorMsg: "Auth token user not found", error: true });
+        .json({ message: "Auth token user not found", error: true });
     }
     const data = await getUserById(user.id);
     req.user = data?.toJSON();
 
     return next();
   } catch (err) {
-    let msg = "Internal Server Error";
+    let message = "Internal Server Error";
     if (err instanceof Error) {
-      msg = err.message;
+      message = err.message;
     } else if (err) {
-      msg = String(err);
+      message = String(err);
     }
-    return res.status(400).json({ errorMsg: msg, error: true });
+    return res.status(400).json({ message, error: true });
   }
 };
 export default requireUser;

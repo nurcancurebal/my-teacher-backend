@@ -30,7 +30,7 @@ export const updateUser = async (
     return res.status(200).json({
       success: updated[0],
       updated: updated[0],
-      msg: updated[0] ? "Data updated successfully" : "failed to update",
+      message: updated[0] ? "Data updated successfully" : "failed to update",
     });
   } catch (err) {
     next(err);

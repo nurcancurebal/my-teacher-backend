@@ -34,3 +34,12 @@ export const createClass = async (classData: CreateClass) => {
   const newClass = await Class.create(classData);
   return newClass;
 };
+
+export const getClasses = async (teacher_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+  };
+
+  const classes = await Class.findAll({ where });
+  return classes;
+};

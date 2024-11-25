@@ -2,11 +2,13 @@ import { Router } from "express";
 import { requireUser, validateRequest } from "../middleware";
 
 import { createClassController } from "../controllers/class";
+import { getClassController } from "../controllers/class";
 
 import { classSchema } from "../validation/class";
 
 const classRouter = Router();
 
+classRouter.get("/", requireUser, getClassController);
 classRouter.post(
   "/",
   requireUser,
@@ -21,6 +23,24 @@ export default classRouter;
  * tags:
  *   name: Class
  *   description: Class management
+ */
+
+/**
+ * @swagger
+ * /class:
+ *   get:
+ *     summary: Get all classes
+ *     description: Get all classes
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *
+ *       "401":
+ *         description: Invalid email or password
+ *
  */
 
 /**

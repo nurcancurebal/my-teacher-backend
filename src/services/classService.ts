@@ -2,6 +2,24 @@ import { WhereOptions } from "sequelize";
 
 import Class, { ClassCreationAttributes } from "../models/Class";
 
+export const getClasses = async (teacher_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+  };
+
+  const classes = await Class.findAll({ where });
+  return classes;
+};
+
+export const getClassCount = async (teacher_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+  };
+
+  const count = await Class.count({ where });
+  return count;
+};
+
 interface ClassExistsOptions {
   class_name: string;
 }
@@ -19,12 +37,6 @@ export const classExists = async (options: ClassExistsOptions) => {
   return classInstance !== null;
 };
 
-/**
- * Yeni bir sınıf oluşturur.
- * @param classData - Oluşturulacak sınıfın verileri.
- * @returns Oluşturulan sınıfın verilerini içeren bir nesne.
- */
-
 interface CreateClass extends ClassCreationAttributes {
   class_name: string;
   teacher_id: number;
@@ -33,13 +45,4 @@ interface CreateClass extends ClassCreationAttributes {
 export const createClass = async (classData: CreateClass) => {
   const newClass = await Class.create(classData);
   return newClass;
-};
-
-export const getClasses = async (teacher_id: number) => {
-  const where: WhereOptions = {
-    teacher_id,
-  };
-
-  const classes = await Class.findAll({ where });
-  return classes;
 };

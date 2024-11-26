@@ -1,6 +1,11 @@
 import { NextFunction, Response } from "express";
 import { customRequest } from "../types/customDefinition";
-import { createClass, classExists, getClasses } from "../services/classService";
+import {
+  createClass,
+  classExists,
+  getClasses,
+  getClassCount,
+} from "../services/classService";
 import { ApiError } from "../util/ApiError";
 
 export const getClassController = async (
@@ -9,9 +14,8 @@ export const getClassController = async (
   next: NextFunction
 ) => {
   try {
-    const { id: teacher_id } = req.user; // Öğretmen kimliğini req.user'dan alıyoruz
+    const { id: teacher_id } = req.user;
 
-    // Öğretmene ait sınıfları getir
     const classes = await getClasses(teacher_id);
 
     return res.status(200).json({
@@ -23,13 +27,32 @@ export const getClassController = async (
   }
 };
 
+export const getClassCountController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id: teacher_id } = req.user;
+
+    const count = await getClassCount(teacher_id);
+
+    return res.status(200).json({
+      data: count,
+      error: false,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createClassController = async (
   req: customRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { id: teacher_id } = req.user; // Öğretmen kimliğini req.user'dan alıyoruz
+    const { id: teacher_id } = req.user;
     const { class_name } = req.body;
 
     // Sınıf adının benzersiz olup olmadığını kontrol et

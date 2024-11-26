@@ -3,12 +3,14 @@ import { requireUser, validateRequest } from "../middleware";
 
 import { createClassController } from "../controllers/class";
 import { getClassController } from "../controllers/class";
+import { getClassCountController } from "../controllers/class";
 
 import { classSchema } from "../validation/class";
 
 const classRouter = Router();
 
 classRouter.get("/", requireUser, getClassController);
+classRouter.get("/count", requireUser, getClassCountController);
 classRouter.post(
   "/",
   requireUser,
@@ -31,6 +33,24 @@ export default classRouter;
  *   get:
  *     summary: Get all classes
  *     description: Get all classes
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *
+ *       "401":
+ *         description: Invalid email or password
+ *
+ */
+
+/**
+ * @swagger
+ * /class/count:
+ *   get:
+ *     summary: Get class count
+ *     description: Get class count
  *     tags: [Class]
  *     security:
  *       - bearerAuth: []

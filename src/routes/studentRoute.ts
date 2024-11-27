@@ -1,11 +1,17 @@
 import { Router } from "express";
 
-import { requireUser } from "../middleware";
+import { requireUser, validateRequest } from "../middleware";
 import { createStudentController } from "../controllers/student";
+import { studentSchema } from "../validation/student";
 
 const studentRouter = Router();
 
-studentRouter.post("/", requireUser, createStudentController);
+studentRouter.post(
+  "/",
+  requireUser,
+  validateRequest(studentSchema),
+  createStudentController
+);
 
 export default studentRouter;
 

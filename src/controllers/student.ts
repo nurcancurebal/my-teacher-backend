@@ -1,7 +1,11 @@
 import { Response, NextFunction } from "express";
 import { WhereOptions } from "sequelize";
 import { customRequest } from "../types/customDefinition";
-import { createStudent, studentExists } from "../services/studentService";
+import {
+  createStudent,
+  studentExists,
+  getStudentCount,
+} from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 import Class from "../models/Class";
 
@@ -14,6 +18,8 @@ export const createStudentController = async (
     const { class_id, student_name, student_lastname, student_number } =
       req.body;
 
+    const { id: teacher_id } = req.user;
+
     // Öğrencinin var olup olmadığını kontrol et
     const studentExist = await studentExists(student_number);
     if (studentExist) {
@@ -23,7 +29,7 @@ export const createStudentController = async (
     // Sınıfın var olup olmadığını ve öğretmene ait olup olmadığını kontrol et
     const where: WhereOptions<Class> = {
       id: class_id,
-      teacher_id: req.user.id,
+      teacher_id,
     };
 
     const studentClass = await Class.findOne({
@@ -35,12 +41,29 @@ export const createStudentController = async (
 
     const student = await createStudent({
       class_id,
+      teacher_id,
       student_name,
       student_lastname,
       student_number,
     });
 
-    return res.status(201).json({ student, error: false });
+    return res.status(201).json({ data: student, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getStudentCountController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id: teacher_id } = req.user;
+
+    const studentCount = await getStudentCount(teacher_id);
+
+    return res.status(200).json({ data: studentCount, error: false });
   } catch (err) {
     next(err);
   }

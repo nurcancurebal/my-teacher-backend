@@ -1,10 +1,13 @@
 import { NextFunction, Response } from "express";
 import { omit } from "lodash";
-import { findOneUser, updateUserById } from "../services/userService";
+import {
+  findOneUser,
+  updateUserById,
+  userExists,
+  validatePassword,
+} from "../services/userService";
 import { customRequest } from "../types/customDefinition";
 import { ApiError } from "../util/ApiError";
-
-const omitData = ["password"];
 
 export const updateUser = async (
   req: customRequest,
@@ -12,20 +15,33 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.user;
+    const { email, id } = req.user;
 
-    let body = req.body;
-    body = omit(body, omitData);
+    const body = req.body;
 
-    let user = await findOneUser({ id });
+    const user = await findOneUser({ email });
 
     if (!user) {
       throw new ApiError(400, "User not found");
     }
 
-    user = user?.toJSON();
+    if (user.email !== body.email) {
+      const repeatEmail = await userExists({ email: body.email });
 
-    const updated = await updateUserById(body, id);
+      if (repeatEmail) {
+        throw new ApiError(400, "Email already exists");
+      }
+    }
+
+    const validPassword = await validatePassword(user.email, body.password);
+
+    if (!validPassword) {
+      throw new ApiError(400, "Password is incorrect");
+    }
+
+    const userData = omit(body, ["password"]);
+
+    const updated = await updateUserById(userData, id);
 
     return res.status(200).json({
       success: updated[0],

@@ -1,10 +1,12 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelizeConnection from "../db/connection";
 import Class from "./Class";
+import User from "./User";
 
 interface StudentAttributes {
   id: number;
   class_id: number;
+  teacher_id: number;
   student_name: string;
   student_lastname: string;
   student_number: number;
@@ -18,6 +20,7 @@ class Student
 {
   public id!: number;
   public class_id!: number;
+  public teacher_id!: number;
   public student_name!: string;
   public student_lastname!: string;
   public student_number!: number;
@@ -35,6 +38,14 @@ Student.init(
       allowNull: false,
       references: {
         model: Class,
+        key: "id",
+      },
+    },
+    teacher_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
         key: "id",
       },
     },
@@ -60,3 +71,4 @@ Student.init(
 );
 
 export default Student;
+export { StudentCreationAttributes };

@@ -1,11 +1,7 @@
 import { WhereOptions } from "sequelize";
-import Student from "../models/Student";
+import Student, { StudentCreationAttributes } from "../models/Student";
 
 export const studentExists = async (student_number: number) => {
-  if (!student_number) {
-    throw new Error("Student number is required");
-  }
-
   const where: WhereOptions = {
     student_number,
   };
@@ -16,7 +12,8 @@ export const studentExists = async (student_number: number) => {
   return student !== null;
 };
 
-interface StudentAttributes {
+interface StudentAttributes extends StudentCreationAttributes {
+  teacher_id: number;
   class_id: number;
   student_name: string;
   student_lastname: string;
@@ -26,4 +23,13 @@ interface StudentAttributes {
 export const createStudent = async (student: StudentAttributes) => {
   const newStudent = await Student.create(student);
   return newStudent;
+};
+
+export const getStudentCount = async (teacher_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+  };
+
+  const count = await Student.count({ where });
+  return count;
 };

@@ -1,7 +1,10 @@
 import { Router } from "express";
 
 import { requireUser, validateRequest } from "../middleware";
-import { createStudentController } from "../controllers/student";
+import {
+  createStudentController,
+  getStudentCountController,
+} from "../controllers/student";
 import { studentSchema } from "../validation/student";
 
 const studentRouter = Router();
@@ -12,6 +15,7 @@ studentRouter.post(
   validateRequest(studentSchema),
   createStudentController
 );
+studentRouter.get("/count", requireUser, getStudentCountController);
 
 export default studentRouter;
 
@@ -20,6 +24,24 @@ export default studentRouter;
  * tags:
  *   name: Student
  *   description: Student management
+ */
+
+/**
+ * @swagger
+ * /student/count:
+ *   get:
+ *     summary: Get student count
+ *     description: Get student count
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *
+ *       "401":
+ *         description: Invalid email or password
+ *
  */
 
 /**

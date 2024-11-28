@@ -47,6 +47,7 @@ export default userRouter;
  *               - lastname
  *               - username
  *               - email
+ *               - password
  *             properties:
  *               firstname:
  *                 type: string
@@ -65,11 +66,14 @@ export default userRouter;
  *                type: string
  *                format: email
  *                description: must be unique
+ *               password:
+ *                 description: The current password of the user
  *             example:
  *               firstname: John
  *               lastname: Doe
  *               username: johndoe
  *               email: johndoe@example.com
+ *               password: password123
  *     responses:
  *       "200":
  *         description: OK

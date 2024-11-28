@@ -6,15 +6,12 @@ interface UserExistsOptions {
   email: string;
 }
 
+// Kullanıcının veritabanında var olup olmadığını kontrol eder. Varsa tekrar kayıt yapmamak için kullandık
 export const userExists = async (
-  // Kullanıcının veritabanında var olup olmadığını kontrol eder. Varsa tekrar kayıt yapmamak için kullandık
   options: UserExistsOptions = {
     email: null,
   }
 ) => {
-  if (!options.email) {
-    throw new Error("Please provide either of these options: email");
-  }
   const where: WhereOptions = {
     email: options.email,
   };
@@ -38,22 +35,17 @@ export const createUser = async (payload: CreateUserPayload) => {
 };
 
 interface FindOneUserOptions {
-  email?: string;
-  id?: number;
+  email: string;
 }
 
 export const findOneUser = async (options: FindOneUserOptions) => {
-  if (!options.email && !options.id) {
-    throw new Error("Please provide email or id");
+  if (!options.email) {
+    throw new Error("Please provide email to find user");
   }
 
-  const where: WhereOptions = {};
-
-  if (options.email) {
-    where.email = options.email;
-  } else if (options.id) {
-    where.id = options.id;
-  }
+  const where: WhereOptions = {
+    email: options.email,
+  };
 
   const user = await User.findOne({
     where,
@@ -63,10 +55,6 @@ export const findOneUser = async (options: FindOneUserOptions) => {
 };
 
 export const validatePassword = async (email: string, password: string) => {
-  if (!email && !password) {
-    throw new Error("Please provide email and password");
-  }
-
   const where: WhereOptions = {
     email,
   };
@@ -88,23 +76,21 @@ interface UpdateUserPayload {
   password?: string;
 }
 
-export const updateUserById = (user: UpdateUserPayload, userId: number) => {
-  if (!user && !userId) {
+export const updateUserById = (user: UpdateUserPayload, id: number) => {
+  if (!user && !id) {
     throw new Error("Please provide user data and/or user id to update");
   }
 
-  if (userId && isNaN(userId)) {
+  if (id && isNaN(id)) {
     throw new Error("Invalid user id");
   }
-
-  const id = userId;
 
   if (user.password) {
     user.password = encryptSync(user.password);
   }
 
   return User.update(user, {
-    where: { id: id },
+    where: { id },
   });
 };
 

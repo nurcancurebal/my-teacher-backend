@@ -2,20 +2,22 @@ import { Router } from "express";
 
 import { requireUser, validateRequest } from "../middleware";
 import {
-  createStudentController,
   getStudentCountController,
+  getStudentsController,
+  createStudentController,
 } from "../controllers/student";
 import { studentSchema } from "../validation/student";
 
 const studentRouter = Router();
 
+studentRouter.get("/count", requireUser, getStudentCountController);
+studentRouter.get("/:class_id", requireUser, getStudentsController);
 studentRouter.post(
   "/",
   requireUser,
   validateRequest(studentSchema),
   createStudentController
 );
-studentRouter.get("/count", requireUser, getStudentCountController);
 
 export default studentRouter;
 
@@ -35,6 +37,39 @@ export default studentRouter;
  *     tags: [Student]
  *     security:
  *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: integer
+ *                 error:
+ *                   type: boolean
+ *       "401":
+ *         description: Unauthorized
+ *
+ */
+
+/**
+ * @swagger
+ * /student/{class_id}:
+ *   get:
+ *     summary: Get students by class_id
+ *     description: Get students by class_id
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
  *     responses:
  *       "200":
  *         description: OK

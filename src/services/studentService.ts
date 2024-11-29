@@ -1,6 +1,25 @@
 import { WhereOptions } from "sequelize";
 import Student, { StudentCreationAttributes } from "../models/Student";
 
+export const getStudents = async (teacher_id: number, class_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+    class_id,
+  };
+
+  const students = await Student.findAll({ where });
+  return students;
+};
+
+export const getStudentCount = async (teacher_id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+  };
+
+  const count = await Student.count({ where });
+  return count;
+};
+
 export const studentExists = async (student_number: number) => {
   const where: WhereOptions = {
     student_number,
@@ -23,13 +42,4 @@ interface StudentAttributes extends StudentCreationAttributes {
 export const createStudent = async (student: StudentAttributes) => {
   const newStudent = await Student.create(student);
   return newStudent;
-};
-
-export const getStudentCount = async (teacher_id: number) => {
-  const where: WhereOptions = {
-    teacher_id,
-  };
-
-  const count = await Student.count({ where });
-  return count;
 };

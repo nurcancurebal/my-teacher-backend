@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { requireUser, validateRequest } from "../middleware";
 
-import { createClassController } from "../controllers/class";
-import { getClassController } from "../controllers/class";
-import { getClassCountController } from "../controllers/class";
+import {
+  getClassController,
+  getClassCountController,
+  createClassController,
+} from "../controllers/class";
 
 import { classSchema } from "../validation/class";
 

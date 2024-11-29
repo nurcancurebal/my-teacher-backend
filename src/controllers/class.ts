@@ -53,7 +53,9 @@ export const createClassController = async (
 ) => {
   try {
     const { id: teacher_id } = req.user;
-    const { class_name } = req.body;
+    let { class_name } = req.body;
+
+    class_name = class_name.trim().toUpperCase();
 
     // Sınıf adının benzersiz olup olmadığını kontrol et
     const classExist = await classExists({

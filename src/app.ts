@@ -17,11 +17,12 @@ const app = express();
 // Adding Middleware
 app.use(logger("dev")); // HTTP isteklerini "dev" formatında loglar.
 
+app.use(cors());
+
 app.set("port", process.env.PORT || 3000);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 
 app.use(deserializeUser);
 
@@ -38,6 +39,9 @@ Student.belongsTo(User, { foreignKey: "teacher_id" });
 
 Student.hasMany(Grade, { foreignKey: "student_id" });
 Grade.belongsTo(Student, { foreignKey: "student_id" });
+
+Class.hasMany(Grade, { foreignKey: "class_id" });
+Grade.belongsTo(Class, { foreignKey: "class_id" });
 
 Student.hasMany(TeacherNote, { foreignKey: "student_id" });
 TeacherNote.belongsTo(Student, { foreignKey: "student_id" });

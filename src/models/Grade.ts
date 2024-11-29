@@ -1,12 +1,14 @@
 import { DataTypes, Model, Optional } from "sequelize";
 
 import Student from "./Student";
+import Class from "./Class";
 
 import sequelizeConnection from "../db/connection";
 
 interface GradeAttributes {
   id: number;
   student_id: number;
+  class_id: number;
   grade_type: string;
   grade_value: number;
   created_at: Date;
@@ -22,6 +24,7 @@ class Grade
 {
   public id!: number;
   public student_id!: number;
+  public class_id!: number;
   public grade_type!: string;
   public grade_value!: number;
   public readonly created_at!: Date;
@@ -40,6 +43,14 @@ Grade.init(
       allowNull: false,
       references: {
         model: Student,
+        key: "id",
+      },
+    },
+    class_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Class,
         key: "id",
       },
     },

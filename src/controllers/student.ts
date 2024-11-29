@@ -5,9 +5,50 @@ import {
   createStudent,
   studentExists,
   getStudentCount,
+  getStudents,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 import Class from "../models/Class";
+
+export const getStudentsController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id: teacher_id } = req.user;
+    const { class_id } = req.params;
+
+    // class_id'yi number türüne dönüştür
+    const classIdNumber = parseInt(class_id, 10);
+
+    if (isNaN(classIdNumber)) {
+      throw new ApiError(400, "Invalid class_id");
+    }
+
+    const students = await getStudents(teacher_id, classIdNumber);
+
+    return res.status(200).json({ data: students, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getStudentCountController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id: teacher_id } = req.user;
+
+    const studentCount = await getStudentCount(teacher_id);
+
+    return res.status(200).json({ data: studentCount, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const createStudentController = async (
   req: customRequest,
@@ -48,22 +89,6 @@ export const createStudentController = async (
     });
 
     return res.status(201).json({ data: student, error: false });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getStudentCountController = async (
-  req: customRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { id: teacher_id } = req.user;
-
-    const studentCount = await getStudentCount(teacher_id);
-
-    return res.status(200).json({ data: studentCount, error: false });
   } catch (err) {
     next(err);
   }

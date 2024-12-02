@@ -1,10 +1,10 @@
 import { NextFunction, Response } from "express";
 import { customRequest } from "../types/customDefinition";
 import {
-  createClass,
-  classExists,
   getClasses,
   getClassCount,
+  classExists,
+  createClass,
 } from "../services/classService";
 import { ApiError } from "../util/ApiError";
 

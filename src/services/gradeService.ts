@@ -21,7 +21,7 @@ interface GradeExistsOptions {
   grade_type: string;
 }
 
-// Aynı Türde Notun Tekrar Girilmesini Engelleme
+// Aynı Türde Notun Aynı Sınıfa Tekrar Girilmesini Engelleme
 export const gradeExists = async (options: GradeExistsOptions) => {
   if (!options.class_id || !options.grade_type) {
     throw new Error("class_id and grade_type are required");

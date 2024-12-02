@@ -57,11 +57,6 @@ Grade.init(
     grade_type: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      set(value: string) {
-        // Baş ve sondaki boşlukları silerek kaydet
-        this.setDataValue("grade_type", value.trim());
-      },
     },
     grade_value: {
       type: DataTypes.INTEGER,

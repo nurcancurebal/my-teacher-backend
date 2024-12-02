@@ -12,13 +12,13 @@ const gradeRouter = Router();
 
 gradeRouter.get("/:class_id", requireUser, getGradeController);
 gradeRouter.post(
-  "/",
+  "/:class_id",
   requireUser,
   validateRequest(existSchema),
   existGradeController
 );
 gradeRouter.post(
-  "/:class_id",
+  "/:class_id/:student_id",
   requireUser,
   validateRequest(createSchema),
   createGradeController
@@ -58,45 +58,10 @@ export default gradeRouter;
 
 /**
  * @swagger
- * /grade:
- *   post:
- *     summary: Existence check for grade
- *     description: Only authenticated users can check the existence of a grade.
- *     tags: [Grade]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - class_id
- *               - grade_type
- *             properties:
- *               class_id:
- *                 type: number
- *               grade_type:
- *                 type: string
- *                 minLength: 3
- *                 maxLength: 30
- *                 description: must be unique
- *             example:
- *               class_id: 1
- *               grade_type: "midterm"
- *     responses:
- *       "200":
- *         description: OK
- *
- */
-
-/**
- * @swagger
  * /grade/{class_id}:
  *   post:
- *     summary: Create a new grade
- *     description: Only authenticated users can create grades.
+ *     summary: Check the existence of a grade
+ *     description: Only authenticated users can check the existence of a grade.
  *     tags: [Grade]
  *     parameters:
  *       - in: path
@@ -112,21 +77,62 @@ export default gradeRouter;
  *           schema:
  *             type: object
  *             required:
- *               - student_id
  *               - grade_type
- *               - grade_value
  *             properties:
- *               student_id:
- *                 type: number
  *               grade_type:
  *                 type: string
  *                 minLength: 3
  *                 maxLength: 30
- *                 description: must be unique
+ *             example:
+ *               grade_type: "midterm"
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "201":
+ *         description: Created
+ *       "400":
+ *         description: Bad Request
+ *       "401":
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /grade/{class_id}/{student_id}:
+ *   post:
+ *     summary: Create a new grade
+ *     description: Only authenticated users can create grades.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *       - in: path
+ *         name: student_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - grade_type
+ *               - grade_value
+ *             properties:
+ *               grade_type:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
  *               grade_value:
  *                 type: number
  *             example:
- *               student_id: 1
  *               grade_type: "midterm"
  *               grade_value: 80
  *     security:

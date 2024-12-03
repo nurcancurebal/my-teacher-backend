@@ -40,7 +40,7 @@ interface CreateGradePayload extends GradeCreationAttributes {
   student_id: number;
   class_id: number;
   grade_type: string;
-  grade_value: number;
+  grade_value: number | null;
 }
 
 export const createGrade = async (payload: CreateGradePayload) => {

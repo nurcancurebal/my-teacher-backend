@@ -180,7 +180,7 @@ export const createGradeController = async (
     }
 
     // Yeni not oluştur
-    const newGrade = await createGrade({
+    await createGrade({
       student_id: studentIdNumber,
       class_id: classIdNumber,
       grade_type,
@@ -188,7 +188,7 @@ export const createGradeController = async (
     });
 
     return res.status(201).json({
-      data: newGrade,
+      message: "Grades have been successfully created",
       error: false,
     });
   } catch (err) {

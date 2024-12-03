@@ -10,7 +10,7 @@ interface GradeAttributes {
   student_id: number;
   class_id: number;
   grade_type: string;
-  grade_value: number;
+  grade_value: number | null;
   created_at: Date;
   last_updated: Date;
 }
@@ -26,7 +26,7 @@ class Grade
   public student_id!: number;
   public class_id!: number;
   public grade_type!: string;
-  public grade_value!: number;
+  public grade_value!: number | null;
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
 }
@@ -60,7 +60,7 @@ Grade.init(
     },
     grade_value: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     created_at: {
       type: DataTypes.DATE,

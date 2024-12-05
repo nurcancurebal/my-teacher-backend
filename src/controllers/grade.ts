@@ -131,7 +131,7 @@ export const createGradeController = async (
 
     if (!classStudent) {
       return res.status(404).json({
-        message: "There are no students in the classroom",
+        message: "This student is not in this class",
         error: true,
       });
     }

@@ -10,6 +10,13 @@ import {
 import { ApiError } from "../util/ApiError";
 import Class from "../models/Class";
 
+const formatName = (name: string): string => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase());
+};
+
 export const getStudentsController = async (
   req: customRequest,
   res: Response,
@@ -56,10 +63,13 @@ export const createStudentController = async (
   next: NextFunction
 ) => {
   try {
-    const { class_id, student_name, student_lastname, student_number } =
-      req.body;
+    const { class_id, student_number } = req.body;
+    let { student_name, student_lastname } = req.body;
 
     const { id: teacher_id } = req.user;
+
+    student_name = formatName(student_name);
+    student_lastname = formatName(student_lastname);
 
     // Öğrencinin var olup olmadığını kontrol et
     const studentExist = await studentExists(student_number);

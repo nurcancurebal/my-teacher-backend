@@ -6,6 +6,13 @@ import Student from "../models/Student";
 import Class from "../models/Class";
 import Grade from "../models/Grade";
 
+const formatName = (name: string): string => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase());
+};
+
 export const getGradeController = async (
   req: customRequest,
   res: Response,
@@ -54,10 +61,7 @@ export const existGradeController = async (
     let { grade_type } = req.body;
     const { class_id } = req.params;
 
-    grade_type = grade_type
-      .trim()
-      .toLowerCase()
-      .replace(/^[a-z]/, (c: string) => c.toUpperCase());
+    grade_type = formatName(grade_type);
 
     const classIdNumber = parseInt(class_id, 10);
 
@@ -105,10 +109,7 @@ export const createGradeController = async (
     const { class_id, student_id } = req.params;
     const teacher_id = req.user.id;
 
-    grade_type = grade_type
-      .trim()
-      .toLowerCase()
-      .replace(/^[a-z]/, (c: string) => c.toUpperCase());
+    grade_type = formatName(grade_type);
 
     // class_id'yi number türüne dönüştür
     const classIdNumber = parseInt(class_id, 10);

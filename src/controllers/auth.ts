@@ -15,6 +15,13 @@ import {
 
 import { sendOTP } from "../helpers/mailHelper";
 
+const formatName = (name: string): string => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase());
+};
+
 export const registerUser = async (
   req: Request,
   res: Response,
@@ -22,6 +29,10 @@ export const registerUser = async (
 ) => {
   try {
     let user = req.body;
+
+    user.firstname = formatName(user.firstname);
+    user.lastname = formatName(user.lastname);
+    user.username = formatName(user.username);
 
     const userExist = await userExists({
       email: user.email,

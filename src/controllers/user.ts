@@ -9,6 +9,13 @@ import {
 import { customRequest } from "../types/customDefinition";
 import { ApiError } from "../util/ApiError";
 
+const formatName = (name: string): string => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase());
+};
+
 export const updateUser = async (
   req: customRequest,
   res: Response,
@@ -18,6 +25,10 @@ export const updateUser = async (
     const { email, id } = req.user;
 
     const body = req.body;
+
+    body.firstname = formatName(body.firstname);
+    body.lastname = formatName(body.lastname);
+    body.username = formatName(body.username);
 
     const user = await findOneUser({ email });
 

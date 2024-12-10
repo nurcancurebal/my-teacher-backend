@@ -1,10 +1,16 @@
 import { Response, NextFunction } from "express";
 
 import { customRequest } from "../types/customDefinition";
-import { getGrade, gradeExists, createGrade } from "../services/gradeService";
-import Student from "../models/Student";
-import Class from "../models/Class";
-import Grade from "../models/Grade";
+import {
+  getGrade,
+  gradeExists,
+  checkStudentInClass,
+  countStudentInClass,
+  checkDuplicateGrade,
+  createGrade,
+  updateGrade,
+  checkTeacherClass,
+} from "../services/gradeService";
 
 const formatName = (name: string): string => {
   return name
@@ -28,14 +34,12 @@ export const getGradeController = async (
     }
 
     // Sınıfın var olup olmadığını ve öğretmene ait olup olmadığını kontrol et
-    const classExists = await Class.findOne({
-      where: {
-        id: classIdNumber,
-        teacher_id,
-      },
+    const studentClass = await checkTeacherClass({
+      id: classIdNumber,
+      teacher_id,
     });
 
-    if (!classExists) {
+    if (!studentClass) {
       return res
         .status(404)
         .json({ message: "Class not found or not authorized", error: true });
@@ -66,9 +70,7 @@ export const existGradeController = async (
     const classIdNumber = parseInt(class_id, 10);
 
     // Sınıfın içerisinde öğrenci var mı kontrol et
-    const studentCount = await Student.count({
-      where: { class_id: classIdNumber },
-    });
+    const studentCount = await countStudentInClass({ class_id: classIdNumber });
 
     if (studentCount === 0) {
       return res.status(404).json({
@@ -125,25 +127,10 @@ export const createGradeController = async (
       });
     }
 
-    // Sınıfın içerisinde öğrenci var mı
-    const classStudent = await Student.findOne({
-      where: { id: studentIdNumber, class_id: classIdNumber },
-    });
-
-    if (!classStudent) {
-      return res.status(404).json({
-        message: "This student is not in this class",
-        error: true,
-      });
-    }
-
     // Öğrencinin belirtilen class_id'ye ait olup olmadığını kontrol et
-
-    const student = await Student.findOne({
-      where: {
-        id: studentIdNumber,
-        class_id: classIdNumber,
-      },
+    const student = await checkStudentInClass({
+      student_id: studentIdNumber,
+      class_id: classIdNumber,
     });
     if (!student) {
       return res.status(404).json({
@@ -153,9 +140,9 @@ export const createGradeController = async (
     }
 
     // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
-
-    const studentClass = await Class.findOne({
-      where: { id: classIdNumber, teacher_id },
+    const studentClass = await checkTeacherClass({
+      id: classIdNumber,
+      teacher_id,
     });
     if (!studentClass) {
       return res.status(403).json({
@@ -164,16 +151,13 @@ export const createGradeController = async (
       });
     }
 
-    // Aynı türde notun tekrar girilmesini engelle
-
-    const exists = await Grade.findOne({
-      where: {
-        class_id: classIdNumber,
-        student_id: studentIdNumber,
-        grade_type,
-      },
+    // Aynı öğrenciye aynı türde notun tekrar girilmesini engelle
+    const duplicateGrade = await checkDuplicateGrade({
+      class_id: classIdNumber,
+      student_id: studentIdNumber,
+      grade_type,
     });
-    if (exists) {
+    if (duplicateGrade) {
       return res.status(400).json({
         message: "Grade of this type already exists for this student",
         error: true,
@@ -190,6 +174,78 @@ export const createGradeController = async (
 
     return res.status(201).json({
       message: "Grades have been successfully created",
+      error: false,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateGradeController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { grade_value } = req.body;
+    const { class_id, student_id, id } = req.params;
+    const teacher_id = req.user.id;
+
+    const classIdNumber = parseInt(class_id, 10);
+    if (isNaN(classIdNumber)) {
+      return res.status(400).json({ message: "Invalid class_id", error: true });
+    }
+
+    const studentIdNumber = parseInt(student_id, 10);
+    if (isNaN(studentIdNumber)) {
+      return res.status(400).json({
+        message: "Invalid student_id",
+        error: true,
+      });
+    }
+
+    const gradeIdNumber = parseInt(id, 10);
+    if (isNaN(gradeIdNumber)) {
+      return res.status(400).json({
+        message: "Invalid grade_id",
+        error: true,
+      });
+    }
+
+    // Öğrencinin belirtilen class_id'ye ait olup olmadığını kontrol et
+    const student = await checkStudentInClass({
+      student_id: studentIdNumber,
+      class_id: classIdNumber,
+    });
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found in the specified class",
+        error: true,
+      });
+    }
+
+    // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
+    const studentClass = await checkTeacherClass({
+      id: classIdNumber,
+      teacher_id,
+    });
+    if (!studentClass) {
+      return res.status(403).json({
+        message: "Not authorized to grade this student",
+        error: true,
+      });
+    }
+
+    // Notu güncelle
+    const grade = await updateGrade({
+      id: gradeIdNumber,
+      class_id: classIdNumber,
+      student_id: studentIdNumber,
+      grade_value,
+    });
+
+    return res.status(200).json({
+      data: grade,
       error: false,
     });
   } catch (err) {

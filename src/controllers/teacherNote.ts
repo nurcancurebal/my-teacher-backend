@@ -1,10 +1,12 @@
 import { Response, NextFunction } from "express";
-import { WhereOptions } from "sequelize";
 
 import { customRequest } from "../types/customDefinition";
-import Student from "../models/Student";
-import Class from "../models/Class";
-import { createTeacherNote } from "../services/teacherNoteService";
+
+import {
+  createTeacherNote,
+  foundStudent,
+  classBelongsToTeacher,
+} from "../services/teacherNoteService";
 
 export const createTeacherNoteController = async (
   req: customRequest,
@@ -13,10 +15,16 @@ export const createTeacherNoteController = async (
 ) => {
   try {
     const { student_id, title, note } = req.body;
+    const { class_id } = req.params;
     const { id: teacher_id } = req.user;
 
+    const classIdNumber = parseInt(class_id, 10);
+    if (isNaN(classIdNumber)) {
+      return res.status(400).json({ message: "Invalid class_id", error: true });
+    }
+
     // Öğrencinin var olup olmadığını kontrol et
-    const student = await Student.findByPk(student_id);
+    const student = await foundStudent(student_id);
     if (!student) {
       return res
         .status(404)
@@ -24,13 +32,9 @@ export const createTeacherNoteController = async (
     }
 
     // Öğrencinin öğretmenin sınıfında olup olmadığını kontrol et
-    const where: WhereOptions<Class> = {
-      id: student.class_id,
+    const studentClass = await classBelongsToTeacher({
+      id: classIdNumber,
       teacher_id,
-    };
-
-    const studentClass = await Class.findOne({
-      where,
     });
     if (!studentClass) {
       return res.status(403).json({

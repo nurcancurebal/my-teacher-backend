@@ -7,7 +7,7 @@ import { createSchema } from "../validation/teacherNote";
 const teacherNoteRouter = Router();
 
 teacherNoteRouter.post(
-  "/",
+  "/:class_id",
   requireUser,
   validateRequest(createSchema),
   createTeacherNoteController
@@ -31,6 +31,13 @@ export default teacherNoteRouter;
  *     tags: [TeacherNote]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Class ID
  *     requestBody:
  *       required: true
  *       content:

@@ -1,14 +1,13 @@
 import { Response, NextFunction } from "express";
-import { WhereOptions } from "sequelize";
 import { customRequest } from "../types/customDefinition";
 import {
+  classBelongsToTeacher,
   createStudent,
   studentExists,
   getStudentCount,
   getStudents,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
-import Class from "../models/Class";
 
 const formatName = (name: string): string => {
   return name
@@ -78,15 +77,11 @@ export const createStudentController = async (
     }
 
     // Sınıfın var olup olmadığını ve öğretmene ait olup olmadığını kontrol et
-    const where: WhereOptions<Class> = {
+    const teacherClass = await classBelongsToTeacher({
       id: class_id,
       teacher_id,
-    };
-
-    const studentClass = await Class.findOne({
-      where,
     });
-    if (!studentClass) {
+    if (!teacherClass) {
       throw new ApiError(404, "Class not found or not authorized");
     }
 

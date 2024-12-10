@@ -1,5 +1,6 @@
 import { WhereOptions } from "sequelize";
 import Student, { StudentCreationAttributes } from "../models/Student";
+import Class from "../models/Class";
 
 export const getStudents = async (teacher_id: number, class_id: number) => {
   const where: WhereOptions = {
@@ -29,6 +30,26 @@ export const studentExists = async (student_number: number) => {
     where,
   });
   return student !== null;
+};
+
+interface classBelongsToTeacherParams {
+  id: number;
+  teacher_id: number;
+}
+
+export const classBelongsToTeacher = async (
+  payload: classBelongsToTeacherParams
+) => {
+  const where: WhereOptions = {
+    id: payload.id,
+    teacher_id: payload.teacher_id,
+  };
+
+  const teacherClass = await Class.findOne({
+    where,
+  });
+
+  return teacherClass;
 };
 
 interface StudentAttributes extends StudentCreationAttributes {

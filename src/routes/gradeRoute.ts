@@ -5,8 +5,9 @@ import {
   getGradeController,
   existGradeController,
   createGradeController,
+  updateGradeController,
 } from "../controllers/grade";
-import { existSchema, createSchema } from "../validation/grade";
+import { existSchema, createSchema, updateSchema } from "../validation/grade";
 
 const gradeRouter = Router();
 
@@ -22,6 +23,12 @@ gradeRouter.post(
   requireUser,
   validateRequest(createSchema),
   createGradeController
+);
+gradeRouter.patch(
+  "/:class_id/:student_id/:id",
+  requireUser,
+  validateRequest(updateSchema),
+  updateGradeController
 );
 
 export default gradeRouter;
@@ -140,6 +147,56 @@ export default gradeRouter;
  *     responses:
  *       "201":
  *         description: Created
+ *       "400":
+ *         description: Bad Request
+ *       "401":
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /grade/{class_id}/{student_id}/{id}:
+ *   patch:
+ *     summary: Update a grade
+ *     description: Only authenticated users can update grades.
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *       - in: path
+ *         name: student_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the grade
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - grade_value
+ *             properties:
+ *               grade_value:
+ *                 type: number
+ *             example:
+ *               grade_value: 80
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "201":
+ *         description: Updated
  *       "400":
  *         description: Bad Request
  *       "401":

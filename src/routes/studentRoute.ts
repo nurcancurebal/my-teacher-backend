@@ -40,15 +40,6 @@ export default studentRouter;
  *     responses:
  *       "200":
  *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: integer
- *                 error:
- *                   type: boolean
  *       "401":
  *         description: Unauthorized
  *

@@ -24,7 +24,7 @@ export default teacherNoteRouter;
 
 /**
  * @swagger
- * /teacher-note:
+ * /teacher-note/{class_id}:
  *   post:
  *     summary: Create a new teacher note
  *     description: Create a new teacher note

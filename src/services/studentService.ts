@@ -12,6 +12,15 @@ export const getStudents = async (teacher_id: number, class_id: number) => {
   return students;
 };
 
+export const getStudentClassCount = async (class_id: number) => {
+  const where: WhereOptions = {
+    class_id,
+  };
+
+  const count = await Student.count({ where });
+  return count;
+};
+
 export const getStudentCount = async (teacher_id: number) => {
   const where: WhereOptions = {
     teacher_id,
@@ -32,13 +41,13 @@ export const studentExists = async (student_number: number) => {
   return student !== null;
 };
 
-interface classBelongsToTeacherParams {
+interface ClassBelongsToTeacherParams {
   id: number;
   teacher_id: number;
 }
 
 export const classBelongsToTeacher = async (
-  payload: classBelongsToTeacherParams
+  payload: ClassBelongsToTeacherParams
 ) => {
   const where: WhereOptions = {
     id: payload.id,

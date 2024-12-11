@@ -6,6 +6,7 @@ import {
   studentExists,
   getStudentCount,
   getStudents,
+  getStudentClassCount,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 
@@ -35,6 +36,28 @@ export const getStudentsController = async (
     const students = await getStudents(teacher_id, classIdNumber);
 
     return res.status(200).json({ data: students, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getClassCountController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { class_id } = req.params;
+
+    const classIdNumber = parseInt(class_id, 10);
+
+    if (isNaN(classIdNumber)) {
+      throw new ApiError(400, "Invalid class_id");
+    }
+
+    const studentCount = await getStudentClassCount(classIdNumber);
+
+    return res.status(200).json({ data: studentCount, error: false });
   } catch (err) {
     next(err);
   }

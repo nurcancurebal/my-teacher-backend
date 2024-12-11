@@ -4,6 +4,7 @@ import { requireUser, validateRequest } from "../middleware";
 import {
   getStudentCountController,
   getStudentsController,
+  getClassCountController,
   createStudentController,
 } from "../controllers/student";
 import { studentSchema } from "../validation/student";
@@ -12,6 +13,12 @@ const studentRouter = Router();
 
 studentRouter.get("/count", requireUser, getStudentCountController);
 studentRouter.get("/:class_id", requireUser, getStudentsController);
+studentRouter.get(
+  "/:class_id/class-count",
+  requireUser,
+  getClassCountController
+);
+
 studentRouter.post(
   "/",
   requireUser,
@@ -64,7 +71,30 @@ export default studentRouter;
  *     responses:
  *       "200":
  *         description: OK
+ *       "401":
+ *         description: Invalid email or password
  *
+ */
+
+/**
+ * @swagger
+ * /student/{class_id}/class-count:
+ *   get:
+ *     summary: Get student count by class_id
+ *     description: Get student count by class_id
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *     responses:
+ *       "200":
+ *         description: OK
  *       "401":
  *         description: Invalid email or password
  *

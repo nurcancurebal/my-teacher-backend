@@ -6,9 +6,12 @@ interface ClassAttributes {
   id: number;
   class_name: string;
   teacher_id: number;
+  created_at: Date;
+  last_updated: Date;
 }
 
-interface ClassCreationAttributes extends Optional<ClassAttributes, "id"> {}
+interface ClassCreationAttributes
+  extends Optional<ClassAttributes, "id" | "created_at" | "last_updated"> {}
 
 class Class
   extends Model<ClassAttributes, ClassCreationAttributes>
@@ -17,6 +20,8 @@ class Class
   public id!: number;
   public class_name!: string;
   public teacher_id!: number;
+  public readonly created_at!: Date;
+  public readonly last_updated!: Date;
 }
 
 Class.init(
@@ -39,11 +44,21 @@ Class.init(
       allowNull: false,
       unique: true,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    last_updated: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize: sequelizeConnection,
     tableName: "classes",
-    timestamps: false,
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "last_updated",
   }
 );
 

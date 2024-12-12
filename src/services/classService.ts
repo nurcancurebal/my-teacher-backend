@@ -46,3 +46,30 @@ export const createClass = async (classData: CreateClass) => {
   const newClass = await Class.create(classData);
   return newClass;
 };
+
+export const teacherIsClass = async (teacher_id: number, id: number) => {
+  const where: WhereOptions = {
+    teacher_id,
+    id,
+  };
+
+  const classInstance = await Class.findOne({ where });
+  return classInstance !== null;
+};
+
+interface UpdateClass {
+  id: number;
+  class_name: string;
+}
+
+export const updateClass = async (classData: UpdateClass) => {
+  const { id } = classData;
+
+  const where: WhereOptions = {
+    id,
+  };
+
+  const [updated] = await Class.update(classData, { where });
+
+  return updated;
+};

@@ -5,6 +5,8 @@ import {
   getClassCount,
   classExists,
   createClass,
+  teacherIsClass,
+  updateClass,
 } from "../services/classService";
 import { ApiError } from "../util/ApiError";
 
@@ -74,5 +76,47 @@ export const createClassController = async (
     });
   } catch (err) {
     next(err);
+  }
+};
+
+export const updateClassController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const teacher_id = req.user.id;
+    let { class_name } = req.body;
+
+    class_name = class_name.trim().toUpperCase();
+
+    const numberId = parseInt(id, 10);
+    if (isNaN(numberId)) {
+      throw new ApiError(400, "Invalid class id");
+    }
+
+    const teacherIsClasss = await teacherIsClass(teacher_id, numberId);
+
+    if (!teacherIsClasss) {
+      throw new ApiError(401, "The teacher does not have such a class");
+    }
+
+    // Sınıf adının benzersiz olup olmadığını kontrol et
+    const classExist = await classExists({
+      class_name,
+    });
+    if (classExist) {
+      throw new ApiError(400, "Class name is already used");
+    }
+
+    const updated = await updateClass({ id: numberId, class_name });
+
+    return res.status(200).json({
+      data: updated,
+      error: false,
+    });
+  } catch (error) {
+    next(error);
   }
 };

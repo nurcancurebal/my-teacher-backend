@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { requireUser, validateRequest } from "../middleware";
 import { getUserData, updateUser } from "../controllers/user";
-import { updateSchema } from "../validation/user";
+import { userSchema } from "../validation/user";
 
 const userRouter = Router();
 
 userRouter.get("/", requireUser, getUserData);
-userRouter.patch("/", requireUser, validateRequest(updateSchema), updateUser);
+userRouter.patch("/", requireUser, validateRequest(userSchema), updateUser);
 
 export default userRouter;
 

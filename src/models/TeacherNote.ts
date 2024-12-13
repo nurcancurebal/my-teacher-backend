@@ -2,6 +2,7 @@ import { Model, DataTypes, Optional } from "sequelize";
 
 import User from "./User";
 import Student from "./Student";
+
 import sequelizeConnection from "../db/connection";
 
 interface TeacherNoteAttributes {
@@ -55,6 +56,7 @@ TeacherNote.init(
         model: Student,
         key: "id",
       },
+      onDelete: "CASCADE", // Öğrenci silindiğinde öğretmen notlarını da sil
     },
     title: {
       type: DataTypes.STRING,

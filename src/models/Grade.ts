@@ -45,6 +45,7 @@ Grade.init(
         model: Student,
         key: "id",
       },
+      onDelete: "CASCADE", // Öğrenci silindiğinde notları da sil
     },
     class_id: {
       type: DataTypes.INTEGER,

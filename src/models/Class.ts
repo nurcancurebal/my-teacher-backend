@@ -1,6 +1,11 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelizeConnection from "../db/connection";
+
 import User from "./User";
+import Student from "./Student";
+import Grade from "./Grade";
+import TeacherNote from "./TeacherNote";
+
+import sequelizeConnection from "../db/connection";
 
 interface ClassAttributes {
   id: number;
@@ -59,6 +64,18 @@ Class.init(
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "last_updated",
+    hooks: {
+      beforeDestroy: async (instance: Class) => {
+        const students = await Student.findAll({
+          where: { class_id: instance.id },
+        });
+        const studentIds = students.map(student => student.id);
+
+        await Grade.destroy({ where: { student_id: studentIds } });
+        await TeacherNote.destroy({ where: { student_id: studentIds } });
+        await Student.destroy({ where: { class_id: instance.id } });
+      },
+    },
   }
 );
 

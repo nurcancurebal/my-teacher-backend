@@ -1,7 +1,11 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelizeConnection from "../db/connection";
+
 import Class from "./Class";
 import User from "./User";
+import Grade from "./Grade";
+import TeacherNote from "./TeacherNote";
+
+import sequelizeConnection from "../db/connection";
 
 interface StudentAttributes {
   id: number;
@@ -40,6 +44,7 @@ Student.init(
         model: Class,
         key: "id",
       },
+      onDelete: "CASCADE", // Sınıf silindiğinde öğrencileri de sil
     },
     teacher_id: {
       type: DataTypes.INTEGER,
@@ -67,6 +72,12 @@ Student.init(
     sequelize: sequelizeConnection,
     tableName: "students",
     timestamps: false,
+    hooks: {
+      beforeDestroy: async (instance: Student) => {
+        await Grade.destroy({ where: { student_id: instance.id } });
+        await TeacherNote.destroy({ where: { student_id: instance.id } });
+      },
+    },
   }
 );
 

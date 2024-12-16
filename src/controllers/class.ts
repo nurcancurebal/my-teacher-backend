@@ -56,6 +56,7 @@ export const createClassController = async (
   try {
     const { id: teacher_id } = req.user;
     let { class_name } = req.body;
+    const { explanation } = req.body;
 
     class_name = class_name.trim().toUpperCase();
 
@@ -68,7 +69,7 @@ export const createClassController = async (
     }
 
     // Yeni sınıf oluştur
-    const newClass = await createClass({ class_name, teacher_id });
+    const newClass = await createClass({ class_name, teacher_id, explanation });
 
     return res.status(201).json({
       data: newClass,
@@ -88,8 +89,11 @@ export const updateClassController = async (
     const { id } = req.params;
     const teacher_id = req.user.id;
     let { class_name } = req.body;
+    const { explanation } = req.body;
 
-    class_name = class_name.trim().toUpperCase();
+    if (class_name) {
+      class_name = class_name.trim().toUpperCase();
+    }
 
     const numberId = parseInt(id, 10);
     if (isNaN(numberId)) {
@@ -102,15 +106,21 @@ export const updateClassController = async (
       throw new ApiError(401, "The teacher does not have such a class");
     }
 
-    // Sınıf adının benzersiz olup olmadığını kontrol et
-    const classExist = await classExists({
-      class_name,
-    });
-    if (classExist) {
-      throw new ApiError(400, "Class name is already used");
+    if (class_name) {
+      // Sınıf adının benzersiz olup olmadığını kontrol et
+      const classExist = await classExists({
+        class_name,
+      });
+      if (classExist) {
+        throw new ApiError(400, "Class name is already used");
+      }
     }
 
-    const updated = await updateClass({ id: numberId, class_name });
+    const updated = await updateClass({
+      id: numberId,
+      class_name,
+      explanation,
+    });
 
     return res.status(200).json({
       data: updated,

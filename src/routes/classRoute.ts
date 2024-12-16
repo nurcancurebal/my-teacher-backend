@@ -8,7 +8,7 @@ import {
   updateClassController,
 } from "../controllers/class";
 
-import { classSchema } from "../validation/class";
+import { createSchema, updateSchema } from "../validation/class";
 
 const classRouter = Router();
 
@@ -17,13 +17,13 @@ classRouter.get("/count", requireUser, getClassCountController);
 classRouter.post(
   "/",
   requireUser,
-  validateRequest(classSchema),
+  validateRequest(createSchema),
   createClassController
 );
 classRouter.patch(
   "/:id",
   requireUser,
-  validateRequest(classSchema),
+  validateRequest(updateSchema),
   updateClassController
 );
 
@@ -87,18 +87,21 @@ export default classRouter;
  *             type: object
  *             required:
  *               - class_name
+ *               - explanation
  *             properties:
  *               class_name:
  *                 type: string
  *                 minLength: 2
  *                 maxLength: 3
  *                 description: must be unique
+ *               explanation:
+ *                 type: string
  *             example:
  *               class_name: 3B
+ *               explanation: 3B sınıfı
  *     responses:
  *       "200":
  *         description: OK
- *
  *       "401":
  *         description: Invalid email or password
  */
@@ -107,8 +110,8 @@ export default classRouter;
  * @swagger
  * /class/{id}:
  *   patch:
- *     summary: Update class by id
- *     description: Update class by id
+ *     summary: Update a class
+ *     description: Update the class name and/or explanation of a specific class. At least one of `class_name` or `explanation` must be provided.
  *     tags: [Class]
  *     security:
  *       - bearerAuth: []
@@ -118,23 +121,25 @@ export default classRouter;
  *         schema:
  *           type: integer
  *         required: true
- *         description: Class id
+ *         description: The class ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - class_name
  *             properties:
  *               class_name:
  *                 type: string
  *                 minLength: 2
  *                 maxLength: 3
  *                 description: must be unique
+ *               explanation:
+ *                 type: string
+ *                 description: The explanation of the class
  *             example:
  *               class_name: 3B
+ *               explanation: "This is a class explanation."
  *     responses:
  *       "200":
  *         description: OK

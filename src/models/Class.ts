@@ -9,8 +9,9 @@ import sequelizeConnection from "../db/connection";
 
 interface ClassAttributes {
   id: number;
-  class_name: string;
   teacher_id: number;
+  class_name: string;
+  explanation: string;
   created_at: Date;
   last_updated: Date;
 }
@@ -23,8 +24,9 @@ class Class
   implements ClassAttributes
 {
   public id!: number;
-  public class_name!: string;
   public teacher_id!: number;
+  public class_name!: string;
+  public explanation!: string;
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
 }
@@ -48,6 +50,10 @@ Class.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    explanation: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,

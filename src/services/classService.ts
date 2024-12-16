@@ -38,8 +38,9 @@ export const classExists = async (options: ClassExistsOptions) => {
 };
 
 interface CreateClass extends ClassCreationAttributes {
-  class_name: string;
   teacher_id: number;
+  class_name: string;
+  explanation: string;
 }
 
 export const createClass = async (classData: CreateClass) => {
@@ -59,17 +60,18 @@ export const teacherIsClass = async (teacher_id: number, id: number) => {
 
 interface UpdateClass {
   id: number;
-  class_name: string;
+  class_name?: string;
+  explanation?: string;
 }
 
 export const updateClass = async (classData: UpdateClass) => {
-  const { id } = classData;
+  const { id, ...updateFields } = classData;
 
   const where: WhereOptions = {
     id,
   };
 
-  const [updated] = await Class.update(classData, { where });
+  const [updated] = await Class.update(updateFields, { where });
 
   return updated;
 };

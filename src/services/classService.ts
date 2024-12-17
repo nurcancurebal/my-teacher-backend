@@ -75,3 +75,13 @@ export const updateClass = async (classData: UpdateClass) => {
 
   return updated;
 };
+
+export const deleteClass = async (id: number) => {
+  const where: WhereOptions = {
+    id,
+  };
+
+  const deleted = await Class.destroy({ where });
+
+  return deleted;
+};

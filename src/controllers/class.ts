@@ -7,6 +7,7 @@ import {
   createClass,
   teacherIsClass,
   updateClass,
+  deleteClass,
 } from "../services/classService";
 import { ApiError } from "../util/ApiError";
 
@@ -124,6 +125,38 @@ export const updateClassController = async (
 
     return res.status(200).json({
       data: updated,
+      error: false,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteClassController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const teacher_id = req.user.id;
+
+    const numberId = parseInt(id, 10);
+    if (isNaN(numberId)) {
+      throw new ApiError(400, "Invalid class id");
+    }
+
+    const teacherIsClasss = await teacherIsClass(teacher_id, numberId);
+
+    if (!teacherIsClasss) {
+      throw new ApiError(401, "The teacher does not have such a class");
+    }
+
+    // Sınıfı sil
+    await deleteClass(numberId);
+
+    return res.status(200).json({
+      data: "Class deleted",
       error: false,
     });
   } catch (error) {

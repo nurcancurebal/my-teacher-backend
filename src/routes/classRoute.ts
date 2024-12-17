@@ -6,6 +6,7 @@ import {
   getClassCountController,
   createClassController,
   updateClassController,
+  deleteClassController,
 } from "../controllers/class";
 
 import { createSchema, updateSchema } from "../validation/class";
@@ -26,6 +27,7 @@ classRouter.patch(
   validateRequest(updateSchema),
   updateClassController
 );
+classRouter.delete("/:id", requireUser, deleteClassController);
 
 export default classRouter;
 
@@ -145,4 +147,33 @@ export default classRouter;
  *         description: OK
  *       "401":
  *         description: Invalid email or password
+ */
+
+/**
+ * @swagger
+ * /class/{id}:
+ *   delete:
+ *     summary: Delete a class
+ *     description: Delete a specific class by ID.
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The class ID
+ *     responses:
+ *       "200":
+ *         description: Class deleted successfully
+ *       "400":
+ *         description: Invalid class ID
+ *       "401":
+ *         description: Unauthorized
+ *       "404":
+ *         description: Class not found
+ *       "500":
+ *         description: Internal server error
  */

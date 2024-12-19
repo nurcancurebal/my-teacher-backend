@@ -62,11 +62,14 @@ export const classBelongsToTeacher = async (
 };
 
 interface StudentAttributes extends StudentCreationAttributes {
-  teacher_id: number;
   class_id: number;
+  teacher_id: number;
+  tc: bigint;
   student_name: string;
   student_lastname: string;
   student_number: number;
+  gender: string;
+  birthdate: Date;
 }
 
 export const createStudent = async (student: StudentAttributes) => {

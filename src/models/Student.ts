@@ -11,9 +11,12 @@ interface StudentAttributes {
   id: number;
   class_id: number;
   teacher_id: number;
+  tc: bigint;
   student_name: string;
   student_lastname: string;
   student_number: number;
+  gender: string;
+  birthdate: Date;
 }
 
 interface StudentCreationAttributes extends Optional<StudentAttributes, "id"> {}
@@ -25,9 +28,12 @@ class Student
   public id!: number;
   public class_id!: number;
   public teacher_id!: number;
+  public tc!: bigint;
   public student_name!: string;
   public student_lastname!: string;
   public student_number!: number;
+  public gender!: string;
+  public birthdate!: Date;
 }
 
 Student.init(
@@ -54,6 +60,11 @@ Student.init(
         key: "id",
       },
     },
+    tc: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      unique: true,
+    },
     student_name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -66,6 +77,14 @@ Student.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
+    },
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    birthdate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
   },
   {

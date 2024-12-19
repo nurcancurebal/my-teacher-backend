@@ -20,7 +20,7 @@ studentRouter.get(
 );
 
 studentRouter.post(
-  "/",
+  "/:class_id",
   requireUser,
   validateRequest(studentSchema),
   createStudentController
@@ -102,13 +102,20 @@ export default studentRouter;
 
 /**
  * @swagger
- * /student:
+ * /student/{class_id}:
  *   post:
  *     summary: Create a new student
  *     description: Create a new student
  *     tags: [Student]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: class_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
  *     requestBody:
  *       required: true
  *       content:
@@ -116,13 +123,17 @@ export default studentRouter;
  *           schema:
  *             type: object
  *             required:
- *               - class_id
+ *               - tc
  *               - student_name
  *               - student_lastname
  *               - student_number
+ *               - gender
+ *               - birthdate
  *             properties:
- *               class_id:
- *                 type: number
+ *               tc:
+ *                 type: string
+ *                 pattern: "^[0-9]{11}$"
+ *                 description: "11 haneli TC kimlik numarası"
  *               student_name:
  *                 type: string
  *                 minLength: 3
@@ -135,11 +146,21 @@ export default studentRouter;
  *                type: number
  *                minLength: 2
  *                maxLength: 15
+ *               gender:
+ *                 type: string
+ *                 enum: ["K", "E"]
+ *                 description: "Cinsiyet (K: Kadın, E: Erkek)"
+ *               birthdate:
+ *                 type: string
+ *                 format: date
+ *                 description: "Öğrencinin doğum tarihi"
  *             example:
- *               class_id: 1
+ *               tc: 12345678901
  *               student_name: John
  *               student_lastname: Doe
  *               student_number: 123456
+ *               gender: K
+ *               birthdate: 1990-01-01
  *     responses:
  *       "200":
  *         description: OK

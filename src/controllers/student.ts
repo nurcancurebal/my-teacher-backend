@@ -1,4 +1,5 @@
 import { Response, NextFunction } from "express";
+import { parseISO } from "date-fns";
 import { customRequest } from "../types/customDefinition";
 import {
   classBelongsToTeacher,
@@ -85,13 +86,18 @@ export const createStudentController = async (
   next: NextFunction
 ) => {
   try {
-    const { class_id, student_number } = req.body;
-    let { student_name, student_lastname } = req.body;
-
+    const { student_number, tc, gender } = req.body;
+    let { student_name, student_lastname, birthdate } = req.body;
+    const { class_id } = req.params;
     const { id: teacher_id } = req.user;
 
     student_name = formatName(student_name);
     student_lastname = formatName(student_lastname);
+
+    const classIdNumber = parseInt(class_id, 10);
+    if (isNaN(classIdNumber)) {
+      return res.status(400).json({ message: "Invalid class_id", error: true });
+    }
 
     // Öğrencinin var olup olmadığını kontrol et
     const studentExist = await studentExists(student_number);
@@ -101,19 +107,25 @@ export const createStudentController = async (
 
     // Sınıfın var olup olmadığını ve öğretmene ait olup olmadığını kontrol et
     const teacherClass = await classBelongsToTeacher({
-      id: class_id,
+      id: classIdNumber,
       teacher_id,
     });
     if (!teacherClass) {
       throw new ApiError(404, "Class not found or not authorized");
     }
 
+    // Doğum tarihini ISO 8601 formatına dönüştür
+    birthdate = parseISO(birthdate);
+
     const student = await createStudent({
-      class_id,
+      class_id: classIdNumber,
       teacher_id,
+      tc,
       student_name,
       student_lastname,
       student_number,
+      gender,
+      birthdate,
     });
 
     return res.status(201).json({ data: student, error: false });

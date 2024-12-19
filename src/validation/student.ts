@@ -1,7 +1,21 @@
 import joi from "joi";
 
 export const studentSchema = joi.object({
-  class_id: joi.number().required(),
+  tc: joi
+    .number()
+    .integer()
+    .required()
+    .custom((value, helpers) => {
+      const stringValue = value.toString();
+      if (stringValue.length !== 11) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    }, "TC Length Validation")
+    .messages({
+      "any.invalid": "'tc' must be exactly 11 digits long",
+      "number.base": "'tc' must be a number",
+    }),
   student_name: joi.string().min(3).max(30).required(),
   student_lastname: joi.string().min(3).max(30).required(),
   student_number: joi
@@ -18,4 +32,8 @@ export const studentSchema = joi.object({
       "any.invalid":
         "'student_number' must be between 2 and 15 characters long",
     }),
+  gender: joi.string().valid("K", "E").required().messages({
+    "any.only": "'gender' must be one of [K, E]",
+  }),
+  birthdate: joi.date().required(),
 });

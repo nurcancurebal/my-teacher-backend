@@ -61,6 +61,17 @@ export const classBelongsToTeacher = async (
   return teacherClass;
 };
 
+export const studentExistsByTc = async (tc: bigint) => {
+  const where: WhereOptions = {
+    tc,
+  };
+
+  const student = await Student.findOne({
+    where,
+  });
+  return student !== null;
+};
+
 interface StudentAttributes extends StudentCreationAttributes {
   class_id: number;
   teacher_id: number;

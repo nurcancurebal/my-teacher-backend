@@ -8,6 +8,7 @@ import {
   getStudentCount,
   getStudents,
   getStudentClassCount,
+  studentExistsByTc,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 
@@ -112,6 +113,11 @@ export const createStudentController = async (
     });
     if (!teacherClass) {
       throw new ApiError(404, "Class not found or not authorized");
+    }
+
+    const tcExist = await studentExistsByTc(tc);
+    if (tcExist) {
+      throw new ApiError(400, "TR ID number has already been used");
     }
 
     // Doğum tarihini ISO 8601 formatına dönüştür

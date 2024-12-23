@@ -2,11 +2,14 @@ import { WhereOptions } from "sequelize";
 import Student, { StudentCreationAttributes } from "../models/Student";
 import Class from "../models/Class";
 
-export const getStudents = async (teacher_id: number, class_id: number) => {
+export const getStudents = async (teacher_id: number, class_id?: number) => {
   const where: WhereOptions = {
     teacher_id,
-    class_id,
   };
+
+  if (class_id) {
+    where.class_id = class_id;
+  }
 
   const students = await Student.findAll({ where });
   return students;

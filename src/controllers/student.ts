@@ -81,6 +81,22 @@ export const getStudentCountController = async (
   }
 };
 
+export const getAllStudentsController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id: teacher_id } = req.user;
+
+    const students = await getStudents(teacher_id);
+
+    return res.status(200).json({ data: students, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const createStudentController = async (
   req: customRequest,
   res: Response,

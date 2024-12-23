@@ -3,6 +3,7 @@ import { Router } from "express";
 import { requireUser, validateRequest } from "../middleware";
 import {
   getStudentCountController,
+  getAllStudentsController,
   getStudentsController,
   getClassCountController,
   createStudentController,
@@ -12,13 +13,13 @@ import { studentSchema } from "../validation/student";
 const studentRouter = Router();
 
 studentRouter.get("/count", requireUser, getStudentCountController);
+studentRouter.get("/", requireUser, getAllStudentsController);
 studentRouter.get("/:class_id", requireUser, getStudentsController);
 studentRouter.get(
   "/:class_id/class-count",
   requireUser,
   getClassCountController
 );
-
 studentRouter.post(
   "/:class_id",
   requireUser,
@@ -49,6 +50,23 @@ export default studentRouter;
  *         description: OK
  *       "401":
  *         description: Unauthorized
+ *
+ */
+
+/**
+ * @swagger
+ * /student:
+ *   get:
+ *     summary: Get all students
+ *     description: Get all students
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Invalid email or password
  *
  */
 

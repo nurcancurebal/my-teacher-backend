@@ -7,6 +7,7 @@ import {
   getStudentsController,
   getClassCountController,
   createStudentController,
+  updateStudentController,
 } from "../controllers/student";
 import { studentSchema } from "../validation/student";
 
@@ -26,6 +27,7 @@ studentRouter.post(
   validateRequest(studentSchema),
   createStudentController
 );
+studentRouter.patch("/:id", requireUser, updateStudentController);
 
 export default studentRouter;
 
@@ -183,4 +185,67 @@ export default studentRouter;
  *       "200":
  *         description: OK
  *
+ */
+
+/**
+ * @swagger
+ * /student/{id}:
+ *   patch:
+ *     summary: Update a student
+ *     description: Update a student
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               class_id:
+ *                 type: integer
+ *                 description: "Sınıf ID'si"
+ *               tc:
+ *                 type: string
+ *                 pattern: "^[0-9]{11}$"
+ *                 description: "11 haneli TC kimlik numarası"
+ *               student_name:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *               student_lastname:
+ *                type: string
+ *                minLength: 3
+ *                maxLength: 30
+ *               student_number:
+ *                type: number
+ *                minLength: 2
+ *                maxLength: 15
+ *               gender:
+ *                 type: string
+ *                 enum: ["K", "E"]
+ *                 description: "Cinsiyet (K: Kadın, E: Erkek)"
+ *               birthdate:
+ *                 type: string
+ *                 format: date
+ *                 description: "Öğrencinin doğum tarihi"
+ *             example:
+ *               class_id: 1
+ *               tc: 12345678901
+ *               student_name: John
+ *               student_lastname: Doe
+ *               student_number: 123456
+ *               gender: K
+ *               birthdate: 1990-01-01
+ *     responses:
+ *       "200":
+ *         description: OK
  */

@@ -9,6 +9,7 @@ import {
   getStudents,
   getStudentClassCount,
   studentExistsByTc,
+  updateStudent,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 
@@ -151,6 +152,89 @@ export const createStudentController = async (
     });
 
     return res.status(201).json({ data: student, error: false });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateStudentController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const { id: teacher_id } = req.user;
+    let { student_name, student_lastname, birthdate, class_id } = req.body;
+    const { tc, student_number, gender } = req.body;
+
+    if (student_name) {
+      student_name = formatName(student_name);
+    }
+
+    if (student_lastname) {
+      student_lastname = formatName(student_lastname);
+    }
+
+    if (class_id) {
+      class_id = parseInt(class_id, 10);
+      if (isNaN(class_id)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid class_id", error: true });
+      }
+    }
+
+    const studentIdNumber = parseInt(id, 10);
+    if (isNaN(studentIdNumber)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid student_id", error: true });
+    }
+
+    // Öğrencinin var olup olmadığını kontrol et
+    if (student_number) {
+      const studentExist = await studentExists(student_number);
+      if (studentExist) {
+        throw new ApiError(400, "Student number is already used");
+      }
+    }
+
+    // Sınıfın var olup olmadığını ve öğretmene ait olup olmadığını kontrol et
+    if (class_id) {
+      const teacherClass = await classBelongsToTeacher({
+        id: class_id,
+        teacher_id,
+      });
+      if (!teacherClass) {
+        throw new ApiError(404, "Class not found or not authorized");
+      }
+    }
+
+    if (tc) {
+      const tcExist = await studentExistsByTc(tc);
+      if (tcExist) {
+        throw new ApiError(400, "TR ID number has already been used");
+      }
+    }
+
+    if (birthdate) {
+      birthdate = parseISO(birthdate);
+    }
+
+    const student = await updateStudent({
+      id: studentIdNumber,
+      class_id,
+      teacher_id,
+      tc,
+      student_name,
+      student_lastname,
+      student_number,
+      gender,
+      birthdate,
+    });
+
+    return res.status(200).json({ data: student, error: false });
   } catch (err) {
     next(err);
   }

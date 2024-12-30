@@ -90,3 +90,30 @@ export const createStudent = async (student: StudentAttributes) => {
   const newStudent = await Student.create(student);
   return newStudent;
 };
+
+interface UpdateStudent {
+  id: number;
+  class_id?: number;
+  teacher_id: number;
+  tc?: bigint;
+  student_name?: string;
+  student_lastname?: string;
+  student_number?: number;
+  gender?: string;
+  birthdate?: Date;
+}
+
+export const updateStudent = async (student: UpdateStudent) => {
+  const { id, teacher_id, ...rest } = student;
+
+  const where: WhereOptions = {
+    id,
+    teacher_id,
+  };
+
+  const [updated] = await Student.update(rest, {
+    where,
+  });
+
+  return updated;
+};

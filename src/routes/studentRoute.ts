@@ -8,6 +8,7 @@ import {
   getClassCountController,
   createStudentController,
   updateStudentController,
+  deleteStudentController,
 } from "../controllers/student";
 import { studentSchema } from "../validation/student";
 
@@ -28,6 +29,7 @@ studentRouter.post(
   createStudentController
 );
 studentRouter.patch("/:id", requireUser, updateStudentController);
+studentRouter.delete("/:id", requireUser, deleteStudentController);
 
 export default studentRouter;
 
@@ -248,4 +250,33 @@ export default studentRouter;
  *     responses:
  *       "200":
  *         description: OK
+ */
+
+/**
+ * @swagger
+ * /student/{id}:
+ *   delete:
+ *     summary: Delete a student
+ *     description: Delete a student
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The student ID
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "400":
+ *         description: Bad request
+ *       "401":
+ *         description: Unauthorized
+ *       "404":
+ *         description: Not found
+ *       "500":
+ *         description: Internal server error
  */

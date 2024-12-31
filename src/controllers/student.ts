@@ -10,6 +10,8 @@ import {
   getStudentClassCount,
   studentExistsByTc,
   updateStudent,
+  studentRecord,
+  deleteStudent,
 } from "../services/studentService";
 import { ApiError } from "../util/ApiError";
 
@@ -237,5 +239,35 @@ export const updateStudentController = async (
     return res.status(200).json({ data: student, error: false });
   } catch (err) {
     next(err);
+  }
+};
+
+export const deleteStudentController = async (
+  req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const teacher_id = req.user.id;
+
+    const numberId = parseInt(id, 10);
+    if (isNaN(numberId)) {
+      throw new ApiError(400, "Invalid class id");
+    }
+
+    const student = await studentRecord(numberId, teacher_id);
+    if (!student) {
+      throw new ApiError(404, "Student not found or not authorized");
+    }
+
+    await deleteStudent(numberId);
+
+    return res.status(200).json({
+      data: "Student deleted",
+      error: false,
+    });
+  } catch (error) {
+    next(error);
   }
 };

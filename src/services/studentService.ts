@@ -117,3 +117,28 @@ export const updateStudent = async (student: UpdateStudent) => {
 
   return updated;
 };
+
+export const studentRecord = async (id: number, teacher_id: number) => {
+  const where: WhereOptions = {
+    id,
+    teacher_id,
+  };
+
+  const student = await Student.findOne({
+    where,
+  });
+
+  return student;
+};
+
+export const deleteStudent = async (id: number) => {
+  const where: WhereOptions = {
+    id,
+  };
+
+  const deleted = await Student.destroy({
+    where,
+  });
+
+  return deleted;
+};

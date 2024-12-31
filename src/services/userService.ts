@@ -89,8 +89,12 @@ export const updateUserById = (user: UpdateUserPayload, id: number) => {
     user.password = encryptSync(user.password);
   }
 
+  const where: WhereOptions = {
+    id,
+  };
+
   return User.update(user, {
-    where: { id },
+    where,
   });
 };
 
@@ -112,7 +116,11 @@ export const deleteUserById = (userId: number) => {
     throw new Error("Invalid user id");
   }
 
+  const where: WhereOptions = {
+    id: userId,
+  };
+
   return User.destroy({
-    where: { id: userId },
+    where,
   });
 };

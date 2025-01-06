@@ -38,6 +38,13 @@ export const gradeExists = async (options: GradeExistsOptions) => {
   return grade !== null;
 };
 
+export const getLastAddedGrade = async () => {
+  const grade = await Grade.findOne({
+    order: [["created_at", "DESC"]], // order parametresi, sonuçların sıralanma şeklini belirtir. Burada, created_at alanına göre azalan sırada (DESC) sıralama yapılır. Bu, en son eklenen notun ilk sırada olmasını sağlar.
+  });
+  return grade;
+};
+
 interface CheckStudentInClassOptions {
   student_id: number;
   class_id: number;

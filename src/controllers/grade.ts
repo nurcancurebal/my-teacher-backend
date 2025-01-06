@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-
+import { format } from "date-fns";
 import { customRequest } from "../types/customDefinition";
 import {
   getGrade,
@@ -10,6 +10,7 @@ import {
   createGrade,
   updateGrade,
   checkTeacherClass,
+  getLastAddedGrade,
 } from "../services/gradeService";
 
 const formatName = (name: string): string => {
@@ -93,6 +94,28 @@ export const existGradeController = async (
 
     return res.status(201).json({
       data: true,
+      error: false,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLastAddedGradeController = async (
+  _req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const grade = await getLastAddedGrade();
+    if (!grade) {
+      return res.status(404).json({ message: "No grades found", error: true });
+    }
+
+    const formattedDate = format(grade.created_at, "dd.MM.yyyy");
+
+    return res.status(200).json({
+      data: formattedDate,
       error: false,
     });
   } catch (error) {

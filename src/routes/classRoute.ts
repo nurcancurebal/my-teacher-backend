@@ -50,7 +50,6 @@ export default classRouter;
  *     responses:
  *       "200":
  *         description: OK
- *
  *       "401":
  *         description: Invalid email or password
  */

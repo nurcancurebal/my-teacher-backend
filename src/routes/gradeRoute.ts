@@ -3,6 +3,7 @@ import { Router } from "express";
 import { requireUser, validateRequest } from "../middleware";
 import {
   getGradeController,
+  getLastAddedGradeController,
   existGradeController,
   createGradeController,
   updateGradeController,
@@ -11,6 +12,7 @@ import { existSchema, createSchema, updateSchema } from "../validation/grade";
 
 const gradeRouter = Router();
 
+gradeRouter.get("/last-added", requireUser, getLastAddedGradeController);
 gradeRouter.get("/:class_id", requireUser, getGradeController);
 gradeRouter.post(
   "/:class_id",
@@ -56,6 +58,22 @@ export default gradeRouter;
  *           type: integer
  *         required: true
  *         description: The ID of the class
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Invalid email or password
+ */
+
+/**
+ * @swagger
+ * /grade/last-added:
+ *   get:
+ *     summary: Get the last added grade
+ *     description: Get the last added grade
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       "200":
  *         description: OK

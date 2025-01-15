@@ -13,7 +13,9 @@ const formatName = (name: string): string => {
   return name
     .trim()
     .toLowerCase()
-    .replace(/^\w/, c => c.toUpperCase());
+    .replace(/\b\w/g, (c, index) =>
+      index === 0 || name[index - 1] === " " ? c.toUpperCase() : c
+    );
 };
 
 export const updateUser = async (

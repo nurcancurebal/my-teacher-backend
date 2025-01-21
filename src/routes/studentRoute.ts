@@ -171,7 +171,7 @@ export default studentRouter;
  *               gender:
  *                 type: string
  *                 enum: ["K", "E"]
- *                 description: "Cinsiyet (K: Kadın, E: Erkek)"
+ *                 description: "Cinsiyet (K: Kız, E: Erkek)"
  *               birthdate:
  *                 type: string
  *                 format: date
@@ -234,7 +234,7 @@ export default studentRouter;
  *               gender:
  *                 type: string
  *                 enum: ["K", "E"]
- *                 description: "Cinsiyet (K: Kadın, E: Erkek)"
+ *                 description: "Cinsiyet (K: Kız, E: Erkek)"
  *               birthdate:
  *                 type: string
  *                 format: date

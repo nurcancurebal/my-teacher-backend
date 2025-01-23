@@ -24,6 +24,13 @@ export const getStudentClassCount = async (class_id: number) => {
   return count;
 };
 
+export const getGenderCount = async () => {
+  const maleCount = await Student.count({ where: { gender: "E" } });
+  const femaleCount = await Student.count({ where: { gender: "K" } });
+
+  return { maleCount, femaleCount };
+};
+
 export const getStudentCount = async (teacher_id: number) => {
   const where: WhereOptions = {
     teacher_id,

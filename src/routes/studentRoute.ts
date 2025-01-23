@@ -6,6 +6,7 @@ import {
   getAllStudentsController,
   getStudentsController,
   getClassCountController,
+  getGenderCountController,
   createStudentController,
   updateStudentController,
   deleteStudentController,
@@ -16,6 +17,7 @@ const studentRouter = Router();
 
 studentRouter.get("/count", requireUser, getStudentCountController);
 studentRouter.get("/", requireUser, getAllStudentsController);
+studentRouter.get("/gender-count", requireUser, getGenderCountController);
 studentRouter.get("/:class_id", requireUser, getStudentsController);
 studentRouter.get(
   "/:class_id/class-count",
@@ -119,6 +121,23 @@ export default studentRouter;
  *         description: OK
  *       "401":
  *         description: Invalid email or password
+ *
+ */
+
+/**
+ * @swagger
+ * /student/gender-count:
+ *   get:
+ *     summary: Get student gender count
+ *     description: Get student gender count
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
  *
  */
 

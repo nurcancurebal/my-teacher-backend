@@ -8,6 +8,7 @@ import {
   getStudentCount,
   getStudents,
   getStudentClassCount,
+  getGenderCount,
   studentExistsByTc,
   updateStudent,
   studentRecord,
@@ -43,8 +44,8 @@ export const getStudentsController = async (
     const students = await getStudents(teacher_id, classIdNumber);
 
     return res.status(200).json({ data: students, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -65,8 +66,22 @@ export const getClassCountController = async (
     const studentCount = await getStudentClassCount(classIdNumber);
 
     return res.status(200).json({ data: studentCount, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getGenderCountController = async (
+  _req: customRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const genderCount = await getGenderCount();
+
+    return res.status(200).json({ data: genderCount, error: false });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -81,8 +96,8 @@ export const getStudentCountController = async (
     const studentCount = await getStudentCount(teacher_id);
 
     return res.status(200).json({ data: studentCount, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -97,8 +112,8 @@ export const getAllStudentsController = async (
     const students = await getStudents(teacher_id);
 
     return res.status(200).json({ data: students, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -156,8 +171,8 @@ export const createStudentController = async (
     });
 
     return res.status(201).json({ data: student, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -239,8 +254,8 @@ export const updateStudentController = async (
     });
 
     return res.status(200).json({ data: student, error: false });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 

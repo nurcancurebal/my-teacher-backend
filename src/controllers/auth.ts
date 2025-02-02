@@ -1,165 +1,185 @@
-import { NextFunction, Request, Response } from "express";
-import { omit } from "lodash";
+import { Request, Response, NextFunction } from "express";
 
-import { sign } from "../util/jwt";
-import { generateOTP, verifyOTP } from "../util/otp";
-import { ApiError } from "../util/ApiError";
+import { IUserCreationAttributes } from "../models/user";
 
-import {
-  userExists,
-  createUser,
-  findOneUser,
-  validatePassword,
-  updateUserById,
-} from "../services/userService";
+import ServiceUser from "../services/user";
 
-import { sendOTP } from "../helpers/mailHelper";
+import utilJwt from "../utils/jwt";
+import utilEncrypt from "../utils/encrypt";
+import utilOtp from "../utils/otp";
+import utilMail from "../utils/mail";
 
-const formatName = (name: string): string => {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/\b\w/g, (c, index) =>
-      index === 0 || name[index - 1] === " " ? c.toUpperCase() : c
-    );
+import helperFormatName from "../helpers/format-name";
+
+import { TDecoded } from "../types";
+
+export default {
+  getSession,
+  login,
+  register,
+  forgotPassword,
+  resetPassword,
+  refreshToken,
 };
 
-export const registerUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+async function getSession(_req: Request, res: Response, next: NextFunction) {
   try {
-    let user = req.body;
-
-    user.firstname = formatName(user.firstname);
-    user.lastname = formatName(user.lastname);
-    user.username = formatName(user.username);
-
-    const userExist = await userExists({
-      email: user.email,
-    });
-    if (userExist) {
-      throw new ApiError(400, "Email is already used");
-    }
-
-    user = await createUser(user);
-
-    const userData = omit(user?.toJSON(), ["password"]);
-
-    const accessToken = sign({ ...userData });
-
-    return res.status(200).json({
-      data: userData,
+    res.json({
       error: false,
-      accessToken,
-      message: "User registered successfully",
+      data: res.locals.user,
+      message: res.locals.getLang("USER_FOUND"),
     });
-  } catch (err) {
-    console.log(err);
-    next(err);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-export const loginUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
 
-    const user = await findOneUser({ email });
+    const user: IUserCreationAttributes = await ServiceUser.findOneWithEmail(
+      email
+    );
 
     if (!user) {
-      throw new ApiError(400, "Email is incorrect");
+      throw new Error(res.locals.getLang("USER_NOT_FOUND"));
     }
 
-    const validPassword = await validatePassword(user.email, password);
+    const isPasswordCorrect = utilEncrypt.compareSync(password, user.password);
 
-    if (!validPassword) {
-      throw new ApiError(400, "Password is incorrect");
+    if (!isPasswordCorrect) {
+      throw new Error(res.locals.getLang("USER_PASSWORD_IS_INCORRENT"));
     }
 
-    const userData = omit(user?.toJSON(), ["password"]);
-    const accessToken = sign({ ...userData });
+    const newTokens = utilJwt.authTokenGenerate(user.id);
 
-    return res.status(200).json({
-      data: userData,
-      accessToken,
+    res.json({
       error: false,
+      data: newTokens,
+      message: res.locals.getLang("LOGIN_SUCCESS"),
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-export const forgotPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+async function register(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = req.body;
+
+    const newUser: IUserCreationAttributes = {
+      firstname: helperFormatName(body.firstname),
+      lastname: helperFormatName(body.lastname),
+      username: helperFormatName(body.username),
+      email: body.email,
+      password: utilEncrypt.encryptSync(body.password),
+    };
+
+    const userExist = await ServiceUser.emailWithExists(newUser.email);
+
+    if (userExist) {
+      throw new Error(res.locals.getLang("USER_EXISTS"));
+    }
+
+    const userId = await ServiceUser.createOne(newUser);
+
+    const newTokens = utilJwt.authTokenGenerate(userId);
+
+    res.json({
+      error: false,
+      data: newTokens,
+      message: res.locals.getLang("USER_REGISTERED_SUCCESSFULLY"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function refreshToken(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { refreshToken } = req.body;
+
+    const verify = utilJwt.verify(refreshToken);
+
+    if (!verify.valid) {
+      throw new Error(res.locals.getLang("REFRESH_TOKEN_INVALID"));
+    }
+
+    if (verify.expired) {
+      throw new Error(res.locals.getLang("REFRESH_TOKEN_EXPIRED"));
+    }
+
+    const decoded = verify.decoded as TDecoded;
+
+    const newTokens = utilJwt.authTokenGenerate(decoded.userId);
+
+    res.json({
+      error: false,
+      data: newTokens,
+      message: res.locals.getLang("TOKEN_REFRESHED"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function forgotPassword(req: Request, res: Response, next: NextFunction) {
   try {
     const { email } = req.body;
 
-    let user = await findOneUser({ email });
+    const user = await ServiceUser.findOneWithEmail(email);
 
     if (!user) {
-      throw new ApiError(400, "Email is incorrect");
+      throw new Error(res.locals.getLang("EMAIL_IS_INCORRECT"));
     }
 
-    // generate otp
-    user = user.toJSON();
-    const otp = generateOTP(user.email);
+    const otp = utilOtp.generateOTP(user.email);
 
-    // send otp to email
-    const send = await sendOTP(user.email, otp);
+    const send = await utilMail.sendOTP(user.email, otp);
 
     if (!send) {
-      throw new ApiError(400, "Failed to send OTP");
+      throw new Error(res.locals.getLang("FAILED_TO_SEND_OTP"));
     }
 
-    return res.status(200).json({
-      message: "Email sent successfully",
+    res.json({
       error: false,
+      data: null,
+      message: res.locals.getLang("EMAIL_SENT_SUCCESSFULLY"),
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
-};
+}
 
-export const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, otp, password } = req.body;
 
-    let user = await findOneUser({ email });
+    const user = await ServiceUser.findOneWithEmail(email);
 
     if (!user) {
-      throw new ApiError(400, "Email is incorrect");
+      throw new Error(res.locals.getLang("EMAIL_IS_INCORRECT"));
     }
 
-    user = user?.toJSON();
-    const isValid = verifyOTP(user.email, otp);
+    const isValid = utilOtp.verifyOTP(user.email, otp);
 
     if (!isValid) {
-      return res.status(400).json({
-        error: true,
-        message: "Otp code is invalid.",
-      });
+      throw new Error(res.locals.getLang("INVALID_OTP"));
     }
 
-    const updated = await updateUserById({ password }, user.id);
+    const updated = await ServiceUser.updatePasswordById(user.id, password);
 
-    return res.status(200).json({
-      updated: updated[0],
-      message: updated[0] ? "Password reseted successfully" : "Failed to reset",
+    if (!updated) {
+      throw new Error(res.locals.getLang("FAILED_TO_UPDATE_PASSWORD"));
+    }
+
+    res.json({
       error: false,
+      data: null,
+      message: res.locals.getLang("PASSWORD_UPDATED_SUCCESSFULLY"),
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
-};
+}

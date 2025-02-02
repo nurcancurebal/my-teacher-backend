@@ -1,54 +1,39 @@
 import { Router } from "express";
 
-import authRouter from "./authRoute";
-import docsRouter from "./docsRoute";
-import userRouter from "./userRoute";
-import globalRouter from "./globalRoute";
-import classRouter from "./classRoute";
-import studentRouter from "./studentRoute";
-import gradeRouter from "./gradeRoute";
-import teacherNoteRouter from "./teacherNoteRoute";
+const router = Router();
 
-const appRouter = Router();
+import MiddlewareAuth from "../middlewares/auth";
+import MiddlewareLang from "../middlewares/lang";
 
-// all routes
-const appRoutes = [
-  {
-    path: "/auth",
-    router: authRouter,
-  },
-  {
-    path: "/user",
-    router: userRouter,
-  },
-  {
-    path: "/docs",
-    router: docsRouter,
-  },
-  {
-    path: "/",
-    router: globalRouter,
-  },
-  {
-    path: "/class",
-    router: classRouter,
-  },
-  {
-    path: "/student",
-    router: studentRouter,
-  },
-  {
-    path: "/grade",
-    router: gradeRouter,
-  },
-  {
-    path: "/teacher-note",
-    router: teacherNoteRouter,
-  },
-];
+router.use(MiddlewareLang);
+router.use(MiddlewareAuth);
+router.use(MiddlewareLang);
 
-appRoutes.forEach(route => {
-  appRouter.use(route.path, route.router);
-});
+import RouterUser from "./user";
+import RouterAuth from "./auth";
+import RouterClass from "./class";
+import RouterStudent from "./student";
+import RouterTeacherNote from "./teacher-note";
+import RouterGrade from "./grade";
+import RouterDocs from "./docs";
 
-export default appRouter;
+import ControllerRoot from "../controllers/root";
+
+router.get("/", ControllerRoot.home);
+router.patch("/db-sync", ControllerRoot.databaseSync);
+
+router.use("/auth", RouterAuth);
+router.use("/user", RouterUser);
+router.use("/class", RouterClass);
+router.use("/student", RouterStudent);
+router.use("/teacher-note", RouterTeacherNote);
+router.use("/grade", RouterGrade);
+router.use("/docs", RouterDocs);
+
+import MiddlewareError from "../middlewares/error";
+import MiddlewareNotFound from "../middlewares/not-found";
+
+router.use(MiddlewareNotFound);
+router.use(MiddlewareError);
+
+export default router;

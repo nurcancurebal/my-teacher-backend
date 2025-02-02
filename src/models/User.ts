@@ -1,48 +1,38 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { compareSync } from "../util/encrypt";
-import sequelizeConnection from "../db/connection";
 
-// User modelinin özelliklerini tanımlayan arayüz
-interface UserAttributes {
+import sequelize from "../utils/db";
+
+interface IUserAttributes {
   id: number;
   firstname: string;
   lastname: string;
   username: string;
   email: string;
+  language?: string;
   password: string;
   created_at: Date;
   last_updated: Date;
 }
 
-// User modelinin oluşturulması sırasında elle girilmesi gerekli olmayan özellikleri tanımlayan arayüz
-interface UserCreationAttributes
-  extends Optional<UserAttributes, "id" | "created_at" | "last_updated"> {}
+interface IUserCreationAttributes
+  extends Optional<IUserAttributes, "id" | "created_at" | "last_updated"> {}
 
-// User modelini tanımlayan sınıf
-//implements Anahtar Kelimesi: User sınıfının UserAttributes arayüzünde tanımlanan tüm özellikleri içermesi gerektiğini belirtir.
-
-class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
+class ModelUser
+  extends Model<IUserAttributes, IUserCreationAttributes>
+  implements IUserAttributes
 {
   public id!: number;
   public firstname!: string;
   public lastname!: string;
   public username!: string;
+  public language!: string;
   public email!: string;
   public password!: string;
-  // timestamps!
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
-
-  // Şifre doğrulama fonksiyonu
-  static validPassword(password: string, hash: string): boolean {
-    return compareSync(password, hash);
-  }
 }
 
-// User modelinin Sequelize ile başlatılması
-User.init(
+ModelUser.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -71,6 +61,11 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    language: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "TR",
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -81,7 +76,7 @@ User.init(
     },
   },
   {
-    sequelize: sequelizeConnection,
+    sequelize,
     tableName: "users",
     timestamps: true,
     createdAt: "created_at",
@@ -89,5 +84,5 @@ User.init(
   }
 );
 
-export default User;
-export { UserCreationAttributes };
+export default ModelUser;
+export { IUserCreationAttributes };

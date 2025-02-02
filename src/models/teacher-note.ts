@@ -1,42 +1,53 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 
 import sequelize from "../utils/db";
 
+import ModelUser from "./user";
 import ModelStudent from "./student";
-import ModelClass from "./class";
 
-interface IGradeAttributes {
+interface ITeacherNoteAttributes {
   id: number;
+  teacher_id: number;
   student_id: number;
-  class_id: number;
-  grade_type: string;
-  grade_value: number | null;
+  title: string;
+  note: string;
   created_at: Date;
   last_updated: Date;
 }
 
-interface IGradeCreationAttributes
-  extends Optional<IGradeAttributes, "id" | "created_at" | "last_updated"> {}
+interface ITeacherNoteCreationAttributes
+  extends Optional<
+    ITeacherNoteAttributes,
+    "id" | "created_at" | "last_updated"
+  > {}
 
-class ModelGrade
-  extends Model<IGradeAttributes, IGradeCreationAttributes>
-  implements IGradeAttributes
+class ModelTeacherNote
+  extends Model<ITeacherNoteAttributes, ITeacherNoteCreationAttributes>
+  implements ITeacherNoteAttributes
 {
   public id!: number;
+  public teacher_id!: number;
   public student_id!: number;
-  public class_id!: number;
-  public grade_type!: string;
-  public grade_value!: number | null;
+  public title!: string;
+  public note!: string;
   public readonly created_at!: Date;
   public readonly last_updated!: Date;
 }
 
-ModelGrade.init(
+ModelTeacherNote.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    teacher_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: ModelUser,
+        key: "id",
+      },
     },
     student_id: {
       type: DataTypes.INTEGER,
@@ -45,23 +56,15 @@ ModelGrade.init(
         model: ModelStudent,
         key: "id",
       },
-      onDelete: "CASCADE",
+      onDelete: "CASCADE", // Öğrenci silindiğinde öğretmen notlarını da sil
     },
-    class_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: ModelClass,
-        key: "id",
-      },
-    },
-    grade_type: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    grade_value: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+    note: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -74,12 +77,12 @@ ModelGrade.init(
   },
   {
     sequelize,
-    tableName: "grades",
+    tableName: "teacher_notes",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "last_updated",
   }
 );
 
-export default ModelGrade;
-export { IGradeCreationAttributes };
+export default ModelTeacherNote;
+export { ITeacherNoteCreationAttributes };

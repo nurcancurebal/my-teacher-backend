@@ -1,13 +1,13 @@
 import { DataTypes, Model, Optional } from "sequelize";
 
-import Class from "./Class";
-import User from "./User";
-import Grade from "./Grade";
-import TeacherNote from "./TeacherNote";
+import sequelize from "../utils/db";
 
-import sequelizeConnection from "../db/connection";
+import ModelClass from "./class";
+import ModelUser from "./user";
+import ModelGrade from "./grade";
+import ModelTeacherNote from "./teacher-note";
 
-interface StudentAttributes {
+interface IStudentAttributes {
   id: number;
   class_id: number;
   teacher_id: number;
@@ -19,11 +19,12 @@ interface StudentAttributes {
   birthdate: Date;
 }
 
-interface StudentCreationAttributes extends Optional<StudentAttributes, "id"> {}
+interface IStudentCreationAttributes
+  extends Optional<IStudentAttributes, "id"> {}
 
-class Student
-  extends Model<StudentAttributes, StudentCreationAttributes>
-  implements StudentAttributes
+class ModelStudent
+  extends Model<IStudentAttributes, IStudentCreationAttributes>
+  implements IStudentAttributes
 {
   public id!: number;
   public class_id!: number;
@@ -36,7 +37,7 @@ class Student
   public birthdate!: Date;
 }
 
-Student.init(
+ModelStudent.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -47,7 +48,7 @@ Student.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Class,
+        model: ModelClass,
         key: "id",
       },
       onDelete: "CASCADE", // Sınıf silindiğinde öğrencileri de sil
@@ -56,7 +57,7 @@ Student.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: User,
+        model: ModelUser,
         key: "id",
       },
     },
@@ -88,17 +89,17 @@ Student.init(
     },
   },
   {
-    sequelize: sequelizeConnection,
+    sequelize: sequelize,
     tableName: "students",
     timestamps: false,
     hooks: {
-      beforeDestroy: async (instance: Student) => {
-        await Grade.destroy({ where: { student_id: instance.id } });
-        await TeacherNote.destroy({ where: { student_id: instance.id } });
+      beforeDestroy: async (instance: ModelStudent) => {
+        await ModelGrade.destroy({ where: { student_id: instance.id } });
+        await ModelTeacherNote.destroy({ where: { student_id: instance.id } });
       },
     },
   }
 );
 
-export default Student;
-export { StudentCreationAttributes };
+export default ModelStudent;
+export { IStudentCreationAttributes };

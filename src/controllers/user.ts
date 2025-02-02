@@ -1,82 +1,54 @@
-import { NextFunction, Response } from "express";
-import { omit } from "lodash";
-import {
-  findOneUser,
-  updateUserById,
-  userExists,
-  validatePassword,
-} from "../services/userService";
-import { customRequest } from "../types/customDefinition";
-import { ApiError } from "../util/ApiError";
+import { NextFunction, Response, Request } from "express";
 
-const formatName = (name: string): string => {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/\b\w/g, (c, index) =>
-      index === 0 || name[index - 1] === " " ? c.toUpperCase() : c
-    );
-};
+import ServiceUser from "../services/user";
 
-export const updateUser = async (
-  req: customRequest,
-  res: Response,
-  next: NextFunction
-) => {
+import helperFormatName from "../helpers/format-name";
+
+export default { updateOne };
+
+async function updateOne(req: Request, res: Response, next: NextFunction) {
   try {
-    const { email, id } = req.user;
+    const { email } = res.locals.user;
+
+    const user = await ServiceUser.findOneWithEmail(email);
+
+    if (!user) {
+      throw new Error(res.locals.getLang("USER_NOT_FOUND"));
+    }
 
     const body = req.body;
 
-    body.firstname = formatName(body.firstname);
-    body.lastname = formatName(body.lastname);
-    body.username = formatName(body.username);
-
-    const user = await findOneUser({ email });
-
-    if (!user) {
-      throw new ApiError(400, "User not found");
-    }
-
     if (user.email !== body.email) {
-      const repeatEmail = await userExists({ email: body.email });
+      const repeatEmail = await ServiceUser.emailWithExists(email);
 
       if (repeatEmail) {
-        throw new ApiError(400, "Email already exists");
+        throw new Error(res.locals.getLang("USER_EMAIL_EXISTS"));
       }
     }
 
-    const validPassword = await validatePassword(user.email, body.password);
+    const validPassword = await ServiceUser.validatePassword(
+      user.email,
+      body.password
+    );
 
     if (!validPassword) {
-      throw new ApiError(400, "Password is incorrect");
+      throw new Error(res.locals.getLang("USER_PASSWORD_INVALID"));
     }
 
-    const userData = omit(body, ["password"]);
+    const updateData = {
+      firstname: helperFormatName(body.firstname),
+      lastname: helperFormatName(body.lastname),
+      username: helperFormatName(body.username),
+    };
 
-    const updated = await updateUserById(userData, id);
+    const updateUser = await ServiceUser.updateOneById(user.id, updateData);
 
-    return res.status(200).json({
-      success: updated[0],
-      updated: updated[0],
-      message: updated[0] ? "Data updated successfully" : "failed to update",
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getUserData = async (
-  req: customRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    return res.status(200).json({
-      data: req.user,
+    res.json({
       error: false,
+      data: updateUser,
+      message: res.locals.getLang("USER_UPDATED_SUCCESSFULLY"),
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
-};
+}

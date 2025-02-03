@@ -12,7 +12,9 @@ const WHITE_LIST = [
   "/api/auth/refresh",
   "/api/auth/forgot-password",
   "/api/auth/reset-password",
+  "/api/db-sync",
   "/api/docs",
+  "/api/status",
 ];
 
 export default async function (
@@ -21,10 +23,18 @@ export default async function (
   next: NextFunction
 ) {
   try {
-    if (WHITE_LIST.includes(req.path)) return next();
+    const originalUrl = req.originalUrl;
+
+    const whiteListCheck = WHITE_LIST.some(item =>
+      String(originalUrl).startsWith(item)
+    );
+
+    if (whiteListCheck) return next();
 
     const headerAuthorization = req.headers.authorization;
-    if (!headerAuthorization) return next();
+    if (!headerAuthorization) {
+      throw new Error(res.locals.getLang("NO_AUTH_HEADER"));
+    }
 
     const splitAuth = headerAuthorization.split(" ");
 
@@ -38,7 +48,9 @@ export default async function (
       throw new Error(res.locals.getLang("INVALID_AUTH_HEADER"));
     }
 
-    if (!token) return next();
+    if (!token) {
+      throw new Error(res.locals.getLang("NO_TOKEN"));
+    }
 
     const verify = utilJwt.verify(token);
 

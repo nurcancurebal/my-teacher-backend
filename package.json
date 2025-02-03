@@ -1,6 +1,6 @@
 {
-  "name": "my-teacher-api",
-  "description": "My Teacher Api",
+  "name": "my-teacher-backend",
+  "description": "My Teacher Backend",
   "version": "1.0.0",
   "main": "dist/index.js",
   "private": true,

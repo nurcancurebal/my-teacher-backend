@@ -2,9 +2,9 @@ import Joi from "joi";
 
 import { TGetLang } from "../types";
 
-import { email, password } from "./user";
+import { email, password, firstname, lastname, username } from "./user";
 
-export const getSession = () => {
+export const schemaGetSession = () => {
   return Joi.object({
     body: Joi.object().max(0),
     query: Joi.object().max(0),
@@ -12,7 +12,7 @@ export const getSession = () => {
   });
 };
 
-export const login = (getLang: TGetLang) => {
+export const schemaLogin = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       email: email(getLang),
@@ -23,12 +23,12 @@ export const login = (getLang: TGetLang) => {
   });
 };
 
-export const register = (getLang: TGetLang) => {
+export const schemaRegister = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      firstname: Joi.string().min(3).max(30).required(),
-      lastname: Joi.string().min(3).max(30).required(),
-      username: Joi.string().min(3).max(30).required(),
+      firstname: firstname(getLang),
+      lastname: lastname(getLang),
+      username: username(getLang),
       email: email(getLang),
       password: password(getLang),
     }),
@@ -37,14 +37,53 @@ export const register = (getLang: TGetLang) => {
   });
 };
 
-export const passwordReset = (getLang: TGetLang) => {
+export const schemaResetPassword = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       password: password(getLang),
-      otp: Joi.string().length(6).required(),
+      otp: otp(getLang),
       email: email(getLang),
     }),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
+};
+
+export const schemaForgotPassword = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      email: email(getLang),
+    }),
+    query: Joi.object().max(0),
+    params: Joi.object().max(0),
+  });
+};
+
+export const schemaRefreshToken = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      refreshToken: refreshToken(getLang),
+    }),
+    query: Joi.object().max(0),
+    params: Joi.object().max(0),
+  });
+};
+
+export const otp = (getLang: TGetLang) => {
+  return Joi.string()
+    .length(6)
+    .required()
+    .messages({
+      "string.length": getLang("OTP_LENGTH"),
+      "any.required": getLang("OTP_REQUIRED"),
+    });
+};
+
+export const refreshToken = (getLang: TGetLang) => {
+  return Joi.string()
+    .required()
+    .messages({
+      "any.required": getLang("REFRESH_TOKEN_REQUIRED"),
+      "string.empty": getLang("REFRESH_TOKEN_EMPTY"),
+    });
 };

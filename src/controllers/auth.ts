@@ -24,9 +24,11 @@ export default {
 
 async function getSession(_req: Request, res: Response, next: NextFunction) {
   try {
+    const currentUser = res.locals.user;
+
     res.json({
       error: false,
-      data: res.locals.user,
+      data: currentUser,
       message: res.locals.getLang("USER_FOUND"),
     });
   } catch (error) {
@@ -117,7 +119,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
     res.json({
       error: false,
       data: newTokens,
-      message: res.locals.getLang("TOKEN_REFRESHED"),
+      message: res.locals.getLang("TOKEN_SUCCESS_REFRESHED"),
     });
   } catch (error) {
     next(error);

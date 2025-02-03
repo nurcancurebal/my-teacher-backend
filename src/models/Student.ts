@@ -11,7 +11,7 @@ interface IStudentAttributes {
   id: number;
   class_id: number;
   teacher_id: number;
-  tc: bigint;
+  id_number: bigint;
   student_name: string;
   student_lastname: string;
   student_number: number;
@@ -29,7 +29,7 @@ class ModelStudent
   public id!: number;
   public class_id!: number;
   public teacher_id!: number;
-  public tc!: bigint;
+  public id_number!: bigint;
   public student_name!: string;
   public student_lastname!: string;
   public student_number!: number;
@@ -51,7 +51,7 @@ ModelStudent.init(
         model: ModelClass,
         key: "id",
       },
-      onDelete: "CASCADE", // Sınıf silindiğinde öğrencileri de sil
+      onDelete: "CASCADE",
     },
     teacher_id: {
       type: DataTypes.INTEGER,
@@ -61,7 +61,7 @@ ModelStudent.init(
         key: "id",
       },
     },
-    tc: {
+    id_number: {
       type: DataTypes.BIGINT,
       allowNull: false,
       unique: true,

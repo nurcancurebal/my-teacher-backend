@@ -22,7 +22,7 @@ export default async function (
 
     res.locals.getLang = (key: keyof (typeof LANG)[typeof userLanguage]) => {
       if (!LANG?.[userLanguage]?.[key]) {
-        return LANG[userLanguage]["UNKNOWN_ERROR"];
+        return LANG[userLanguage]["DEFAULT"];
       }
 
       return LANG[userLanguage][key];

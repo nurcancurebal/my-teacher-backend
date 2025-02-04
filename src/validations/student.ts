@@ -5,13 +5,13 @@ import { TGetLang } from "../types";
 export const schemaStudent = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      id_number: idNumber(getLang),
-      student_name: studentName(getLang),
-      student_lastname: studentLastname(getLang),
-      student_number: studentNumber(getLang),
+      idNumber: idNumber(getLang),
+      studentName: studentName(getLang),
+      studentLastname: studentLastname(getLang),
+      studentNumber: studentNumber(getLang),
       gender: gender(getLang),
       birthdate: birthdate(getLang),
-    }),
+    }).max(6),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -33,6 +33,101 @@ export const schemaGetAll = () => {
   });
 };
 
+export const schemaGenderCount = () => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object().max(0),
+  });
+};
+
+export const schemaGetAllByClassId = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaCountByClassId = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaCreateOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      idNumber: idNumber(getLang),
+      studentName: studentName(getLang),
+      studentLastname: studentLastname(getLang),
+      studentNumber: studentNumber(getLang),
+      gender: gender(getLang),
+      birthdate: birthdate(getLang),
+    }).max(6),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaUpdateOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      classId: classId(getLang),
+      idNumber: idNumber(getLang),
+      studentName: studentName(getLang),
+      studentLastname: studentLastname(getLang),
+      studentNumber: studentNumber(getLang),
+      birthdate: birthdate(getLang),
+      gender: gender(getLang),
+    }).max(7),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      id: id(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaDeleteOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      id: id(getLang),
+    }).max(1),
+  });
+};
+
+export const id = (getLang: TGetLang) => {
+  return Joi.number()
+    .integer()
+    .required()
+    .messages({
+      "any.required": getLang("ID_REQUIRED"),
+      "number.base": getLang("ID_NUMBER"),
+      "number.integer": getLang("ID_INTEGER"),
+    });
+};
+
+export const classId = (getLang: TGetLang) => {
+  return Joi.number()
+    .integer()
+    .required()
+    .messages({
+      "any.required": getLang("CLASS_ID_REQUIRED"),
+      "number.base": getLang("CLASS_ID_NUMBER"),
+      "number.integer": getLang("CLASS_ID_INTEGER"),
+    });
+};
+
 export const idNumber = (getLang: TGetLang) => {
   return Joi.number()
     .integer()
@@ -43,14 +138,14 @@ export const idNumber = (getLang: TGetLang) => {
         return helpers.error("any.invalid");
       }
       return value;
-    }, "TC Length Validation")
+    }, "ID Number Length Validation")
     .messages({
-      "any.invalid": getLang("TC_CHARACTER"),
-      "number.base": getLang("TC_NUMBER"),
-      "any.required": getLang("TC_REQUIRED"),
-      "number.integer": getLang("TC_INTEGER"),
-      "string.empty": getLang("TC_CANNOT_BE_EMPTY"),
-      "string.base": getLang("TC_REQUIRED"),
+      "any.invalid": getLang("ID_NUMBER_CHARACTER"),
+      "number.base": getLang("ID_NUMBER_NUMBER"),
+      "any.required": getLang("ID_NUMBER_REQUIRED"),
+      "number.integer": getLang("ID_NUMBER_INTEGER"),
+      "string.empty": getLang("ID_NUMBER_CANNOT_BE_EMPTY"),
+      "string.base": getLang("ID_NUMBER_REQUIRED"),
     });
 };
 

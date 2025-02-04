@@ -5,10 +5,10 @@ import { TGetLang } from "../types";
 export const schemaCreate = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      student_id: studentId(getLang),
+      studentId: studentId(getLang),
       title: title(getLang),
       note: note(getLang),
-    }),
+    }).max(3),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });

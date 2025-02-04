@@ -10,7 +10,7 @@ export const schemaUpdate = (getLang: TGetLang) => {
       username: username(getLang),
       email: email(getLang),
       password: password(getLang),
-    }),
+    }).max(5),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });

@@ -73,15 +73,15 @@ async function register(req: Request, res: Response, next: NextFunction) {
     const newUser: IUserCreationAttributes = {
       firstname: helperFormatName(body.firstname),
       lastname: helperFormatName(body.lastname),
-      username: helperFormatName(body.username),
+      username: body.username.trim(),
       email: body.email,
       password: utilEncrypt.encryptSync(body.password),
     };
 
-    const userExist = await ServiceUser.emailWithExists(newUser.email);
+    const emailExists = await ServiceUser.emailWithExists(newUser.email);
 
-    if (userExist) {
-      throw new Error(res.locals.getLang("USER_EXISTS"));
+    if (emailExists) {
+      throw new Error(res.locals.getLang("EMAIL_EXISTS"));
     }
 
     const userId = await ServiceUser.createOne(newUser);

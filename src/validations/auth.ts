@@ -17,7 +17,7 @@ export const schemaLogin = (getLang: TGetLang) => {
     body: Joi.object({
       email: email(getLang),
       password: password(getLang),
-    }),
+    }).max(2),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -31,7 +31,7 @@ export const schemaRegister = (getLang: TGetLang) => {
       username: username(getLang),
       email: email(getLang),
       password: password(getLang),
-    }),
+    }).max(5),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -43,7 +43,7 @@ export const schemaResetPassword = (getLang: TGetLang) => {
       password: password(getLang),
       otp: otp(getLang),
       email: email(getLang),
-    }),
+    }).max(3),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -53,7 +53,7 @@ export const schemaForgotPassword = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       email: email(getLang),
-    }),
+    }).max(1),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -63,7 +63,7 @@ export const schemaRefreshToken = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       refreshToken: refreshToken(getLang),
-    }),
+    }).max(1),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });

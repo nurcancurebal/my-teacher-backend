@@ -73,10 +73,10 @@ router.get(
  *           schema:
  *             type: object
  *             required:
- *               - class_name
+ *               - className
  *               - explanation
  *             properties:
- *               class_name:
+ *               className:
  *                 type: string
  *                 minLength: 2
  *                 maxLength: 3
@@ -86,7 +86,7 @@ router.get(
  *                 minLength: 2
  *                 maxLength: 60
  *             example:
- *               class_name: 3B
+ *               className: 3B
  *               explanation: 3B sınıfı
  *     responses:
  *       "200":
@@ -126,7 +126,7 @@ router.post(
  *           schema:
  *             type: object
  *             properties:
- *               class_name:
+ *               className:
  *                 type: string
  *                 minLength: 2
  *                 maxLength: 3
@@ -136,7 +136,7 @@ router.post(
  *                 minLength: 2
  *                 maxLength: 60
  *             example:
- *               class_name: 3B
+ *               className: 3B
  *               explanation: 3B sınıfı
  *     responses:
  *       "200":

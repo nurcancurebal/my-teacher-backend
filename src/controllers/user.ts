@@ -18,8 +18,8 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
 
     const body = req.body;
 
-    if (user.email !== body.email) {
-      const repeatEmail = await ServiceUser.emailWithExists(email);
+    if (email !== body.email) {
+      const repeatEmail = await ServiceUser.emailWithExists(body.email);
 
       if (repeatEmail) {
         throw new Error(res.locals.getLang("USER_EMAIL_EXISTS"));
@@ -38,7 +38,8 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     const updateData = {
       firstname: helperFormatName(body.firstname),
       lastname: helperFormatName(body.lastname),
-      username: helperFormatName(body.username),
+      email: body.email,
+      username: body.username.trim(),
     };
 
     const updateUser = await ServiceUser.updateOneById(user.id, updateData);

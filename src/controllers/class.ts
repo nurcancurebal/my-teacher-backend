@@ -12,11 +12,9 @@ export default {
 
 async function findAll(_req: Request, res: Response, next: NextFunction) {
   try {
-    const currentUser = res.locals.user;
+    const { id: teacherId } = res.locals.user;
 
-    const { id: teacher_id } = currentUser;
-
-    const classes = await ServiceClass.findAllWithTeacherId(teacher_id);
+    const classes = await ServiceClass.findAllWithTeacherId(teacherId);
 
     res.json({
       error: false,
@@ -30,11 +28,9 @@ async function findAll(_req: Request, res: Response, next: NextFunction) {
 
 async function getCount(_req: Request, res: Response, next: NextFunction) {
   try {
-    const currentUser = res.locals.user;
+    const { id: teacherId } = res.locals.user;
 
-    const { id: teacher_id } = currentUser;
-
-    const count = await ServiceClass.getCount(teacher_id);
+    const count = await ServiceClass.getCount(teacherId);
 
     res.json({
       error: false,
@@ -48,28 +44,30 @@ async function getCount(_req: Request, res: Response, next: NextFunction) {
 
 async function createOne(req: Request, res: Response, next: NextFunction) {
   try {
-    const currentUser = res.locals.user;
+    const { id: teacherId } = res.locals.user;
 
-    const { id: teacher_id } = currentUser;
     const { explanation, className } = req.body;
 
     const newClassName = className.trim().toUpperCase();
 
-    const classExist = await ServiceClass.exists(newClassName);
+    const classNameExists = await ServiceClass.classNameWithExists(
+      newClassName,
+      teacherId
+    );
 
-    if (classExist) {
-      throw new Error(res.locals.getLang("CLASS_ALREADY_EXIST"));
+    if (classNameExists) {
+      throw new Error(res.locals.getLang("CLASS_NAME_ALREADY_EXISTS"));
     }
 
-    const newClass = await ServiceClass.create({
-      class_name: newClassName,
-      teacher_id,
+    const newClass = await ServiceClass.createOne({
+      newClassName,
+      teacherId,
       explanation,
     });
 
     res.json({
-      data: newClass,
       error: false,
+      data: newClass,
       message: res.locals.getLang("CLASS_CREATED"),
     });
   } catch (error) {
@@ -79,44 +77,46 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
 
 async function updateOne(req: Request, res: Response, next: NextFunction) {
   try {
-    const currentUser = res.locals.user;
+    const { id: teacherId } = res.locals.user;
 
     const { id } = req.params;
     const { className, explanation } = req.body;
 
-    const newData = {
-      class_name: className.trim().toUpperCase(),
-      explanation,
-    };
+    const newData: { className?: string; explanation?: string } = {};
 
-    const numberToId = parseInt(id);
+    if (className) {
+      const newClassName = className.trim().toUpperCase();
 
-    if (isNaN(numberToId)) {
-      throw new Error(res.locals.getLang("INVALID_CLASS_ID"));
+      newData.className = newClassName;
+
+      const classNameExists = await ServiceClass.classNameWithExists(
+        newClassName,
+        teacherId
+      );
+
+      if (classNameExists) {
+        throw new Error(res.locals.getLang("CLASS_NAME_ALREADY_EXISTS"));
+      }
+    }
+
+    if (explanation) {
+      newData.explanation = explanation;
     }
 
     const teacherIsClasss = await ServiceClass.teacherIsClass(
-      currentUser.id,
-      numberToId
+      teacherId,
+      Number(id)
     );
 
     if (!teacherIsClasss) {
       throw new Error(res.locals.getLang("TEACHER_DOES_NOT_HAVE_CLASS"));
     }
 
-    if (newData.class_name) {
-      const classExist = await ServiceClass.exists(newData.class_name);
-
-      if (classExist) {
-        throw new Error(res.locals.getLang("CLASS_ALREADY_EXIST"));
-      }
-    }
-
-    const updated = await ServiceClass.updateOne(numberToId, newData);
+    const updated = await ServiceClass.updateOne(Number(id), newData);
 
     res.json({
-      data: updated,
       error: false,
+      data: updated,
       message: res.locals.getLang("CLASS_UPDATED"),
     });
   } catch (error) {
@@ -126,30 +126,24 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
 
 async function deleteOne(req: Request, res: Response, next: NextFunction) {
   try {
-    const currentUser = res.locals.user;
+    const { id: teacherId } = res.locals.user;
 
     const { id } = req.params;
 
-    const numberToId = parseInt(id);
-
-    if (isNaN(numberToId)) {
-      throw new Error(res.locals.getLang("INVALID_CLASS_ID"));
-    }
-
     const teacherIsClass = await ServiceClass.teacherIsClass(
-      currentUser.id,
-      numberToId
+      teacherId,
+      Number(id)
     );
 
     if (!teacherIsClass) {
       throw new Error(res.locals.getLang("TEACHER_DOES_NOT_HAVE_CLASS"));
     }
 
-    const deleted = await ServiceClass.deleteOne(numberToId);
+    const deleted = await ServiceClass.deleteOne(Number(id));
 
     res.json({
-      data: deleted,
       error: false,
+      data: deleted,
       message: res.locals.getLang("CLASS_SUCCESS_DELETED"),
     });
   } catch (error) {

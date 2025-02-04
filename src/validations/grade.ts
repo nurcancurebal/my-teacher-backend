@@ -2,11 +2,11 @@ import Joi from "joi";
 
 import { TGetLang } from "../types";
 
-export const schemaExist = (getLang: TGetLang) => {
+export const schemaExists = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      grade_type: gradeType(getLang),
-    }),
+      gradeType: gradeType(getLang),
+    }).max(1),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -15,9 +15,9 @@ export const schemaExist = (getLang: TGetLang) => {
 export const schemaCreate = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      grade_type: gradeType(getLang),
-      grade_value: gradeValue(getLang),
-    }),
+      gradeType: gradeType(getLang),
+      gradeValue: gradeValue(getLang),
+    }).max(2),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
@@ -26,8 +26,8 @@ export const schemaCreate = (getLang: TGetLang) => {
 export const schemaUpdate = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      grade_value: gradeValue(getLang),
-    }),
+      gradeValue: gradeValue(getLang),
+    }).max(1),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
   });

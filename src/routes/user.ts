@@ -63,7 +63,7 @@ import { schemaUpdate } from "../validations/user";
  *               lastname: Doe
  *               username: johndoe
  *               email: johndoe@example.com
- *               password: password123
+ *               password: password12
  *     responses:
  *       "200":
  *         description: OK

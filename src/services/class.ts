@@ -23,13 +23,30 @@ export default class ClassService extends ModelClass {
     return result;
   }
 
-  static async exists(class_name: string): Promise<boolean> {
-    const classInstance = await this.findOne({ where: { class_name } });
+  static async classNameWithExists(
+    class_name: string,
+    teacher_id: number
+  ): Promise<boolean> {
+    const classInstance = await this.findOne({
+      where: { class_name, teacher_id },
+    });
     return !!classInstance;
   }
 
-  static async createOne(classData: IClassCreationAttributes) {
-    const newClass = await this.create(classData);
+  static async createOne({
+    newClassName,
+    teacherId,
+    explanation,
+  }: {
+    newClassName: string;
+    teacherId: number;
+    explanation: string;
+  }) {
+    const newClass = await this.create({
+      class_name: newClassName,
+      teacher_id: teacherId,
+      explanation,
+    });
     return newClass;
   }
 
@@ -40,14 +57,22 @@ export default class ClassService extends ModelClass {
 
   static async updateOne(
     id: number,
-    data: { class_name: string; explanation: string }
+    { className, explanation }: { className?: string; explanation?: string }
   ) {
-    const result = await this.update(data, { where: { id } });
+    const result = await this.update(
+      { class_name: className, explanation },
+      { where: { id } }
+    );
     return result;
   }
 
   static async deleteOne(id: number) {
     const result = await this.destroy({ where: { id } });
     return result;
+  }
+
+  static async existsById(id: number, teacher_id: number): Promise<boolean> {
+    const result = await this.findOne({ where: { id, teacher_id } });
+    return !!result;
   }
 }

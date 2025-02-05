@@ -2,6 +2,8 @@ import Joi from "joi";
 
 import { TGetLang } from "../types";
 
+import { classId } from "./class";
+
 export const schemaStudent = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
@@ -91,7 +93,7 @@ export const schemaUpdateOne = (getLang: TGetLang) => {
     }).max(7),
     query: Joi.object().max(0),
     params: Joi.object({
-      id: id(getLang),
+      id: studentId(getLang),
     }).max(1),
   });
 };
@@ -101,12 +103,12 @@ export const schemaDeleteOne = (getLang: TGetLang) => {
     body: Joi.object().max(0),
     query: Joi.object().max(0),
     params: Joi.object({
-      id: id(getLang),
+      id: studentId(getLang),
     }).max(1),
   });
 };
 
-export const id = (getLang: TGetLang) => {
+export const studentId = (getLang: TGetLang) => {
   return Joi.number()
     .integer()
     .required()
@@ -114,17 +116,6 @@ export const id = (getLang: TGetLang) => {
       "any.required": getLang("ID_REQUIRED"),
       "number.base": getLang("ID_NUMBER"),
       "number.integer": getLang("ID_INTEGER"),
-    });
-};
-
-export const classId = (getLang: TGetLang) => {
-  return Joi.number()
-    .integer()
-    .required()
-    .messages({
-      "any.required": getLang("CLASS_ID_REQUIRED"),
-      "number.base": getLang("CLASS_ID_NUMBER"),
-      "number.integer": getLang("CLASS_ID_INTEGER"),
     });
 };
 
@@ -209,6 +200,7 @@ export const gender = (getLang: TGetLang) => {
 
 export const birthdate = (getLang: TGetLang) => {
   return Joi.date()
+    .iso()
     .required()
     .messages({
       "any.required": getLang("BIRTHDATE_REQUIRED"),

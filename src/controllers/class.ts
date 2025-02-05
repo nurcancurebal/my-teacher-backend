@@ -60,8 +60,8 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const newClass = await ServiceClass.createOne({
-      newClassName,
-      teacherId,
+      teacher_id: teacherId,
+      class_name: newClassName,
       explanation,
     });
 
@@ -82,37 +82,31 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const { className, explanation } = req.body;
 
-    const newData: { className?: string; explanation?: string } = {};
+    const verifyClassAssignment = await ServiceClass.verifyClassAssignment(
+      teacherId,
+      Number(id)
+    );
+    if (!verifyClassAssignment) {
+      throw new Error(res.locals.getLang("TEACHER_DOES_NOT_HAVE_CLASS"));
+    }
 
-    if (className) {
-      const newClassName = className.trim().toUpperCase();
+    const newClassName = className.trim().toUpperCase();
 
-      newData.className = newClassName;
-
+    if (verifyClassAssignment.class_name !== newClassName) {
       const classNameExists = await ServiceClass.classNameWithExists(
         newClassName,
         teacherId
       );
-
       if (classNameExists) {
         throw new Error(res.locals.getLang("CLASS_NAME_ALREADY_EXISTS"));
       }
     }
 
-    if (explanation) {
-      newData.explanation = explanation;
-    }
-
-    const teacherIsClasss = await ServiceClass.teacherIsClass(
-      teacherId,
-      Number(id)
-    );
-
-    if (!teacherIsClasss) {
-      throw new Error(res.locals.getLang("TEACHER_DOES_NOT_HAVE_CLASS"));
-    }
-
-    const updated = await ServiceClass.updateOne(Number(id), newData);
+    const updated = await ServiceClass.updateOne(Number(id), {
+      teacher_id: teacherId,
+      class_name: newClassName,
+      explanation,
+    });
 
     res.json({
       error: false,
@@ -130,12 +124,12 @@ async function deleteOne(req: Request, res: Response, next: NextFunction) {
 
     const { id } = req.params;
 
-    const teacherIsClass = await ServiceClass.teacherIsClass(
+    const verifyClassAssignment = await ServiceClass.verifyClassAssignment(
       teacherId,
       Number(id)
     );
 
-    if (!teacherIsClass) {
+    if (!verifyClassAssignment) {
       throw new Error(res.locals.getLang("TEACHER_DOES_NOT_HAVE_CLASS"));
     }
 

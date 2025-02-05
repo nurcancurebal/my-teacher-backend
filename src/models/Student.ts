@@ -5,7 +5,6 @@ import sequelize from "../utils/db";
 import ModelClass from "./class";
 import ModelUser from "./user";
 import ModelGrade from "./grade";
-import ModelTeacherNote from "./teacher-note";
 
 interface IStudentAttributes {
   id: number;
@@ -95,7 +94,6 @@ ModelStudent.init(
     hooks: {
       beforeDestroy: async (instance: ModelStudent) => {
         await ModelGrade.destroy({ where: { student_id: instance.id } });
-        await ModelTeacherNote.destroy({ where: { student_id: instance.id } });
       },
     },
   }

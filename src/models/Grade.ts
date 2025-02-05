@@ -4,9 +4,11 @@ import sequelize from "../utils/db";
 
 import ModelStudent from "./student";
 import ModelClass from "./class";
+import ModelUser from "./user";
 
 interface IGradeAttributes {
   id: number;
+  teacher_id: number;
   student_id: number;
   class_id: number;
   grade_type: string;
@@ -23,6 +25,7 @@ class ModelGrade
   implements IGradeAttributes
 {
   public id!: number;
+  public teacher_id!: number;
   public student_id!: number;
   public class_id!: number;
   public grade_type!: string;
@@ -37,6 +40,14 @@ ModelGrade.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    teacher_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: ModelUser,
+        key: "id",
+      },
     },
     student_id: {
       type: DataTypes.INTEGER,

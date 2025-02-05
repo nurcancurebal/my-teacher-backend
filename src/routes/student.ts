@@ -198,14 +198,14 @@ router.get(
  *                 description: "Gender: Female or Male"
  *               birthdate:
  *                 type: string
- *                 format: date
+ *                 format: ISO date
  *             example:
  *               idNumber: 12345678901
  *               studentName: John
  *               studentLastname: Doe
  *               studentNumber: 123456
  *               gender: Female
- *               birthdate: 1990-01-01
+ *               birthdate: 2010-01-01
  *     responses:
  *       "200":
  *         description: OK
@@ -268,7 +268,7 @@ router.post(
  *                 description: "Gender: Female or Male"
  *               birthdate:
  *                 type: string
- *                 format: date
+ *                 format: ISO date
  *             example:
  *               classId: 1
  *               idNumber: 12345678901
@@ -276,7 +276,7 @@ router.post(
  *               studentLastname: Doe
  *               studentNumber: 123456
  *               gender: Female
- *               birthdate: 1990-01-01
+ *               birthdate: 2010-01-01
  *     responses:
  *       "200":
  *         description: OK

@@ -125,6 +125,9 @@ router.post(
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - className
+ *               - explanation
  *             properties:
  *               className:
  *                 type: string

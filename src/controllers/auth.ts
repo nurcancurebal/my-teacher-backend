@@ -84,6 +84,14 @@ async function register(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("EMAIL_EXISTS"));
     }
 
+    const usernameExists = await ServiceUser.usernameWithExists(
+      newUser.username
+    );
+
+    if (usernameExists) {
+      throw new Error(res.locals.getLang("USERNAME_EXISTS"));
+    }
+
     const userId = await ServiceUser.createOne(newUser);
 
     const newTokens = utilJwt.authTokenGenerate(userId);

@@ -26,6 +26,16 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       }
     }
 
+    if (user.username !== body.username) {
+      const repeatUsername = await ServiceUser.usernameWithExists(
+        body.username
+      );
+
+      if (repeatUsername) {
+        throw new Error(res.locals.getLang("USER_USERNAME_EXISTS"));
+      }
+    }
+
     const validPassword = await ServiceUser.validatePassword(
       user.email,
       body.password

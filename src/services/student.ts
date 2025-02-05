@@ -23,15 +23,29 @@ export default class studentService extends ModelStudent {
     return result;
   }
 
+  static async getOneById(
+    id: number,
+    teacher_id: number
+  ): Promise<IStudentCreationAttributes> {
+    const result = await this.findOne({
+      where: {
+        id,
+        teacher_id,
+      },
+    });
+
+    return result;
+  }
+
   static async getGenderCount(teacher_id: number): Promise<{
     maleCount: number;
     femaleCount: number;
   }> {
     const maleCount = await this.count({
-      where: { teacher_id, gender: "male" },
+      where: { teacher_id, gender: "Male" },
     });
     const femaleCount = await this.count({
-      where: { teacher_id, gender: "female" },
+      where: { teacher_id, gender: "Female" },
     });
 
     return { maleCount, femaleCount };
@@ -65,7 +79,7 @@ export default class studentService extends ModelStudent {
     return result;
   }
 
-  static async existsByStudentNumber(
+  static async studentNumberWithExists(
     teacher_id: number,
     student_number: number
   ): Promise<boolean> {
@@ -79,7 +93,7 @@ export default class studentService extends ModelStudent {
     return !!result;
   }
 
-  static async existsByIdNumber(
+  static async idNumberWithExists(
     teacher_id: number,
     id_number: bigint
   ): Promise<boolean> {
@@ -93,102 +107,31 @@ export default class studentService extends ModelStudent {
     return !!result;
   }
 
-  static async existsByClassId(
-    teacher_id: number,
-    class_id: number
-  ): Promise<boolean> {
-    const result = await this.findOne({
-      where: {
-        teacher_id,
-        class_id,
-      },
-    });
-
-    return !!result;
-  }
-
-  static async createOne({
-    teacherId,
-    classId,
-    newIdNumber,
-    newStudentName,
-    newStudentLastname,
-    studentNumber,
-    gender,
-    newBirthdate,
-  }: {
-    teacherId: number;
-    classId: number;
-    newIdNumber: bigint;
-    newStudentName: string;
-    newStudentLastname: string;
-    studentNumber: number;
-    gender: string;
-    newBirthdate: Date;
-  }): Promise<IStudentCreationAttributes> {
-    const result = await this.create({
-      teacher_id: teacherId,
-      class_id: classId,
-      id_number: newIdNumber,
-      student_name: newStudentName,
-      student_lastname: newStudentLastname,
-      student_number: studentNumber,
-      gender,
-      birthdate: newBirthdate,
-    });
+  static async createOne(
+    data: IStudentCreationAttributes
+  ): Promise<IStudentCreationAttributes> {
+    const result = await this.create(data);
 
     return result;
   }
 
-  static async existsById(teacher_id: number, id: number): Promise<boolean> {
+  static async idWithExists(id: number, teacher_id: number): Promise<boolean> {
     const result = await this.findOne({
       where: {
-        teacher_id,
         id,
+        teacher_id,
       },
     });
 
     return !!result;
   }
 
-  static async updateStudent({
-    id,
-    teacherId,
-    idNumber,
-    studentName,
-    studentLastname,
-    studentNumber,
-    birthdate,
-    classId,
-    gender,
-  }: {
-    id: number;
-    teacherId: number;
-    idNumber: bigint;
-    studentName: string;
-    studentLastname: string;
-    studentNumber: number;
-    birthdate: Date;
-    classId: number;
-    gender: string;
-  }): Promise<number> {
-    const result = await this.update(
-      {
-        id_number: idNumber,
-        student_name: studentName,
-        student_lastname: studentLastname,
-        student_number: studentNumber,
-        birthdate,
-        class_id: classId,
-        gender,
-      },
-      {
-        where: {
-          id,
-          teacher_id: teacherId,
-        },
-      }
-    );
+  static async updateOne(data: IStudentCreationAttributes): Promise<number> {
+    const { id, teacher_id, ...updateData } = data;
+
+    const result = await this.update(updateData, {
+      where: { id, teacher_id },
+    });
 
     return result[0];
   }
@@ -199,6 +142,18 @@ export default class studentService extends ModelStudent {
         id,
         teacher_id,
       },
+    });
+
+    return !!result;
+  }
+
+  static async studentIdExists(
+    id: number,
+    class_id: number,
+    teacher_id: number
+  ): Promise<boolean> {
+    const result = await this.findOne({
+      where: { id, class_id, teacher_id },
     });
 
     return !!result;

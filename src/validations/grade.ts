@@ -2,34 +2,65 @@ import Joi from "joi";
 
 import { TGetLang } from "../types";
 
-export const schemaExists = (getLang: TGetLang) => {
-  return Joi.object({
-    body: Joi.object({
-      gradeType: gradeType(getLang),
-    }).max(1),
-    query: Joi.object().max(0),
-    params: Joi.object().max(0),
-  });
-};
+import { studentId } from "./student";
+import { classId } from "./class";
 
-export const schemaCreate = (getLang: TGetLang) => {
+export const schemaCreateOne = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       gradeType: gradeType(getLang),
       gradeValue: gradeValue(getLang),
     }).max(2),
     query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+      studentId: studentId(getLang),
+    }).max(2),
+  });
+};
+
+export const schemaUpdateOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      gradeValue: gradeValue(getLang),
+      gradeType: gradeType(getLang),
+    }).max(1),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+      studentId: studentId(getLang),
+      id: gradeId(getLang),
+    }).max(3),
+  });
+};
+
+export const schemaLatestGrade = () => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
     params: Joi.object().max(0),
   });
 };
 
-export const schemaUpdate = (getLang: TGetLang) => {
+export const schemaClassIdFindAll = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      class_id: classId(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaGradeTypeExists = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      gradeValue: gradeValue(getLang),
+      gradeType: gradeType(getLang),
     }).max(1),
     query: Joi.object().max(0),
-    params: Joi.object().max(0),
+    params: Joi.object({
+      class_id: classId(getLang),
+    }).max(1),
   });
 };
 
@@ -48,10 +79,20 @@ export const gradeType = (getLang: TGetLang) => {
 export const gradeValue = (getLang: TGetLang) => {
   return Joi.number()
     .allow(null)
-    .optional()
+    .required()
     .messages({
       "number.base": getLang("GRADE_VALUE_NUMBER"),
-      "any.optional": getLang("GRADE_VALUE_OPTIONAL"),
-      "number.allow": getLang("GRADE_VALUE_ALLOW"),
+      "any.required": getLang("GRADE_VALUE_REQUIRED"),
+      "number.integer": getLang("GRADE_VALUE_INTEGER"),
+    });
+};
+
+export const gradeId = (getLang: TGetLang) => {
+  return Joi.number()
+    .required()
+    .messages({
+      "number.base": getLang("GRADE_ID_NUMBER"),
+      "any.required": getLang("GRADE_ID_REQUIRED"),
+      "number.integer": getLang("GRADE_ID_INTEGER"),
     });
 };

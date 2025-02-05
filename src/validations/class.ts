@@ -32,14 +32,12 @@ export const schemaCreateOne = (getLang: TGetLang) => {
 export const schemaUpdateOne = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
-      className: className(getLang).optional(),
-      explanation: explanation(getLang).optional(),
-    })
-      .or("className", "explanation")
-      .max(2),
+      className: className(getLang),
+      explanation: explanation(getLang),
+    }).max(2),
     query: Joi.object().max(0),
     params: Joi.object({
-      id: id(getLang),
+      id: classId(getLang),
     }).max(1),
   });
 };
@@ -49,12 +47,12 @@ export const schemaDeleteOne = (getLang: TGetLang) => {
     body: Joi.object().max(0),
     query: Joi.object().max(0),
     params: Joi.object({
-      id: id(getLang),
+      id: classId(getLang),
     }).max(1),
   });
 };
 
-export const id = (getLang: TGetLang) => {
+export const classId = (getLang: TGetLang) => {
   return Joi.number()
     .integer()
     .required()

@@ -21,6 +21,16 @@ export default class UserService extends ModelUser {
     return !!user;
   }
 
+  static async usernameWithExists(username: string): Promise<boolean> {
+    const user = await this.findOne({
+      where: {
+        username,
+      },
+    });
+
+    return !!user;
+  }
+
   static async createOne(userData: IUserCreationAttributes) {
     const user = await this.create(userData);
 

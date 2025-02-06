@@ -74,6 +74,11 @@ async function getAllByClassId(
 
     const { classId } = req.params;
 
+    const result = await ServiceClass.idWithExists(Number(classId), teacherId);
+    if (!result) {
+      throw new Error(res.locals.getLang("CLASS_NOT_FOUND"));
+    }
+
     const students = await ServiceStudent.getStudentByClassId(
       teacherId,
       Number(classId)

@@ -3,7 +3,7 @@ import ModelClass, { IClassCreationAttributes } from "../models/class";
 export default class ClassService extends ModelClass {
   static async findAllWithTeacherId(
     teacher_id: number
-  ): Promise<IClassCreationAttributes[] | []> {
+  ): Promise<IClassCreationAttributes[]> {
     const result = await this.findAll({
       where: {
         teacher_id,
@@ -41,7 +41,10 @@ export default class ClassService extends ModelClass {
     return result;
   }
 
-  static async updateOne(id: number, data: IClassCreationAttributes) {
+  static async updateOne(
+    id: number,
+    data: IClassCreationAttributes
+  ): Promise<number[]> {
     const result = await this.update(data, { where: { id } });
     return result;
   }
@@ -54,7 +57,7 @@ export default class ClassService extends ModelClass {
     return result;
   }
 
-  static async deleteOne(id: number) {
+  static async deleteOne(id: number): Promise<number> {
     const result = await this.destroy({ where: { id } });
     return result;
   }

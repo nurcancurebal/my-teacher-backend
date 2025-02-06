@@ -24,7 +24,7 @@ export const schemaUpdateOne = (getLang: TGetLang) => {
     body: Joi.object({
       gradeValue: gradeValue(getLang),
       gradeType: gradeType(getLang),
-    }).max(1),
+    }).max(2),
     query: Joi.object().max(0),
     params: Joi.object({
       classId: classId(getLang),
@@ -47,7 +47,7 @@ export const schemaClassIdFindAll = (getLang: TGetLang) => {
     body: Joi.object().max(0),
     query: Joi.object().max(0),
     params: Joi.object({
-      class_id: classId(getLang),
+      classId: classId(getLang),
     }).max(1),
   });
 };
@@ -59,7 +59,7 @@ export const schemaGradeTypeExists = (getLang: TGetLang) => {
     }).max(1),
     query: Joi.object().max(0),
     params: Joi.object({
-      class_id: classId(getLang),
+      classId: classId(getLang),
     }).max(1),
   });
 };
@@ -73,6 +73,7 @@ export const gradeType = (getLang: TGetLang) => {
       "string.min": getLang("GRADE_TYPE_MIN"),
       "string.max": getLang("GRADE_TYPE_MAX"),
       "any.required": getLang("GRADE_TYPE_REQUIRED"),
+      "string.empty": getLang("GRADE_TYPE_EMPTY"),
     });
 };
 
@@ -80,10 +81,15 @@ export const gradeValue = (getLang: TGetLang) => {
   return Joi.number()
     .allow(null)
     .required()
+    .min(0)
+    .max(100)
     .messages({
       "number.base": getLang("GRADE_VALUE_NUMBER"),
       "any.required": getLang("GRADE_VALUE_REQUIRED"),
       "number.integer": getLang("GRADE_VALUE_INTEGER"),
+      "number.empty": getLang("GRADE_VALUE_EMPTY"),
+      "number.min": getLang("GRADE_VALUE_NUMBER_MIN"),
+      "number.max": getLang("GRADE_VALUE_NUMBER_MAX"),
     });
 };
 
@@ -94,5 +100,6 @@ export const gradeId = (getLang: TGetLang) => {
       "number.base": getLang("GRADE_ID_NUMBER"),
       "any.required": getLang("GRADE_ID_REQUIRED"),
       "number.integer": getLang("GRADE_ID_INTEGER"),
+      "number.empty": getLang("GRADE_ID_EMPTY"),
     });
 };

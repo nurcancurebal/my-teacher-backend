@@ -76,6 +76,8 @@ export const otp = (getLang: TGetLang) => {
     .messages({
       "string.length": getLang("OTP_LENGTH"),
       "any.required": getLang("OTP_REQUIRED"),
+      "string.empty": getLang("OTP_EMPTY"),
+      "string.base": getLang("OTP_REQUIRED"),
     });
 };
 
@@ -85,5 +87,6 @@ export const refreshToken = (getLang: TGetLang) => {
     .messages({
       "any.required": getLang("REFRESH_TOKEN_REQUIRED"),
       "string.empty": getLang("REFRESH_TOKEN_EMPTY"),
+      "string.base": getLang("REFRESH_TOKEN_REQUIRED"),
     });
 };

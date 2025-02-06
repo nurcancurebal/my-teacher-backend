@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import ServiceGrade from "../services/grade";
 import ServiceStudent from "../services/student";
+import ServiceClass from "../services/class";
 
 import helperFormatName from "../helpers/format-name";
 
@@ -69,6 +70,14 @@ async function gradeTypeExists(
     const { gradeType } = req.body;
     const { classId } = req.params;
 
+    const classExists = await ServiceClass.idWithExists(
+      Number(classId),
+      teacherId
+    );
+    if (!classExists) {
+      throw new Error(res.locals.getLang("CLASS_NOT_FOUND"));
+    }
+
     const newGradeType = helperFormatName(gradeType);
 
     const grades = await ServiceGrade.gradeTypeExists(
@@ -77,14 +86,14 @@ async function gradeTypeExists(
       newGradeType
     );
 
-    if (grades) {
-      throw new Error(res.locals.getLang("THERE_IS_NOTE_FOR_THIS_CLASS"));
+    if (!grades) {
+      throw new Error(res.locals.getLang("GRADE_TYPE_NOT_FOUND"));
     }
 
     res.json({
       error: false,
       data: grades,
-      message: res.locals.getLang("CLASS_ID_GRADE_TYPE_FOUND"),
+      message: res.locals.getLang("THERE_IS_NOTE_FOR_THIS_CLASS"),
     });
   } catch (error) {
     next(error);
@@ -101,6 +110,15 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     const classIdNumber = Number(classId);
     const studentIdNumber = Number(studentId);
 
+    const classExists = await ServiceClass.idWithExists(
+      classIdNumber,
+      teacherId
+    );
+
+    if (!classExists) {
+      throw new Error(res.locals.getLang("CLASS_NOT_FOUND"));
+    }
+
     const student = await ServiceStudent.studentIdExists(
       studentIdNumber,
       classIdNumber,
@@ -108,6 +126,15 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     );
     if (!student) {
       throw new Error(res.locals.getLang("STUDENT_NOT_FOUND_IN_THE_CLASS"));
+    }
+
+    const gradeExists = await ServiceGrade.gradeTypeExists(
+      classIdNumber,
+      teacherId,
+      newGradeType
+    );
+    if (gradeExists) {
+      throw new Error(res.locals.getLang("GRADE_TYPE_EXISTS"));
     }
 
     const newGrade = await ServiceGrade.createOne({
@@ -118,7 +145,7 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
       grade_value: gradeValue,
     });
 
-    res.status(201).json({
+    res.json({
       error: false,
       data: newGrade,
       message: res.locals.getLang("GRADE_CREATED"),
@@ -143,6 +170,11 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     );
     if (!student) {
       throw new Error(res.locals.getLang("STUDENT_NOT_FOUND_IN_THE_CLASS"));
+    }
+
+    const gradeExists = await ServiceGrade.idExists(Number(id), teacherId);
+    if (!gradeExists) {
+      throw new Error(res.locals.getLang("GRADE_NOT_FOUND"));
     }
 
     const updatedGrade = await ServiceGrade.updateOne(Number(id), {

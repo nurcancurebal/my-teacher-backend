@@ -43,7 +43,7 @@ router.get(
 
 /**
  * @swagger
- * /student/:
+ * /student:
  *   get:
  *     summary: Get all students
  *     tags: [Student]

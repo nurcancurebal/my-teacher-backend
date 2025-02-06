@@ -60,6 +60,7 @@ export const classId = (getLang: TGetLang) => {
       "any.required": getLang("CLASS_ID_REQUIRED"),
       "number.base": getLang("INVALID_CLASS_ID"),
       "number.integer": getLang("CLASS_ID_INTEGER"),
+      "number.empty": getLang("CLASS_ID_EMPTY"),
     });
 };
 
@@ -72,6 +73,7 @@ export const className = (getLang: TGetLang) => {
       "string.min": getLang("CLASS_NAME_MIN"),
       "string.max": getLang("CLASS_NAME_MAX"),
       "any.required": getLang("CLASS_NAME_REQUIRED"),
+      "string.empty": getLang("CLASS_NAME_EMPTY"),
     });
 };
 
@@ -84,5 +86,6 @@ export const explanation = (getLang: TGetLang) => {
       "string.min": getLang("EXPLANATION_MIN"),
       "string.max": getLang("EXPLANATION_MAX"),
       "any.required": getLang("EXPLANATION_REQUIRED"),
+      "string.empty": getLang("EXPLANATION_EMPTY"),
     });
 };

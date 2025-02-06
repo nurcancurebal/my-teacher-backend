@@ -116,6 +116,7 @@ export const studentId = (getLang: TGetLang) => {
       "any.required": getLang("ID_REQUIRED"),
       "number.base": getLang("ID_NUMBER"),
       "number.integer": getLang("ID_INTEGER"),
+      "string.empty": getLang("ID_CANNOT_BE_EMPTY"),
     });
 };
 

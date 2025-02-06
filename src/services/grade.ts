@@ -64,4 +64,15 @@ export default class ClassService extends ModelGrade {
 
     return result[0];
   }
+
+  static async idExists(id: number, teacher_id: number): Promise<boolean> {
+    const result = await this.findOne({
+      where: {
+        id,
+        teacher_id,
+      },
+    });
+
+    return !!result;
+  }
 }

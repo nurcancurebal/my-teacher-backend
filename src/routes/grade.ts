@@ -150,6 +150,8 @@ router.post(
  *                 maxLength: 30
  *               gradeValue:
  *                 type: number
+ *                 minimum: 0
+ *                 maximum: 100
  *             example:
  *               gradeType: "midterm"
  *               gradeValue: 80
@@ -209,6 +211,8 @@ router.post(
  *             properties:
  *               gradeValue:
  *                 type: number
+ *                 minimum: 0
+ *                 maximum: 100
  *               gradeType:
  *                 type: string
  *             example:

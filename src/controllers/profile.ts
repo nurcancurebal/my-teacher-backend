@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 
-import ServiceUser from "../services/user";
+import ServiceAuth from "../services/auth";
 
 import helperFormatName from "../helpers/format-name";
 
@@ -10,7 +10,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
   try {
     const { email } = res.locals.user;
 
-    const user = await ServiceUser.findOneWithEmail(email);
+    const user = await ServiceAuth.findOneWithEmail(email);
 
     if (!user) {
       throw new Error(res.locals.getLang("USER_NOT_FOUND"));
@@ -19,7 +19,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     const body = req.body;
 
     if (email !== body.email) {
-      const repeatEmail = await ServiceUser.emailWithExists(body.email);
+      const repeatEmail = await ServiceAuth.emailWithExists(body.email);
 
       if (repeatEmail) {
         throw new Error(res.locals.getLang("USER_EMAIL_EXISTS"));
@@ -27,7 +27,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     }
 
     if (user.username !== body.username) {
-      const repeatUsername = await ServiceUser.usernameWithExists(
+      const repeatUsername = await ServiceAuth.usernameWithExists(
         body.username
       );
 
@@ -36,7 +36,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       }
     }
 
-    const validPassword = await ServiceUser.validatePassword(
+    const validPassword = await ServiceAuth.validatePassword(
       user.email,
       body.password
     );
@@ -52,7 +52,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       username: body.username.trim(),
     };
 
-    const updateUser = await ServiceUser.updateOneById(user.id, updateData);
+    const updateUser = await ServiceAuth.updateOneById(user.id, updateData);
 
     res.json({
       error: false,

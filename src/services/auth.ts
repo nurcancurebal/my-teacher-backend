@@ -86,7 +86,7 @@ export default class UserService extends ModelUser {
       lastname?: string;
       password?: string;
     }
-  ) {
+  ): Promise<number[]> {
     if (newUserData.password) {
       newUserData.password = utilEncrypt.encryptSync(newUserData.password);
     }

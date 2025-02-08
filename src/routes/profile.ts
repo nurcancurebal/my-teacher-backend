@@ -4,22 +4,22 @@ const router = Router();
 
 import MiddlewareRedValidate from "../middlewares/req-validate";
 
-import ControllerUser from "../controllers/user";
+import ControllerProfile from "../controllers/profile";
 
-import { schemaUpdate } from "../validations/user";
+import { schemaUpdate } from "../validations/profile";
 
 /**
  * @swagger
  * tags:
- *   name: User
+ *   name: Profile
  */
 
 /**
  * @swagger
- * /user:
+ * /profile:
  *   put:
- *     summary: Update user
- *     tags: [User]
+ *     summary: Update profile
+ *     tags: [Profile]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -57,7 +57,7 @@ import { schemaUpdate } from "../validations/user";
  *                format: password
  *                minLength: 8
  *                maxLength: 20
- *                description: The current password of the user
+ *                description: must contain at least one letter and one number and must be between 8 and 20 characters
  *             example:
  *               firstname: John
  *               lastname: Doe
@@ -74,6 +74,10 @@ import { schemaUpdate } from "../validations/user";
  *       "500":
  *         description: Internal Server Error
  */
-router.put("/", MiddlewareRedValidate(schemaUpdate), ControllerUser.updateOne);
+router.put(
+  "/",
+  MiddlewareRedValidate(schemaUpdate),
+  ControllerProfile.updateOne
+);
 
 export default router;

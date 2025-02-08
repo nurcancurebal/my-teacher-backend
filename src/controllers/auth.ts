@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { IUserCreationAttributes } from "../models/user";
 
-import ServiceUser from "../services/user";
+import ServiceAuth from "../services/auth";
 
 import utilJwt from "../utils/jwt";
 import utilEncrypt from "../utils/encrypt";
@@ -40,7 +40,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
 
-    const user: IUserCreationAttributes = await ServiceUser.findOneWithEmail(
+    const user: IUserCreationAttributes = await ServiceAuth.findOneWithEmail(
       email
     );
 
@@ -78,13 +78,13 @@ async function register(req: Request, res: Response, next: NextFunction) {
       password: utilEncrypt.encryptSync(body.password),
     };
 
-    const emailExists = await ServiceUser.emailWithExists(newUser.email);
+    const emailExists = await ServiceAuth.emailWithExists(newUser.email);
 
     if (emailExists) {
       throw new Error(res.locals.getLang("EMAIL_EXISTS"));
     }
 
-    const usernameExists = await ServiceUser.usernameWithExists(
+    const usernameExists = await ServiceAuth.usernameWithExists(
       newUser.username
     );
 
@@ -92,7 +92,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("USERNAME_EXISTS"));
     }
 
-    const userId = await ServiceUser.createOne(newUser);
+    const userId = await ServiceAuth.createOne(newUser);
 
     const newTokens = utilJwt.authTokenGenerate(userId);
 
@@ -138,7 +138,7 @@ async function forgotPassword(req: Request, res: Response, next: NextFunction) {
   try {
     const { email } = req.body;
 
-    const user = await ServiceUser.findOneWithEmail(email);
+    const user = await ServiceAuth.findOneWithEmail(email);
 
     if (!user) {
       throw new Error(res.locals.getLang("EMAIL_IS_INCORRECT"));
@@ -166,7 +166,7 @@ async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, otp, password } = req.body;
 
-    const user = await ServiceUser.findOneWithEmail(email);
+    const user = await ServiceAuth.findOneWithEmail(email);
 
     if (!user) {
       throw new Error(res.locals.getLang("EMAIL_IS_INCORRECT"));
@@ -178,7 +178,7 @@ async function resetPassword(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("INVALID_OTP"));
     }
 
-    const updated = await ServiceUser.updatePasswordById(user.id, password);
+    const updated = await ServiceAuth.updatePasswordById(user.id, password);
 
     if (!updated) {
       throw new Error(res.locals.getLang("FAILED_TO_UPDATE_PASSWORD"));

@@ -9,7 +9,7 @@ router.use(MiddlewareLang);
 router.use(MiddlewareAuth);
 router.use(MiddlewareLang);
 
-import RouterUser from "./user";
+import RouterProfile from "./profile";
 import RouterAuth from "./auth";
 import RouterClass from "./class";
 import RouterStudent from "./student";
@@ -18,7 +18,7 @@ import RouterDocs from "./docs";
 import RouterRoot from "./root";
 
 router.use("/auth", RouterAuth);
-router.use("/user", RouterUser);
+router.use("/profile", RouterProfile);
 router.use("/class", RouterClass);
 router.use("/student", RouterStudent);
 router.use("/grade", RouterGrade);

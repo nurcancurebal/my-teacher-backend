@@ -63,7 +63,6 @@ ModelStudent.init(
     id_number: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      unique: true,
     },
     student_name: {
       type: DataTypes.STRING,
@@ -76,7 +75,6 @@ ModelStudent.init(
     student_number: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
     gender: {
       type: DataTypes.STRING,
@@ -91,6 +89,16 @@ ModelStudent.init(
     sequelize: sequelize,
     tableName: "students",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["teacher_id", "id_number"],
+      },
+      {
+        unique: true,
+        fields: ["teacher_id", "student_number"],
+      },
+    ],
     hooks: {
       beforeDestroy: async (instance: ModelStudent) => {
         await ModelGrade.destroy({ where: { student_id: instance.id } });

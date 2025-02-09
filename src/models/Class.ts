@@ -48,7 +48,6 @@ ModelClass.init(
     class_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     explanation: {
       type: DataTypes.TEXT,
@@ -69,6 +68,12 @@ ModelClass.init(
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "last_updated",
+    indexes: [
+      {
+        unique: true,
+        fields: ["teacher_id", "class_name"],
+      },
+    ],
     hooks: {
       beforeDestroy: async (instance: ModelClass) => {
         const students = await ModelStudent.findAll({

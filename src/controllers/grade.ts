@@ -26,7 +26,7 @@ async function findLatestGrade(
 
     res.json({
       error: false,
-      data: latestGrade.created_at,
+      data: latestGrade.createdAt,
       message: res.locals.getLang("LATEST_GRADE_FOUND"),
     });
   } catch (error) {
@@ -138,11 +138,11 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const newGrade = await ServiceGrade.createOne({
-      teacher_id: teacherId,
-      student_id: studentIdNumber,
-      class_id: classIdNumber,
-      grade_type: newGradeType,
-      grade_value: gradeValue,
+      teacherId,
+      studentId: studentIdNumber,
+      classId: classIdNumber,
+      gradeType: newGradeType,
+      gradeValue,
     });
 
     res.json({
@@ -178,11 +178,11 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const updatedGrade = await ServiceGrade.updateOne(Number(id), {
-      teacher_id: teacherId,
-      student_id: Number(studentId),
-      class_id: Number(classId),
-      grade_type: newGradeType,
-      grade_value: gradeValue,
+      teacherId,
+      studentId: Number(studentId),
+      classId: Number(classId),
+      gradeType: newGradeType,
+      gradeValue,
     });
 
     res.json({

@@ -177,7 +177,7 @@ router.get(
  *               - birthdate
  *             properties:
  *               idNumber:
- *                 type: bigint
+ *                 type: string
  *                 length: 11
  *                 description: "11 digit Turkish identity number"
  *               studentName:
@@ -247,7 +247,7 @@ router.post(
  *               classId:
  *                 type: integer
  *               idNumber:
- *                 type: bigint
+ *                 type: string
  *                 length: 11
  *                 description: "11 digit Turkish identity number"
  *               studentName:

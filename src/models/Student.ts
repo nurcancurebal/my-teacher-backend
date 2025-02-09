@@ -8,12 +8,12 @@ import ModelGrade from "./grade";
 
 interface IStudentAttributes {
   id: number;
-  class_id: number;
-  teacher_id: number;
-  id_number: bigint;
-  student_name: string;
-  student_lastname: string;
-  student_number: number;
+  classId: number;
+  teacherId: number;
+  idNumber: string;
+  studentName: string;
+  studentLastname: string;
+  studentNumber: number;
   gender: string;
   birthdate: Date;
 }
@@ -26,12 +26,12 @@ class ModelStudent
   implements IStudentAttributes
 {
   public id!: number;
-  public class_id!: number;
-  public teacher_id!: number;
-  public id_number!: bigint;
-  public student_name!: string;
-  public student_lastname!: string;
-  public student_number!: number;
+  public classId!: number;
+  public teacherId!: number;
+  public idNumber!: string;
+  public studentName!: string;
+  public studentLastname!: string;
+  public studentNumber!: number;
   public gender!: string;
   public birthdate!: Date;
 }
@@ -43,7 +43,7 @@ ModelStudent.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    class_id: {
+    classId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -52,7 +52,7 @@ ModelStudent.init(
       },
       onDelete: "CASCADE",
     },
-    teacher_id: {
+    teacherId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -60,19 +60,19 @@ ModelStudent.init(
         key: "id",
       },
     },
-    id_number: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    student_name: {
+    idNumber: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    student_lastname: {
+    studentName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    student_number: {
+    studentLastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    studentNumber: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -92,16 +92,16 @@ ModelStudent.init(
     indexes: [
       {
         unique: true,
-        fields: ["teacher_id", "id_number"],
+        fields: ["teacherId", "idNumber"],
       },
       {
         unique: true,
-        fields: ["teacher_id", "student_number"],
+        fields: ["teacherId", "studentNumber"],
       },
     ],
     hooks: {
       beforeDestroy: async (instance: ModelStudent) => {
-        await ModelGrade.destroy({ where: { student_id: instance.id } });
+        await ModelGrade.destroy({ where: { studentId: instance.id } });
       },
     },
   }

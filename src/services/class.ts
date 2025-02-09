@@ -2,21 +2,21 @@ import ModelClass, { IClassCreationAttributes } from "../models/class";
 
 export default class ClassService extends ModelClass {
   static async findAllWithTeacherId(
-    teacher_id: number
+    teacherId: number
   ): Promise<IClassCreationAttributes[]> {
     const result = await this.findAll({
       where: {
-        teacher_id,
+        teacherId,
       },
     });
 
     return result;
   }
 
-  static async getCount(teacher_id: number): Promise<number> {
+  static async getCount(teacherId: number): Promise<number> {
     const result = await this.count({
       where: {
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -24,11 +24,11 @@ export default class ClassService extends ModelClass {
   }
 
   static async classNameWithExists(
-    class_name: string,
-    teacher_id: number
+    className: string,
+    teacherId: number
   ): Promise<boolean> {
     const classInstance = await this.findOne({
-      where: { class_name, teacher_id },
+      where: { className, teacherId },
     });
     return !!classInstance;
   }
@@ -50,10 +50,10 @@ export default class ClassService extends ModelClass {
   }
 
   static async verifyClassAssignment(
-    teacher_id: number,
+    teacherId: number,
     id: number
   ): Promise<IClassCreationAttributes> {
-    const result = await this.findOne({ where: { teacher_id, id } });
+    const result = await this.findOne({ where: { teacherId, id } });
     return result;
   }
 
@@ -62,8 +62,8 @@ export default class ClassService extends ModelClass {
     return result;
   }
 
-  static async idWithExists(id: number, teacher_id: number): Promise<boolean> {
-    const result = await this.findOne({ where: { id, teacher_id } });
+  static async idWithExists(id: number, teacherId: number): Promise<boolean> {
+    const result = await this.findOne({ where: { id, teacherId } });
     return !!result;
   }
 }

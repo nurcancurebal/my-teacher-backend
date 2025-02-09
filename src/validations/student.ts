@@ -121,21 +121,14 @@ export const studentId = (getLang: TGetLang) => {
 };
 
 export const idNumber = (getLang: TGetLang) => {
-  return Joi.number()
-    .integer()
+  return Joi.string()
+    .length(11)
     .required()
-    .custom((value, helpers) => {
-      const stringValue = value.toString();
-      if (stringValue.length !== 11) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    }, "ID Number Length Validation")
+    .pattern(/^\d+$/)
     .messages({
-      "any.invalid": getLang("ID_NUMBER_CHARACTER"),
-      "number.base": getLang("ID_NUMBER_NUMBER"),
+      "string.length": getLang("ID_NUMBER_CHARACTER"),
+      "string.pattern.base": getLang("ID_NUMBER_NUMBER"),
       "any.required": getLang("ID_NUMBER_REQUIRED"),
-      "number.integer": getLang("ID_NUMBER_INTEGER"),
       "string.empty": getLang("ID_NUMBER_CANNOT_BE_EMPTY"),
       "string.base": getLang("ID_NUMBER_REQUIRED"),
     });

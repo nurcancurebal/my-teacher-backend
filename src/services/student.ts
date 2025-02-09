@@ -1,10 +1,10 @@
 import ModelStudent, { IStudentCreationAttributes } from "../models/student";
 
 export default class studentService extends ModelStudent {
-  static async getCount(teacher_id: number): Promise<number> {
+  static async getCount(teacherId: number): Promise<number> {
     const result = await this.count({
       where: {
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -12,11 +12,11 @@ export default class studentService extends ModelStudent {
   }
 
   static async getAll(
-    teacher_id: number
+    teacherId: number
   ): Promise<IStudentCreationAttributes[]> {
     const result = await this.findAll({
       where: {
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -25,40 +25,40 @@ export default class studentService extends ModelStudent {
 
   static async getOneById(
     id: number,
-    teacher_id: number
+    teacherId: number
   ): Promise<IStudentCreationAttributes> {
     const result = await this.findOne({
       where: {
         id,
-        teacher_id,
+        teacherId,
       },
     });
 
     return result;
   }
 
-  static async getGenderCount(teacher_id: number): Promise<{
+  static async getGenderCount(teacherId: number): Promise<{
     maleCount: number;
     femaleCount: number;
   }> {
     const maleCount = await this.count({
-      where: { teacher_id, gender: "Male" },
+      where: { teacherId, gender: "Male" },
     });
     const femaleCount = await this.count({
-      where: { teacher_id, gender: "Female" },
+      where: { teacherId, gender: "Female" },
     });
 
     return { maleCount, femaleCount };
   }
 
   static async getStudentByClassId(
-    teacher_id: number,
-    class_id: number
+    teacherId: number,
+    classId: number
   ): Promise<IStudentCreationAttributes[]> {
     const result = await this.findAll({
       where: {
-        teacher_id,
-        class_id,
+        teacherId,
+        classId,
       },
     });
 
@@ -66,13 +66,13 @@ export default class studentService extends ModelStudent {
   }
 
   static async byClassCount(
-    teacher_id: number,
-    class_id: number
+    teacherId: number,
+    classId: number
   ): Promise<number> {
     const result = await this.count({
       where: {
-        teacher_id,
-        class_id,
+        teacherId,
+        classId,
       },
     });
 
@@ -80,13 +80,13 @@ export default class studentService extends ModelStudent {
   }
 
   static async studentNumberWithExists(
-    teacher_id: number,
-    student_number: number
+    teacherId: number,
+    studentNumber: number
   ): Promise<boolean> {
     const result = await this.findOne({
       where: {
-        teacher_id,
-        student_number,
+        teacherId,
+        studentNumber,
       },
     });
 
@@ -94,13 +94,13 @@ export default class studentService extends ModelStudent {
   }
 
   static async idNumberWithExists(
-    teacher_id: number,
-    id_number: bigint
+    teacherId: number,
+    idNumber: string
   ): Promise<boolean> {
     const result = await this.findOne({
       where: {
-        teacher_id,
-        id_number: BigInt(id_number),
+        teacherId,
+        idNumber,
       },
     });
 
@@ -115,11 +115,11 @@ export default class studentService extends ModelStudent {
     return result;
   }
 
-  static async idWithExists(id: number, teacher_id: number): Promise<boolean> {
+  static async idWithExists(id: number, teacherId: number): Promise<boolean> {
     const result = await this.findOne({
       where: {
         id,
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -127,20 +127,20 @@ export default class studentService extends ModelStudent {
   }
 
   static async updateOne(data: IStudentCreationAttributes): Promise<number> {
-    const { id, teacher_id, ...updateData } = data;
+    const { id, teacherId, ...updateData } = data;
 
     const result = await this.update(updateData, {
-      where: { id, teacher_id },
+      where: { id, teacherId },
     });
 
     return result[0];
   }
 
-  static async deleteStudent(id: number, teacher_id: number): Promise<boolean> {
+  static async deleteStudent(id: number, teacherId: number): Promise<boolean> {
     const result = await this.destroy({
       where: {
         id,
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -149,11 +149,11 @@ export default class studentService extends ModelStudent {
 
   static async studentIdExists(
     id: number,
-    class_id: number,
-    teacher_id: number
+    classId: number,
+    teacherId: number
   ): Promise<boolean> {
     const result = await this.findOne({
-      where: { id, class_id, teacher_id },
+      where: { id, classId, teacherId },
     });
 
     return !!result;

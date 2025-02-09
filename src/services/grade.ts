@@ -2,12 +2,12 @@ import ModelGrade, { IGradeCreationAttributes } from "../models/grade";
 
 export default class ClassService extends ModelGrade {
   static async findLatestGrade(
-    teacher_id: number
+    teacherId: number
   ): Promise<IGradeCreationAttributes> {
     const result = await this.findOne({
-      order: [["created_at", "DESC"]],
+      order: [["createdAt", "DESC"]],
       where: {
-        teacher_id,
+        teacherId,
       },
     });
 
@@ -15,13 +15,13 @@ export default class ClassService extends ModelGrade {
   }
 
   static async classIdFindAll(
-    class_id: number,
-    teacher_id: number
+    classId: number,
+    teacherId: number
   ): Promise<IGradeCreationAttributes[]> {
     const result = await this.findAll({
       where: {
-        class_id,
-        teacher_id,
+        classId,
+        teacherId,
       },
     });
 
@@ -29,15 +29,15 @@ export default class ClassService extends ModelGrade {
   }
 
   static async gradeTypeExists(
-    class_id: number,
-    teacher_id: number,
-    grade_type: string
+    classId: number,
+    teacherId: number,
+    gradeType: string
   ): Promise<boolean> {
     const result = await this.findOne({
       where: {
-        class_id,
-        teacher_id,
-        grade_type,
+        classId,
+        teacherId,
+        gradeType,
       },
     });
 
@@ -65,11 +65,11 @@ export default class ClassService extends ModelGrade {
     return result[0];
   }
 
-  static async idExists(id: number, teacher_id: number): Promise<boolean> {
+  static async idExists(id: number, teacherId: number): Promise<boolean> {
     const result = await this.findOne({
       where: {
         id,
-        teacher_id,
+        teacherId,
       },
     });
 

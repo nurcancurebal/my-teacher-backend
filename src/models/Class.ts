@@ -8,26 +8,26 @@ import ModelGrade from "./grade";
 
 interface IClassAttributes {
   id: number;
-  teacher_id: number;
-  class_name: string;
+  teacherId: number;
+  className: string;
   explanation: string;
-  created_at: Date;
-  last_updated: Date;
+  createdAt: Date;
+  lastUpdated: Date;
 }
 
 interface IClassCreationAttributes
-  extends Optional<IClassAttributes, "id" | "created_at" | "last_updated"> {}
+  extends Optional<IClassAttributes, "id" | "createdAt" | "lastUpdated"> {}
 
 class ModelClass
   extends Model<IClassAttributes, IClassCreationAttributes>
   implements IClassAttributes
 {
   public id!: number;
-  public teacher_id!: number;
-  public class_name!: string;
+  public teacherId!: number;
+  public className!: string;
   public explanation!: string;
-  public readonly created_at!: Date;
-  public readonly last_updated!: Date;
+  public readonly createdAt!: Date;
+  public readonly lastUpdated!: Date;
 }
 
 ModelClass.init(
@@ -37,7 +37,7 @@ ModelClass.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    teacher_id: {
+    teacherId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -45,7 +45,7 @@ ModelClass.init(
         key: "id",
       },
     },
-    class_name: {
+    className: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -53,11 +53,11 @@ ModelClass.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    last_updated: {
+    lastUpdated: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
@@ -66,23 +66,23 @@ ModelClass.init(
     sequelize,
     tableName: "classes",
     timestamps: true,
-    createdAt: "created_at",
-    updatedAt: "last_updated",
+    createdAt: "createdAt",
+    updatedAt: "lastUpdated",
     indexes: [
       {
         unique: true,
-        fields: ["teacher_id", "class_name"],
+        fields: ["teacherId", "className"],
       },
     ],
     hooks: {
       beforeDestroy: async (instance: ModelClass) => {
         const students = await ModelStudent.findAll({
-          where: { class_id: instance.id },
+          where: { classId: instance.id },
         });
         const studentIds = students.map(student => student.id);
 
-        await ModelGrade.destroy({ where: { student_id: studentIds } });
-        await ModelStudent.destroy({ where: { class_id: instance.id } });
+        await ModelGrade.destroy({ where: { studentId: studentIds } });
+        await ModelStudent.destroy({ where: { classId: instance.id } });
       },
     },
   }

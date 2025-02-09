@@ -3,20 +3,20 @@ import ModelClass from "../models/class";
 import ModelStudent from "../models/student";
 import ModelGrade from "../models/grade";
 
-ModelUser.hasMany(ModelClass, { foreignKey: "teacher_id" });
-ModelClass.belongsTo(ModelUser, { foreignKey: "teacher_id" });
+ModelUser.hasMany(ModelClass, { foreignKey: "teacherId" });
+ModelClass.belongsTo(ModelUser, { foreignKey: "teacherId" });
 
-ModelClass.hasMany(ModelStudent, { foreignKey: "class_id" });
-ModelStudent.belongsTo(ModelClass, { foreignKey: "class_id" });
+ModelClass.hasMany(ModelStudent, { foreignKey: "classId" });
+ModelStudent.belongsTo(ModelClass, { foreignKey: "classId" });
 
-ModelUser.hasMany(ModelStudent, { foreignKey: "teacher_id" });
-ModelStudent.belongsTo(ModelUser, { foreignKey: "teacher_id" });
+ModelUser.hasMany(ModelStudent, { foreignKey: "teacherId" });
+ModelStudent.belongsTo(ModelUser, { foreignKey: "teacherId" });
 
-ModelUser.hasMany(ModelGrade, { foreignKey: "teacher_id" });
-ModelGrade.belongsTo(ModelUser, { foreignKey: "teacher_id" });
+ModelUser.hasMany(ModelGrade, { foreignKey: "teacherId" });
+ModelGrade.belongsTo(ModelUser, { foreignKey: "teacherId" });
 
-ModelStudent.hasMany(ModelGrade, { foreignKey: "student_id" });
-ModelGrade.belongsTo(ModelStudent, { foreignKey: "student_id" });
+ModelStudent.hasMany(ModelGrade, { foreignKey: "studentId" });
+ModelGrade.belongsTo(ModelStudent, { foreignKey: "studentId" });
 
-ModelClass.hasMany(ModelGrade, { foreignKey: "class_id" });
-ModelGrade.belongsTo(ModelClass, { foreignKey: "class_id" });
+ModelClass.hasMany(ModelGrade, { foreignKey: "classId" });
+ModelGrade.belongsTo(ModelClass, { foreignKey: "classId" });

@@ -10,12 +10,12 @@ interface IUserAttributes {
   email: string;
   language?: string;
   password: string;
-  created_at: Date;
-  last_updated: Date;
+  createdAt: Date;
+  lastUpdated: Date;
 }
 
 interface IUserCreationAttributes
-  extends Optional<IUserAttributes, "id" | "created_at" | "last_updated"> {}
+  extends Optional<IUserAttributes, "id" | "createdAt" | "lastUpdated"> {}
 
 class ModelUser
   extends Model<IUserAttributes, IUserCreationAttributes>
@@ -28,8 +28,8 @@ class ModelUser
   public language!: string;
   public email!: string;
   public password!: string;
-  public readonly created_at!: Date;
-  public readonly last_updated!: Date;
+  public readonly createdAt!: Date;
+  public readonly lastUpdated!: Date;
 }
 
 ModelUser.init(
@@ -66,11 +66,11 @@ ModelUser.init(
       allowNull: false,
       defaultValue: "TR",
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    last_updated: {
+    lastUpdated: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
@@ -79,8 +79,8 @@ ModelUser.init(
     sequelize,
     tableName: "users",
     timestamps: true,
-    createdAt: "created_at",
-    updatedAt: "last_updated",
+    createdAt: "createdAt",
+    updatedAt: "lastUpdated",
   }
 );
 

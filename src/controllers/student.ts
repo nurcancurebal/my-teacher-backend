@@ -141,11 +141,9 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("STUDENT_STUDENT_NUMBER_EXISTS"));
     }
 
-    const newIdNumber = BigInt(idNumber);
-
     const idNumberExists = await ServiceStudent.idNumberWithExists(
       teacherId,
-      newIdNumber
+      idNumber
     );
     if (idNumberExists) {
       throw new Error(res.locals.getLang("ID_NUMBER_ALREADY_EXISTS"));
@@ -161,12 +159,12 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const student = await ServiceStudent.createOne({
-      teacher_id: teacherId,
-      class_id: Number(classId),
-      id_number: newIdNumber,
-      student_name: newStudentName,
-      student_lastname: newStudentLastname,
-      student_number: studentNumber,
+      teacherId,
+      classId: Number(classId),
+      idNumber,
+      studentName: newStudentName,
+      studentLastname: newStudentLastname,
+      studentNumber,
       gender,
       birthdate,
     });
@@ -205,7 +203,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("STUDENT_NOT_FOUND"));
     }
 
-    if (getOneById.student_number !== studentNumber) {
+    if (getOneById.studentNumber !== studentNumber) {
       const studentNumberExists = await ServiceStudent.studentNumberWithExists(
         teacherId,
         studentNumber
@@ -215,12 +213,10 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       }
     }
 
-    if (BigInt(getOneById.id_number) !== BigInt(idNumber)) {
-      const newIdNumber = BigInt(idNumber);
-
+    if (getOneById.idNumber !== idNumber) {
       const idNumberExists = await ServiceStudent.idNumberWithExists(
         teacherId,
-        newIdNumber
+        idNumber
       );
       if (idNumberExists) {
         throw new Error(res.locals.getLang("ID_NUMBER_ALREADY_EXISTS"));
@@ -243,13 +239,13 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
 
     const student = await ServiceStudent.updateOne({
       id: Number(id),
-      teacher_id: teacherId,
-      id_number: BigInt(idNumber),
-      student_name: newStudentName,
-      student_lastname: newStudentLastname,
-      student_number: studentNumber,
+      teacherId,
+      idNumber,
+      studentName: newStudentName,
+      studentLastname: newStudentLastname,
+      studentNumber,
       birthdate: newBirthdate,
-      class_id: Number(classId),
+      classId: Number(classId),
       gender,
     });
 

@@ -60,8 +60,8 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const newClass = await ServiceClass.createOne({
-      teacher_id: teacherId,
-      class_name: newClassName,
+      teacherId,
+      className: newClassName,
       explanation,
     });
 
@@ -92,7 +92,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
 
     const newClassName = className.trim().toUpperCase();
 
-    if (verifyClassAssignment.class_name !== newClassName) {
+    if (verifyClassAssignment.className !== newClassName) {
       const classNameExists = await ServiceClass.classNameWithExists(
         newClassName,
         teacherId
@@ -103,8 +103,8 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
     }
 
     const updated = await ServiceClass.updateOne(Number(id), {
-      teacher_id: teacherId,
-      class_name: newClassName,
+      teacherId,
+      className: newClassName,
       explanation,
     });
 

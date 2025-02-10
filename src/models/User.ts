@@ -64,7 +64,7 @@ ModelUser.init(
     language: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "TR",
+      defaultValue: "EN",
     },
     createdAt: {
       type: DataTypes.DATE,

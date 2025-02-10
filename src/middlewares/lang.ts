@@ -23,13 +23,15 @@ export default async function (
 
     res.locals.getLang = ((
       key: keyof (typeof LANG)[typeof userLanguage],
-      lang = userLanguage
+      lang?: string
     ) => {
-      if (!LANG?.[userLanguage]?.[key]) {
-        return LANG[lang as keyof typeof LANG]["DEFAULT"];
+      const findPlusLang = lang || userLanguage;
+
+      if (!LANG?.[findPlusLang as keyof typeof LANG]?.[key]) {
+        return LANG[findPlusLang as keyof typeof LANG]["DEFAULT"];
       }
 
-      return LANG[userLanguage][key];
+      return LANG[findPlusLang as keyof typeof LANG][key];
     }) as TGetLang;
 
     next();

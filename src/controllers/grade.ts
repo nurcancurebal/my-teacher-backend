@@ -86,14 +86,14 @@ async function gradeTypeExists(
       newGradeType
     );
 
-    if (!grades) {
-      throw new Error(res.locals.getLang("GRADE_TYPE_NOT_FOUND"));
+    if (grades) {
+      throw new Error(res.locals.getLang("THERE_IS_NOTE_FOR_THIS_CLASS"));
     }
 
     res.json({
       error: false,
       data: grades,
-      message: res.locals.getLang("THERE_IS_NOTE_FOR_THIS_CLASS"),
+      message: res.locals.getLang("GRADE_TYPE_NOT_FOUND"),
     });
   } catch (error) {
     next(error);

@@ -10,9 +10,15 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
   try {
     const { email } = res.locals.user;
 
+    const id = parseInt(req.params.id, 10);
+
     const user = await ServiceAuth.findOneWithEmail(email);
 
     if (!user) {
+      throw new Error(res.locals.getLang("USER_NOT_FOUND"));
+    }
+
+    if (user.id !== id) {
       throw new Error(res.locals.getLang("USER_NOT_FOUND"));
     }
 
@@ -50,9 +56,10 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       lastname: helperFormatName(body.lastname),
       email: body.email,
       username: body.username.trim(),
+      language: user.language,
     };
 
-    const updateUser = await ServiceAuth.updateOneById(user.id, updateData);
+    const updateUser = await ServiceAuth.updateOneById(id, updateData);
 
     res.json({
       error: false,

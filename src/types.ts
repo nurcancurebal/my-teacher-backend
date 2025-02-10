@@ -10,4 +10,4 @@ export type TErrorResponse = {
   stack?: Error["stack"];
 };
 
-export type TGetLang = (lang: string) => string;
+export type TGetLang = (key: string, lang?: string) => string;

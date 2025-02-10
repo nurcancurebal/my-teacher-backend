@@ -59,7 +59,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
     res.json({
       error: false,
       data: newTokens,
-      message: res.locals.getLang("LOGIN_SUCCESS"),
+      message: res.locals.getLang("LOGIN_SUCCESS", user.language),
     });
   } catch (error) {
     next(error);

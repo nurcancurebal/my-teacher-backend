@@ -118,7 +118,7 @@ router.post(
  *         required: true
  *         description: Class ID
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -171,7 +171,7 @@ router.put(
  *         required: true
  *         description: Class ID
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       "200":
  *         description: OK

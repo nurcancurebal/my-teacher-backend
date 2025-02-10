@@ -16,12 +16,19 @@ import { schemaUpdate } from "../validations/profile";
 
 /**
  * @swagger
- * /profile:
+ * /profile/{id}:
  *   put:
  *     summary: Update profile
  *     tags: [Profile]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User ID
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -75,7 +82,7 @@ import { schemaUpdate } from "../validations/profile";
  *         description: Internal Server Error
  */
 router.put(
-  "/",
+  "/:id",
   MiddlewareRedValidate(schemaUpdate),
   ControllerProfile.updateOne
 );

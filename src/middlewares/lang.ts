@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import { LANG } from "../consts";
+import { TGetLang } from "../types";
 
 const WHITE_LIST_LANGUAGE = ["TR", "EN"];
 const DEFAULT_LANG = "EN";
@@ -20,13 +21,16 @@ export default async function (
     const userLanguage: keyof typeof LANG =
       res.locals?.user?.language || findNonAcceptedLang;
 
-    res.locals.getLang = (key: keyof (typeof LANG)[typeof userLanguage]) => {
+    res.locals.getLang = ((
+      key: keyof (typeof LANG)[typeof userLanguage],
+      lang = userLanguage
+    ) => {
       if (!LANG?.[userLanguage]?.[key]) {
-        return LANG[userLanguage]["DEFAULT"];
+        return LANG[lang as keyof typeof LANG]["DEFAULT"];
       }
 
       return LANG[userLanguage][key];
-    };
+    }) as TGetLang;
 
     next();
   } catch (error) {

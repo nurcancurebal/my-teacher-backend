@@ -159,6 +159,10 @@ export const LANG = {
     GRADE_NOT_FOUND: "Grade not found!",
     GRADE_VALUE_NUMBER_MIN: "Grade value must be at least 0!",
     GRADE_VALUE_NUMBER_MAX: "Grade value must be at most 100!",
+    USER_ID_REQUIRED: "User ID is required!",
+    USER_ID_NUMBER: "User ID must be a number!",
+    USER_ID_INTEGER: "User ID must be an integer!",
+    USER_ID_EMPTY: "User ID cannot be empty!",
   },
   TR: {
     DEFAULT: "Hata tanımı bulunamadı!",
@@ -320,5 +324,9 @@ export const LANG = {
     GRADE_NOT_FOUND: "Not bulunamadı!",
     GRADE_VALUE_NUMBER_MIN: "Not değeri en az 0 olmalıdır!",
     GRADE_VALUE_NUMBER_MAX: "Not değeri en fazla 100 olmalıdır!",
+    USER_ID_REQUIRED: "Kullanıcı ID'si gereklidir!",
+    USER_ID_NUMBER: "Kullanıcı ID'si bir sayı olmalıdır!",
+    USER_ID_INTEGER: "Kullanıcı ID'si bir tam sayı olmalıdır!",
+    USER_ID_EMPTY: "Kullanıcı ID'si boş olamaz!",
   },
 };

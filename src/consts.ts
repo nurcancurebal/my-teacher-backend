@@ -240,7 +240,7 @@ export const LANG = {
       "Öğrenci Numarası 2 ile 15 karakter arasında olmalıdır!",
     STUDENT_NUMBER_REQUIRED: "Öğrenci numarası gereklidir!",
     STUDENT_NUMBER_CANNOT_BE_EMPTY: "Öğrenci numarası boş olamaz!",
-    GENDER_VALIDATION_MESSAGE: "Cinsiyet Kadın veya Erkek olmalıdır!",
+    GENDER_VALIDATION_MESSAGE: "Cinsiyet Kız veya Erkek olmalıdır!",
     GENDER_REQUIRED: "Cinsiyet gereklidir!",
     GENDER_EMPTY: "Cinsiyet boş olamaz!",
     BIRTHDATE_REQUIRED: "Doğum tarihi gereklidir!",

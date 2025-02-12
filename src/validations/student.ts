@@ -27,6 +27,20 @@ export const schemaGetCount = () => {
   });
 };
 
+export const schemaFilter = () => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object({
+      firstname: Joi.string().optional(),
+      lastname: Joi.string().optional(),
+      studentNumber: Joi.number().optional(),
+      gender: Joi.string().valid("Female", "Male").optional(),
+      classId: Joi.number().optional(),
+    }).max(5),
+    params: Joi.object().max(0),
+  });
+};
+
 export const schemaGetAll = () => {
   return Joi.object({
     body: Joi.object().max(0),

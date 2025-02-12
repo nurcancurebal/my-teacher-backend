@@ -8,6 +8,7 @@ import helperFormatName from "../helpers/format-name";
 export default {
   getCount,
   getAll,
+  filter,
   genderCount,
   getAllByClassId,
   countByClassId,
@@ -26,6 +27,27 @@ async function getCount(_req: Request, res: Response, next: NextFunction) {
       error: false,
       data: count,
       message: res.locals.getLang("STUDENT_COUNT_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function filter(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id: teacherId } = res.locals.user;
+
+    const query = req.query;
+
+    const students = await ServiceStudent.filter(
+      teacherId,
+      query as { [key: string]: string }
+    );
+
+    res.json({
+      error: false,
+      data: students,
+      message: res.locals.getLang("STUDENTS_FOUND"),
     });
   } catch (error) {
     next(error);

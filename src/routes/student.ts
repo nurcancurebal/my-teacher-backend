@@ -15,6 +15,7 @@ import {
   schemaCreateOne,
   schemaUpdateOne,
   schemaDeleteOne,
+  schemaFilter,
 } from "../validations/student";
 
 /**
@@ -60,6 +61,61 @@ router.get(
  *         description: Internal Server Error
  */
 router.get("/", MiddlewareRedValidate(schemaGetAll), ControllerStudent.getAll);
+
+/**
+ * @swagger
+ * /student/filter:
+ *   get:
+ *     summary: Filter students
+ *     tags: [Student]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: firstname
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The first name of the student
+ *       - in: query
+ *         name: lastname
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The last name of the student
+ *       - in: query
+ *         name: studentNumber
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The student number
+ *       - in: query
+ *         name: gender
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The gender of the student
+ *       - in: query
+ *         name: classId
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The class ID
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.get(
+  "/filter",
+  MiddlewareRedValidate(schemaFilter),
+  ControllerStudent.filter
+);
 
 /**
  * @swagger

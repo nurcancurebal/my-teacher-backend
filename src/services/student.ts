@@ -1,4 +1,5 @@
 import ModelStudent, { IStudentCreationAttributes } from "../models/student";
+import { Op } from "sequelize";
 
 export default class studentService extends ModelStudent {
   static async getCount(teacherId: number): Promise<number> {
@@ -6,6 +7,55 @@ export default class studentService extends ModelStudent {
       where: {
         teacherId,
       },
+    });
+
+    return result;
+  }
+
+  static async filter(
+    teacherId: number,
+    query: { [key: string]: string }
+  ): Promise<IStudentCreationAttributes[]> {
+    const whereClause: {
+      teacherId: number;
+      [Op.or]?: object[];
+      [Op.and]?: object[];
+    } = {
+      teacherId,
+    };
+
+    const andConditions: object[] = [];
+
+    if (query.firstname) {
+      andConditions.push({
+        studentName: { [Op.iLike]: `%${query.firstname}%` },
+      });
+    }
+
+    if (query.lastname) {
+      andConditions.push({
+        studentLastname: { [Op.iLike]: `%${query.lastname}%` },
+      });
+    }
+
+    if (query.studentNumber) {
+      andConditions.push({ studentNumber: query.studentNumber });
+    }
+
+    if (query.gender) {
+      andConditions.push({ gender: query.gender });
+    }
+
+    if (query.classId) {
+      andConditions.push({ classId: query.classId });
+    }
+
+    if (andConditions.length > 0) {
+      whereClause[Op.and] = andConditions;
+    }
+
+    const result = await this.findAll({
+      where: whereClause,
     });
 
     return result;

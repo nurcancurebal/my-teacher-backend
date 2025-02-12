@@ -12,7 +12,73 @@ import {
   schemaGradeTypeExists,
   schemaCreateOne,
   schemaUpdateOne,
+  schemaUniqueGradeType,
+  schemaDeleteOne,
+  schemaAllGradeType,
 } from "../validations/grade";
+
+/**
+ * @swagger
+ * /grade/grade-type/unique:
+ *   get:
+ *     summary: Get all grades unique gradeType
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.get(
+  "/grade-type/unique",
+  MiddlewareRedValidate(schemaUniqueGradeType),
+  ControllerGrade.uniqueGradeType
+);
+
+/**
+ * @swagger
+ * /grade/grade-type:
+ *   post:
+ *     summary: Get all grades gradeType
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - gradeType
+ *             properties:
+ *               gradeType:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *             example:
+ *               gradeType: "midterm"
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.post(
+  "/grade-type",
+  MiddlewareRedValidate(schemaAllGradeType),
+  ControllerGrade.allGradeType
+);
 
 /**
  * @swagger
@@ -234,6 +300,37 @@ router.put(
   "/:classId/:studentId/:id",
   MiddlewareRedValidate(schemaUpdateOne),
   ControllerGrade.updateOne
+);
+
+/**
+ * @swagger
+ * /grade/{id}:
+ *   delete:
+ *     summary: Delete a grade
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Grade ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.delete(
+  "/:id",
+  MiddlewareRedValidate(schemaDeleteOne),
+  ControllerGrade.deleteOne
 );
 
 /**

@@ -1,6 +1,16 @@
 import ModelGrade, { IGradeCreationAttributes } from "../models/grade";
 
 export default class ClassService extends ModelGrade {
+  static async getAll(teacherId: number): Promise<IGradeCreationAttributes[]> {
+    const result = await this.findAll({
+      where: {
+        teacherId,
+      },
+    });
+
+    return result;
+  }
+
   static async findLatestGrade(
     teacherId: number
   ): Promise<IGradeCreationAttributes> {
@@ -74,5 +84,26 @@ export default class ClassService extends ModelGrade {
     });
 
     return !!result;
+  }
+
+  static async deleteOne(id: number): Promise<number> {
+    const result = await this.destroy({
+      where: {
+        id,
+      },
+    });
+
+    return result;
+  }
+
+  static async getGradeType(teacherId: number, gradeType: string) {
+    const result = await this.findAll({
+      where: {
+        teacherId,
+        gradeType,
+      },
+    });
+
+    return result;
   }
 }

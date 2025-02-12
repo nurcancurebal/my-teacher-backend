@@ -7,12 +7,81 @@ import ServiceClass from "../services/class";
 import helperFormatName from "../helpers/format-name";
 
 export default {
+  uniqueGradeType,
   findLatestGrade,
   classIdFindAll,
   gradeTypeExists,
   createOne,
   updateOne,
+  deleteOne,
+  allGradeType,
 };
+
+async function allGradeType(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id: teacherId } = res.locals.user;
+    const { gradeType } = req.body;
+    const newGradeType = helperFormatName(gradeType);
+
+    const grades = await ServiceGrade.getGradeType(teacherId, newGradeType);
+
+    res.json({
+      error: false,
+      data: grades,
+      message: res.locals.getLang("GRADES_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function uniqueGradeType(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id: teacherId } = res.locals.user;
+
+    const grades = await ServiceGrade.getAll(teacherId);
+
+    const uniqueGrades = grades.reduce(
+      (
+        acc: {
+          [key: string]: {
+            gradeType: string;
+            createAt: Date;
+            lastUpdated: Date;
+          };
+        },
+        grade
+      ) => {
+        const { gradeType, createdAt, lastUpdated } = grade;
+        if (!acc[gradeType]) {
+          acc[gradeType] = {
+            gradeType,
+            createAt: createdAt,
+            lastUpdated: lastUpdated,
+          };
+        } else {
+          acc[gradeType].lastUpdated = lastUpdated;
+        }
+        return acc;
+      },
+      {}
+    );
+
+    const result = Object.values(uniqueGrades);
+
+    res.json({
+      error: false,
+      data: result,
+      message: res.locals.getLang("GRADES_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function findLatestGrade(
   _req: Request,
@@ -128,15 +197,6 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
       throw new Error(res.locals.getLang("STUDENT_NOT_FOUND_IN_THE_CLASS"));
     }
 
-    const gradeExists = await ServiceGrade.gradeTypeExists(
-      classIdNumber,
-      teacherId,
-      newGradeType
-    );
-    if (gradeExists) {
-      throw new Error(res.locals.getLang("GRADE_TYPE_EXISTS"));
-    }
-
     const newGrade = await ServiceGrade.createOne({
       teacherId,
       studentId: studentIdNumber,
@@ -189,6 +249,28 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       error: false,
       data: updatedGrade,
       message: res.locals.getLang("GRADE_UPDATED"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteOne(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id: teacherId } = res.locals.user;
+    const { id } = req.params;
+
+    const gradeExists = await ServiceGrade.idExists(Number(id), teacherId);
+    if (!gradeExists) {
+      throw new Error(res.locals.getLang("GRADE_NOT_FOUND"));
+    }
+
+    await ServiceGrade.deleteOne(Number(id));
+
+    res.json({
+      error: false,
+      data: null,
+      message: res.locals.getLang("GRADE_DELETED"),
     });
   } catch (error) {
     next(error);

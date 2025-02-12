@@ -5,6 +5,24 @@ import { TGetLang } from "../types";
 import { studentId } from "./student";
 import { classId } from "./class";
 
+export const schemaUniqueGradeType = () => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object().max(0),
+  });
+};
+
+export const schemaAllGradeType = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object({
+      gradeType: gradeType(getLang),
+    }).max(1),
+    query: Joi.object().max(0),
+    params: Joi.object().max(0),
+  });
+};
+
 export const schemaCreateOne = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
@@ -60,6 +78,16 @@ export const schemaGradeTypeExists = (getLang: TGetLang) => {
     query: Joi.object().max(0),
     params: Joi.object({
       classId: classId(getLang),
+    }).max(1),
+  });
+};
+
+export const schemaDeleteOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      id: gradeId(getLang),
     }).max(1),
   });
 };

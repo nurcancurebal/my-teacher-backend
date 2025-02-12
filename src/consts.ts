@@ -163,6 +163,8 @@ export const LANG = {
     USER_ID_NUMBER: "User ID must be a number!",
     USER_ID_INTEGER: "User ID must be an integer!",
     USER_ID_EMPTY: "User ID cannot be empty!",
+    GRADES_FOUND: "Grades found.",
+    GRADE_DELETED: "Grade successfully deleted.",
   },
   TR: {
     DEFAULT: "Hata tanımı bulunamadı!",
@@ -328,5 +330,7 @@ export const LANG = {
     USER_ID_NUMBER: "Kullanıcı ID'si bir sayı olmalıdır!",
     USER_ID_INTEGER: "Kullanıcı ID'si bir tam sayı olmalıdır!",
     USER_ID_EMPTY: "Kullanıcı ID'si boş olamaz!",
+    GRADES_FOUND: "Notlar bulundu.",
+    GRADE_DELETED: "Not başarıyla silindi.",
   },
 };

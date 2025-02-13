@@ -84,7 +84,7 @@ router.get("/", MiddlewareRedValidate(schemaGetAll), ControllerStudent.getAll);
  *         required: false
  *         description: The last name of the student
  *       - in: query
- *         name: studentNumber
+ *         name: number
  *         schema:
  *           type: string
  *         required: false
@@ -226,25 +226,25 @@ router.get(
  *             type: object
  *             required:
  *               - idNumber
- *               - studentName
- *               - studentLastname
- *               - studentNumber
+ *               - firstname
+ *               - lastname
+ *               - number
  *               - gender
- *               - birthdate
+ *               - birthday
  *             properties:
  *               idNumber:
  *                 type: string
  *                 length: 11
  *                 description: "11 digit Turkish identity number"
- *               studentName:
+ *               firstname:
  *                 type: string
  *                 minLength: 3
  *                 maxLength: 30
- *               studentLastname:
+ *               lastname:
  *                type: string
  *                minLength: 3
  *                maxLength: 30
- *               studentNumber:
+ *               number:
  *                type: number
  *                minLength: 2
  *                maxLength: 15
@@ -252,16 +252,16 @@ router.get(
  *                 type: string
  *                 enum: ["Female", "Male"]
  *                 description: "Gender: Female or Male"
- *               birthdate:
+ *               birthday:
  *                 type: string
  *                 format: ISO date
  *             example:
  *               idNumber: 12345678901
- *               studentName: John
- *               studentLastname: Doe
- *               studentNumber: 123456
+ *               firstname: John
+ *               lastname: Doe
+ *               number: 123456
  *               gender: Female
- *               birthdate: 2010-01-01
+ *               birthday: 2010-01-01
  *     responses:
  *       "200":
  *         description: OK
@@ -306,15 +306,15 @@ router.post(
  *                 type: string
  *                 length: 11
  *                 description: "11 digit Turkish identity number"
- *               studentName:
+ *               firstname:
  *                 type: string
  *                 minLength: 3
  *                 maxLength: 30
- *               studentLastname:
+ *               lastname:
  *                type: string
  *                minLength: 3
  *                maxLength: 30
- *               studentNumber:
+ *               number:
  *                type: number
  *                minLength: 2
  *                maxLength: 15
@@ -322,17 +322,17 @@ router.post(
  *                 type: string
  *                 enum: ["Female", "Male"]
  *                 description: "Gender: Female or Male"
- *               birthdate:
+ *               birthday:
  *                 type: string
  *                 format: ISO date
  *             example:
  *               classId: 1
  *               idNumber: 12345678901
- *               studentName: John
- *               studentLastname: Doe
- *               studentNumber: 123456
+ *               firstname: John
+ *               lastname: Doe
+ *               number: 123456
  *               gender: Female
- *               birthdate: 2010-01-01
+ *               birthday: 2010-01-01
  *     responses:
  *       "200":
  *         description: OK

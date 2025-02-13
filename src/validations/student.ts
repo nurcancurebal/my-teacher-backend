@@ -8,11 +8,11 @@ export const schemaStudent = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       idNumber: idNumber(getLang),
-      studentName: studentName(getLang),
-      studentLastname: studentLastname(getLang),
-      studentNumber: studentNumber(getLang),
+      firstname: firstname(getLang),
+      lastname: lastname(getLang),
+      number: number(getLang),
       gender: gender(getLang),
-      birthdate: birthdate(getLang),
+      birthday: birthday(getLang),
     }).max(6),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
@@ -33,7 +33,7 @@ export const schemaFilter = () => {
     query: Joi.object({
       firstname: Joi.string().optional(),
       lastname: Joi.string().optional(),
-      studentNumber: Joi.number().optional(),
+      number: Joi.number().optional(),
       gender: Joi.string().valid("Female", "Male").optional(),
       classId: Joi.number().optional(),
     }).max(5),
@@ -81,11 +81,11 @@ export const schemaCreateOne = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
       idNumber: idNumber(getLang),
-      studentName: studentName(getLang),
-      studentLastname: studentLastname(getLang),
-      studentNumber: studentNumber(getLang),
+      firstname: firstname(getLang),
+      lastname: lastname(getLang),
+      number: number(getLang),
       gender: gender(getLang),
-      birthdate: birthdate(getLang),
+      birthday: birthday(getLang),
     }).max(6),
     query: Joi.object().max(0),
     params: Joi.object({
@@ -99,10 +99,10 @@ export const schemaUpdateOne = (getLang: TGetLang) => {
     body: Joi.object({
       classId: classId(getLang),
       idNumber: idNumber(getLang),
-      studentName: studentName(getLang),
-      studentLastname: studentLastname(getLang),
-      studentNumber: studentNumber(getLang),
-      birthdate: birthdate(getLang),
+      firstname: firstname(getLang),
+      lastname: lastname(getLang),
+      number: number(getLang),
+      birthday: birthday(getLang),
       gender: gender(getLang),
     }).max(7),
     query: Joi.object().max(0),
@@ -148,35 +148,35 @@ export const idNumber = (getLang: TGetLang) => {
     });
 };
 
-export const studentName = (getLang: TGetLang) => {
+export const firstname = (getLang: TGetLang) => {
   return Joi.string()
     .min(3)
     .max(30)
     .required()
     .messages({
-      "any.required": getLang("STUDENTNAME_REQUIRED"),
-      "string.empty": getLang("STUDENTNAME_CANNOT_BE_EMPTY"),
-      "string.base": getLang("STUDENTNAME_REQUIRED"),
-      "string.min": getLang("STUDENTNAME_MIN"),
-      "string.max": getLang("STUDENTNAME_MAX"),
+      "any.required": getLang("FIRSTNAME_REQUIRED"),
+      "string.empty": getLang("FIRSTNAME_CANNOT_BE_EMPTY"),
+      "string.base": getLang("FIRSTNAME_REQUIRED"),
+      "string.min": getLang("FIRSTNAME_MIN"),
+      "string.max": getLang("FIRSTNAME_MAX"),
     });
 };
 
-export const studentLastname = (getLang: TGetLang) => {
+export const lastname = (getLang: TGetLang) => {
   return Joi.string()
     .min(3)
     .max(30)
     .required()
     .messages({
-      "any.required": getLang("STUDENT_LASTNAME_REQUIRED"),
-      "string.empty": getLang("STUDENT_LASTNAME_CANNOT_BE_EMPTY"),
-      "string.base": getLang("STUDENT_LASTNAME_REQUIRED"),
-      "string.min": getLang("STUDENT_LASTNAME_MIN"),
-      "string.max": getLang("STUDENT_LASTNAME_MAX"),
+      "any.required": getLang("LASTNAME_REQUIRED"),
+      "string.empty": getLang("ASTNAME_CANNOT_BE_EMPTY"),
+      "string.base": getLang("LASTNAME_REQUIRED"),
+      "string.min": getLang("LASTNAME_MIN"),
+      "string.max": getLang("LASTNAME_MAX"),
     });
 };
 
-export const studentNumber = (getLang: TGetLang) => {
+export const number = (getLang: TGetLang) => {
   return Joi.number()
     .required()
     .custom((value, helpers) => {
@@ -187,10 +187,10 @@ export const studentNumber = (getLang: TGetLang) => {
       return value;
     }, "Custom length validation")
     .messages({
-      "any.invalid": getLang("STUDENT_NUMBER_INVALID"),
-      "any.required": getLang("STUDENT_NUMBER_REQUIRED"),
-      "number.base": getLang("STUDENT_NUMBER_REQUIRED"),
-      "string.empty": getLang("STUDENT_NUMBER_CANNOT_BE_EMPTY"),
+      "any.invalid": getLang("NUMBER_INVALID"),
+      "any.required": getLang("NUMBER_REQUIRED"),
+      "number.base": getLang("NUMBER_REQUIRED"),
+      "string.empty": getLang("NUMBER_CANNOT_BE_EMPTY"),
     });
 };
 
@@ -206,14 +206,14 @@ export const gender = (getLang: TGetLang) => {
     });
 };
 
-export const birthdate = (getLang: TGetLang) => {
+export const birthday = (getLang: TGetLang) => {
   return Joi.date()
     .iso()
     .required()
     .messages({
-      "any.required": getLang("BIRTHDATE_REQUIRED"),
-      "date.base": getLang("BIRTHDATE_REQUIRED"),
-      "date.empty": getLang("BIRTHDATE_CANNOT_BE_EMPTY"),
-      "date.format": getLang("BIRTHDATE_INVALID"),
+      "any.required": getLang("BIRTHDAY_REQUIRED"),
+      "date.base": getLang("BIRTHDAY_REQUIRED"),
+      "date.empty": getLang("BIRTHDAY_CANNOT_BE_EMPTY"),
+      "date.format": getLang("BIRTHDAY_INVALID"),
     });
 };

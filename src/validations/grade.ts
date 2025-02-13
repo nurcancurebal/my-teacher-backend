@@ -82,12 +82,12 @@ export const schemaGradeTypeExists = (getLang: TGetLang) => {
   });
 };
 
-export const schemaDeleteOne = (getLang: TGetLang) => {
+export const schemaDeleteAllGradeType = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object().max(0),
     query: Joi.object().max(0),
     params: Joi.object({
-      id: gradeId(getLang),
+      gradeType: gradeType(getLang),
     }).max(1),
   });
 };

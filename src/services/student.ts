@@ -28,18 +28,18 @@ export default class studentService extends ModelStudent {
 
     if (query.firstname) {
       andConditions.push({
-        studentName: { [Op.iLike]: `%${query.firstname}%` },
+        firstname: { [Op.iLike]: `%${query.firstname}%` },
       });
     }
 
     if (query.lastname) {
       andConditions.push({
-        studentLastname: { [Op.iLike]: `%${query.lastname}%` },
+        lastname: { [Op.iLike]: `%${query.lastname}%` },
       });
     }
 
-    if (query.studentNumber) {
-      andConditions.push({ studentNumber: query.studentNumber });
+    if (query.number) {
+      andConditions.push({ number: query.number });
     }
 
     if (query.gender) {
@@ -129,14 +129,14 @@ export default class studentService extends ModelStudent {
     return result;
   }
 
-  static async studentNumberWithExists(
+  static async numberWithExists(
     teacherId: number,
-    studentNumber: number
+    number: number
   ): Promise<boolean> {
     const result = await this.findOne({
       where: {
         teacherId,
-        studentNumber,
+        number,
       },
     });
 

@@ -13,7 +13,7 @@ export default {
   gradeTypeExists,
   createOne,
   updateOne,
-  deleteOne,
+  deleteAllGradeType,
   allGradeType,
 };
 
@@ -255,17 +255,18 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function deleteOne(req: Request, res: Response, next: NextFunction) {
+async function deleteAllGradeType(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { id: teacherId } = res.locals.user;
-    const { id } = req.params;
+    const { gradeType } = req.params;
 
-    const gradeExists = await ServiceGrade.idExists(Number(id), teacherId);
-    if (!gradeExists) {
-      throw new Error(res.locals.getLang("GRADE_NOT_FOUND"));
-    }
+    const newGradeType = helperFormatName(gradeType);
 
-    await ServiceGrade.deleteOne(Number(id));
+    await ServiceGrade.deleteGradeType(Number(teacherId), newGradeType);
 
     res.json({
       error: false,

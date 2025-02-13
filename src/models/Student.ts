@@ -11,11 +11,11 @@ interface IStudentAttributes {
   classId: number;
   teacherId: number;
   idNumber: string;
-  studentName: string;
-  studentLastname: string;
-  studentNumber: number;
+  firstname: string;
+  lastname: string;
+  number: number;
   gender: string;
-  birthdate: Date;
+  birthday: Date;
 }
 
 interface IStudentCreationAttributes
@@ -29,11 +29,11 @@ class ModelStudent
   public classId!: number;
   public teacherId!: number;
   public idNumber!: string;
-  public studentName!: string;
-  public studentLastname!: string;
-  public studentNumber!: number;
+  public firstname!: string;
+  public lastname!: string;
+  public number!: number;
   public gender!: string;
-  public birthdate!: Date;
+  public birthday!: Date;
 }
 
 ModelStudent.init(
@@ -64,15 +64,15 @@ ModelStudent.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    studentName: {
+    firstname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    studentLastname: {
+    lastname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    studentNumber: {
+    number: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -80,7 +80,7 @@ ModelStudent.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    birthdate: {
+    birthday: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
@@ -96,7 +96,7 @@ ModelStudent.init(
       },
       {
         unique: true,
-        fields: ["teacherId", "studentNumber"],
+        fields: ["teacherId", "number"],
       },
     ],
     hooks: {

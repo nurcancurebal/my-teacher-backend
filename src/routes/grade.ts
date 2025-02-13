@@ -13,7 +13,7 @@ import {
   schemaCreateOne,
   schemaUpdateOne,
   schemaUniqueGradeType,
-  schemaDeleteOne,
+  schemaDeleteAllGradeType,
   schemaAllGradeType,
 } from "../validations/grade";
 
@@ -304,19 +304,19 @@ router.put(
 
 /**
  * @swagger
- * /grade/{id}:
+ * /grade/{gradeType}:
  *   delete:
- *     summary: Delete a grade
+ *     summary: All delete a gradeType
  *     tags: [Grade]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
- *         required: true
- *         description: Grade ID
+ *         name: gradeType
  *         schema:
- *           type: integer
+ *           type: string
+ *         required: true
+ *         description: The gradeType to delete
  *     responses:
  *       "200":
  *         description: OK
@@ -328,9 +328,9 @@ router.put(
  *         description: Internal Server Error
  */
 router.delete(
-  "/:id",
-  MiddlewareRedValidate(schemaDeleteOne),
-  ControllerGrade.deleteOne
+  "/:gradeType",
+  MiddlewareRedValidate(schemaDeleteAllGradeType),
+  ControllerGrade.deleteAllGradeType
 );
 
 /**

@@ -141,26 +141,20 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
   try {
     const { id: teacherId } = res.locals.user;
 
-    const {
-      studentName,
-      studentLastname,
-      birthdate,
-      studentNumber,
-      idNumber,
-      gender,
-    } = req.body;
+    const { firstname, lastname, birthday, number, idNumber, gender } =
+      req.body;
 
     const { classId } = req.params;
 
-    const newStudentName = helperFormatName(studentName);
-    const newStudentLastname = helperFormatName(studentLastname);
+    const newFirstname = helperFormatName(firstname);
+    const newLastname = helperFormatName(lastname);
 
-    const studentNumberExists = await ServiceStudent.studentNumberWithExists(
+    const numberExists = await ServiceStudent.numberWithExists(
       teacherId,
-      studentNumber
+      number
     );
-    if (studentNumberExists) {
-      throw new Error(res.locals.getLang("STUDENT_STUDENT_NUMBER_EXISTS"));
+    if (numberExists) {
+      throw new Error(res.locals.getLang("NUMBER_EXISTS"));
     }
 
     const idNumberExists = await ServiceStudent.idNumberWithExists(
@@ -184,11 +178,11 @@ async function createOne(req: Request, res: Response, next: NextFunction) {
       teacherId,
       classId: Number(classId),
       idNumber,
-      studentName: newStudentName,
-      studentLastname: newStudentLastname,
-      studentNumber,
+      firstname: newFirstname,
+      lastname: newLastname,
+      number,
       gender,
-      birthdate,
+      birthday,
     });
 
     res.json({
@@ -205,33 +199,26 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
   try {
     const { id: teacherId } = res.locals.user;
 
-    const {
-      studentName,
-      studentLastname,
-      birthdate,
-      studentNumber,
-      idNumber,
-      classId,
-      gender,
-    } = req.body;
+    const { firstname, lastname, birthday, number, idNumber, classId, gender } =
+      req.body;
 
     const { id } = req.params;
 
-    const newStudentName = helperFormatName(studentName);
-    const newStudentLastname = helperFormatName(studentLastname);
+    const newFirstname = helperFormatName(firstname);
+    const newLastname = helperFormatName(lastname);
 
     const getOneById = await ServiceStudent.getOneById(Number(id), teacherId);
     if (!getOneById) {
       throw new Error(res.locals.getLang("STUDENT_NOT_FOUND"));
     }
 
-    if (getOneById.studentNumber !== studentNumber) {
-      const studentNumberExists = await ServiceStudent.studentNumberWithExists(
+    if (getOneById.number !== number) {
+      const numberExists = await ServiceStudent.numberWithExists(
         teacherId,
-        studentNumber
+        number
       );
-      if (studentNumberExists) {
-        throw new Error(res.locals.getLang("STUDENT_NUMBER_ALREADY_EXISTS"));
+      if (numberExists) {
+        throw new Error(res.locals.getLang("NUMBER_ALREADY_EXISTS"));
       }
     }
 
@@ -245,8 +232,8 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       }
     }
 
-    const newBirthdate = new Date(birthdate);
-    if (isNaN(newBirthdate.getTime())) {
+    const newBirthday = new Date(birthday);
+    if (isNaN(newBirthday.getTime())) {
       throw new Error(res.locals.getLang("INVALID_DATE"));
     }
 
@@ -263,10 +250,10 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       id: Number(id),
       teacherId,
       idNumber,
-      studentName: newStudentName,
-      studentLastname: newStudentLastname,
-      studentNumber,
-      birthdate: newBirthdate,
+      firstname: newFirstname,
+      lastname: newLastname,
+      number,
+      birthday: newBirthday,
       classId: Number(classId),
       gender,
     });

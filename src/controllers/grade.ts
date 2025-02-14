@@ -16,6 +16,7 @@ export default {
   deleteAllGradeType,
   allGradeType,
   classIdGrade,
+  deleteOne,
 };
 
 async function allGradeType(req: Request, res: Response, next: NextFunction) {
@@ -297,6 +298,28 @@ async function deleteAllGradeType(
     const newGradeType = helperFormatName(gradeType);
 
     await ServiceGrade.deleteGradeType(Number(teacherId), newGradeType);
+
+    res.json({
+      error: false,
+      data: null,
+      message: res.locals.getLang("GRADE_DELETED"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteOne(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id: teacherId } = res.locals.user;
+    const { id } = req.params;
+
+    const gradeExists = await ServiceGrade.idExists(Number(id), teacherId);
+    if (!gradeExists) {
+      throw new Error(res.locals.getLang("GRADE_NOT_FOUND"));
+    }
+
+    await ServiceGrade.deleteOne(Number(id), teacherId);
 
     res.json({
       error: false,

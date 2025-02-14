@@ -104,6 +104,16 @@ export const schemaDeleteAllGradeType = (getLang: TGetLang) => {
   });
 };
 
+export const schemaDeleteOne = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      id: gradeId(getLang),
+    }).max(1),
+  });
+};
+
 export const gradeType = (getLang: TGetLang) => {
   return Joi.string()
     .min(3)

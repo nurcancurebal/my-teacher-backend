@@ -16,6 +16,7 @@ import {
   schemaDeleteAllGradeType,
   schemaAllGradeType,
   schemaClassIdGrade,
+  schemaDeleteOne,
 } from "../validations/grade";
 
 /**
@@ -347,6 +348,37 @@ router.put(
   "/:classId/:studentId/:id",
   MiddlewareRedValidate(schemaUpdateOne),
   ControllerGrade.updateOne
+);
+
+/**
+ * @swagger
+ * /grade/{id}:
+ *   delete:
+ *     summary: Delete a grade
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the grade to delete
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.delete(
+  "/:id",
+  MiddlewareRedValidate(schemaDeleteOne),
+  ControllerGrade.deleteOne
 );
 
 /**

@@ -126,4 +126,15 @@ export default class ClassService extends ModelGrade {
 
     return result;
   }
+
+  static async deleteOne(id: number, teacherId: number): Promise<number> {
+    const result = await this.destroy({
+      where: {
+        id,
+        teacherId,
+      },
+    });
+
+    return result;
+  }
 }

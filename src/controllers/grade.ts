@@ -15,6 +15,7 @@ export default {
   updateOne,
   deleteAllGradeType,
   allGradeType,
+  classIdGrade,
 };
 
 async function allGradeType(req: Request, res: Response, next: NextFunction) {
@@ -122,6 +123,35 @@ async function classIdFindAll(req: Request, res: Response, next: NextFunction) {
       error: false,
       data: grades,
       message: res.locals.getLang("CLASS_ID_GRADES_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function classIdGrade(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id: teacherId } = res.locals.user;
+
+    const { classId } = req.params;
+    const { gradeType } = req.body;
+
+    const newGradeType = helperFormatName(gradeType);
+
+    const grades = await ServiceGrade.classIdGrade(
+      Number(classId),
+      teacherId,
+      newGradeType
+    );
+
+    if (!grades.length || grades.length === 0) {
+      throw new Error(res.locals.getLang("GRADE_TYPE_NOT_FOUND"));
+    }
+
+    res.json({
+      error: false,
+      data: grades,
+      message: res.locals.getLang("GRADE_TYPE_FOUND"),
     });
   } catch (error) {
     next(error);

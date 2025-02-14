@@ -15,6 +15,7 @@ import {
   schemaUniqueGradeType,
   schemaDeleteAllGradeType,
   schemaAllGradeType,
+  schemaClassIdGrade,
 } from "../validations/grade";
 
 /**
@@ -179,6 +180,52 @@ router.post(
   "/:classId",
   MiddlewareRedValidate(schemaGradeTypeExists),
   ControllerGrade.gradeTypeExists
+);
+
+/**
+ * @swagger
+ * /grade/grade-type/{classId}:
+ *   post:
+ *     summary: Get a grade by classId and gradeType
+ *     tags: [Grade]
+ *     parameters:
+ *       - in: path
+ *         name: classId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - gradeType
+ *             properties:
+ *               gradeType:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *             example:
+ *               gradeType: "midterm"
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.post(
+  "/grade-type/:classId",
+  MiddlewareRedValidate(schemaClassIdGrade),
+  ControllerGrade.classIdGrade
 );
 
 /**

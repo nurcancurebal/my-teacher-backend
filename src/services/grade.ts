@@ -24,6 +24,20 @@ export default class ClassService extends ModelGrade {
     return result;
   }
 
+  static async studentIdFindAll(
+    studentId: number,
+    teacherId: number
+  ): Promise<IGradeCreationAttributes[]> {
+    const result = await this.findAll({
+      where: {
+        studentId,
+        teacherId,
+      },
+    });
+
+    return result;
+  }
+
   static async classIdFindAll(
     classId: number,
     teacherId: number

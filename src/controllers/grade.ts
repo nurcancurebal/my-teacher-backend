@@ -17,6 +17,8 @@ export default {
   allGradeType,
   classIdGrade,
   deleteOne,
+  studentIdFindAll,
+  uniqueGradeTypeClass,
 };
 
 async function allGradeType(req: Request, res: Response, next: NextFunction) {
@@ -85,6 +87,58 @@ async function uniqueGradeType(
   }
 }
 
+async function uniqueGradeTypeClass(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id: teacherId } = res.locals.user;
+    const { classId } = req.params;
+
+    const grades = await ServiceGrade.classIdFindAll(
+      Number(classId),
+      teacherId
+    );
+
+    const uniqueGrades = grades.reduce(
+      (
+        acc: {
+          [key: string]: {
+            gradeType: string;
+            createAt: Date;
+            lastUpdated: Date;
+          };
+        },
+        grade
+      ) => {
+        const { gradeType, createdAt, lastUpdated } = grade;
+        if (!acc[gradeType]) {
+          acc[gradeType] = {
+            gradeType,
+            createAt: createdAt,
+            lastUpdated: lastUpdated,
+          };
+        } else {
+          acc[gradeType].lastUpdated = lastUpdated;
+        }
+        return acc;
+      },
+      {}
+    );
+
+    const result = Object.values(uniqueGrades);
+
+    res.json({
+      error: false,
+      data: result,
+      message: res.locals.getLang("GRADES_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function findLatestGrade(
   _req: Request,
   res: Response,
@@ -99,6 +153,35 @@ async function findLatestGrade(
       error: false,
       data: latestGrade.createdAt,
       message: res.locals.getLang("LATEST_GRADE_FOUND"),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function studentIdFindAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id: teacherId } = res.locals.user;
+
+    const { studentId } = req.params;
+
+    const grades = await ServiceGrade.studentIdFindAll(
+      Number(studentId),
+      teacherId
+    );
+
+    if (!grades.length || grades.length === 0) {
+      throw new Error(res.locals.getLang("STUDENT_ID_GRADES_NOT_FOUND"));
+    }
+
+    res.json({
+      error: false,
+      data: grades,
+      message: res.locals.getLang("STUDENT_ID_GRADES_FOUND"),
     });
   } catch (error) {
     next(error);

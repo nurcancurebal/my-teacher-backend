@@ -17,7 +17,40 @@ import {
   schemaAllGradeType,
   schemaClassIdGrade,
   schemaDeleteOne,
+  schemaStudentIdFindAll,
+  schemaUniqueGradeTypeClass,
 } from "../validations/grade";
+
+/**
+ * @swagger
+ * /grade/grade-type/unique/{classId}:
+ *   get:
+ *     summary: Get all grades unique gradeType by classId
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: classId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.get(
+  "/grade-type/unique/:classId",
+  MiddlewareRedValidate(schemaUniqueGradeTypeClass),
+  ControllerGrade.uniqueGradeTypeClass
+);
 
 /**
  * @swagger
@@ -108,7 +141,38 @@ router.get(
 
 /**
  * @swagger
- * /grade/{classId}:
+ * /grade/student/{studentId}:
+ *   get:
+ *     summary: Get grades by studentId
+ *     tags: [Grade]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "401":
+ *         description: Unauthorized
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
+ */
+router.get(
+  "/student/:studentId",
+  MiddlewareRedValidate(schemaStudentIdFindAll),
+  ControllerGrade.studentIdFindAll
+);
+
+/**
+ * @swagger
+ * /grade/class/{classId}:
  *   get:
  *     summary: Get grades by classId
  *     tags: [Grade]
@@ -132,7 +196,7 @@ router.get(
  *         description: Internal Server Error
  */
 router.get(
-  "/:classId",
+  "/class/:classId",
   MiddlewareRedValidate(schemaClassIdFindAll),
   ControllerGrade.classIdFindAll
 );

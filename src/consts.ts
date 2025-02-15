@@ -156,6 +156,8 @@ export const LANG = {
     USER_ID_EMPTY: "User ID cannot be empty!",
     GRADES_FOUND: "Grades found.",
     GRADE_DELETED: "Grade successfully deleted.",
+    STUDENT_ID_GRADES_NOT_FOUND: "Student grades not found.",
+    STUDENT_ID_GRADES_FOUND: "Student grades found.",
   },
   TR: {
     DEFAULT: "Hata tanımı bulunamadı!",
@@ -314,5 +316,7 @@ export const LANG = {
     USER_ID_EMPTY: "Kullanıcı ID'si boş olamaz!",
     GRADES_FOUND: "Notlar bulundu.",
     GRADE_DELETED: "Not başarıyla silindi.",
+    STUDENT_ID_GRADES_NOT_FOUND: "Öğrenci notları bulunamadı.",
+    STUDENT_ID_GRADES_FOUND: "Öğrenci notları bulundu.",
   },
 };

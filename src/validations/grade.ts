@@ -37,6 +37,16 @@ export const schemaCreateOne = (getLang: TGetLang) => {
   });
 };
 
+export const schemaUniqueGradeTypeClass = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      classId: classId(getLang),
+    }).max(1),
+  });
+};
+
 export const schemaUpdateOne = (getLang: TGetLang) => {
   return Joi.object({
     body: Joi.object({
@@ -57,6 +67,16 @@ export const schemaLatestGrade = () => {
     body: Joi.object().max(0),
     query: Joi.object().max(0),
     params: Joi.object().max(0),
+  });
+};
+
+export const schemaStudentIdFindAll = (getLang: TGetLang) => {
+  return Joi.object({
+    body: Joi.object().max(0),
+    query: Joi.object().max(0),
+    params: Joi.object({
+      studentId: studentId(getLang),
+    }).max(1),
   });
 };
 

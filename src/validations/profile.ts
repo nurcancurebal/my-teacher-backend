@@ -12,7 +12,8 @@ export const schemaUpdate = (getLang: TGetLang) => {
       username: username(getLang),
       email: email(getLang),
       password: password(getLang),
-    }).max(5),
+      language: language(getLang),
+    }).max(6),
     query: Joi.object().max(0),
     params: Joi.object({
       id: userId(getLang),
@@ -29,5 +30,17 @@ export const userId = (getLang: TGetLang) => {
       "number.base": getLang("USER_ID_NUMBER"),
       "number.integer": getLang("USER_ID_INTEGER"),
       "number.empty": getLang("USER_ID_EMPTY"),
+    });
+};
+
+export const language = (getLang: TGetLang) => {
+  return Joi.string()
+    .max(2)
+    .required()
+    .messages({
+      "string.max": getLang("LANGUAGE_MAX"),
+      "string.empty": getLang("LANGUAGE_EMPTY"),
+      "string.base": getLang("LANGUAGE_STRING"),
+      "any.required": getLang("LANGUAGE_REQUIRED"),
     });
 };

@@ -56,7 +56,7 @@ async function updateOne(req: Request, res: Response, next: NextFunction) {
       lastname: helperFormatName(body.lastname),
       email: body.email,
       username: body.username.trim(),
-      language: user.language,
+      language: body.language,
     };
 
     const updateUser = await ServiceAuth.updateOneById(id, updateData);

@@ -158,6 +158,10 @@ export const LANG = {
     GRADE_DELETED: "Grade successfully deleted.",
     STUDENT_ID_GRADES_NOT_FOUND: "Student grades not found.",
     STUDENT_ID_GRADES_FOUND: "Student grades found.",
+    LANGUAGE_MAX: "Language must be at most 2 characters!",
+    LANGUAGE_EMPTY: "Language cannot be empty!",
+    LANGUAGE_STRING: "Language must be a string!",
+    LANGUAGE_REQUIRED: "Language is required!",
   },
   TR: {
     DEFAULT: "Hata tanımı bulunamadı!",
@@ -318,5 +322,9 @@ export const LANG = {
     GRADE_DELETED: "Not başarıyla silindi.",
     STUDENT_ID_GRADES_NOT_FOUND: "Öğrenci notları bulunamadı.",
     STUDENT_ID_GRADES_FOUND: "Öğrenci notları bulundu.",
+    LANGUAGE_MAX: "Dil en fazla 2 karakter olmalıdır!",
+    LANGUAGE_EMPTY: "Dil boş olamaz!",
+    LANGUAGE_STRING: "Dil bir string olmalıdır!",
+    LANGUAGE_REQUIRED: "Dil gereklidir!",
   },
 };

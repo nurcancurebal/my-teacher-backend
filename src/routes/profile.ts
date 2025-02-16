@@ -41,6 +41,7 @@ import { schemaUpdate } from "../validations/profile";
  *               - username
  *               - email
  *               - password
+ *               - language
  *             properties:
  *               firstname:
  *                 type: string
@@ -65,12 +66,17 @@ import { schemaUpdate } from "../validations/profile";
  *                minLength: 8
  *                maxLength: 20
  *                description: must contain at least one letter and one number and must be between 8 and 20 characters
+ *               language:
+ *                type: string
+ *                maxLength: 2
+ *                description: must be a valid language code
  *             example:
  *               firstname: John
  *               lastname: Doe
  *               username: johndoe
  *               email: johndoe@example.com
  *               password: password12
+ *               language: EN
  *     responses:
  *       "200":
  *         description: OK

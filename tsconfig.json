@@ -12,7 +12,9 @@
     "resolveJsonModule": true,
     "paths": {
       "*": ["node_modules/*", "src/*"]
-    }
+    },
+    "skipLibCheck": true,
+    "noEmitOnError": false
   },
   "include": ["src/**/*"]
 }

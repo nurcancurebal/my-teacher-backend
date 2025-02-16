@@ -12,13 +12,11 @@ const transporter = nodemailer.createTransport({
     user: config.smtp.user,
     pass: config.smtp.password,
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
 });
 
 function sendOTP(email: string, otp: string) {
   return sendMail({
+    from: config.smtp.from,
     to: email,
     html: forgotPasswordMailTemplate({ otp }),
     subject: "OTP Verification",

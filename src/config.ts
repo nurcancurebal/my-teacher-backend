@@ -14,7 +14,8 @@ const {
   SMTP_HOST,
   SMTP_PORT,
   SMTP_USER,
-  SMTP_PASSWORD,
+  SMTP_FROM,
+  SMTP_PASS,
   SMTP_RECIPIENT,
   OTP_EXPIRY_MIN,
   OTP_SECRET,
@@ -39,7 +40,8 @@ const smtp = {
   host: SMTP_HOST,
   port: SMTP_PORT,
   user: SMTP_USER,
-  password: SMTP_PASSWORD,
+  from: SMTP_FROM,
+  password: SMTP_PASS,
   recipient: SMTP_RECIPIENT,
 };
 

@@ -10,5 +10,3 @@ PostgreSQL ve Sequelize ORM ile veritabanı yönetimi sağlanmaktadır.
 - Veritabanı: PostgreSQL (pg & Sequelize)
 - Kimlik Doğrulama: JSON Web Token (JWT) ve One Time Password (OTP)
 - Dokümantasyon: Swagger
-
-Demo backend adres: https://my-teacher-api.trial.town
